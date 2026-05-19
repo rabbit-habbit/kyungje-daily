@@ -324,7 +324,7 @@ body {
   </div>
   {% endif %}
 
-  {% if rabbithat_ideas %}
+  {% if mode != 'share' and rabbithat_ideas %}
   <h2 class="section-h2">🐰 래빗해빛 콘텐츠 소재</h2>
   {% for idea in rabbithat_ideas %}
   <div class="idea">
@@ -343,10 +343,16 @@ body {
 </main>
 
 <div class="footer-bar"></div>
+{% if mode == 'share' %}
+<div class="footer-note" style="font-size: 14px; font-weight: 600;">
+  부자습관은 래빗해빛 🐰
+</div>
+{% else %}
 <div class="footer-note">
   생성 시각: {{ generated_at }} · Claude로 자동 생성됨<br>
   손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
 </div>
+{% endif %}
 
 </body>
 </html>

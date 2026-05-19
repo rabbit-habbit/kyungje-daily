@@ -26,7 +26,8 @@ sys.path.insert(0, str(ROOT))
 from pipeline import fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
 from pipeline import summarize as sm  # noqa: E402
 
-REPORT_URL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
+REPORT_URL_FULL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
+REPORT_URL_SHARE = "https://arum0807.github.io/sonkyungje-daily/share.html"
 
 load_dotenv(override=True)
 logger = logging.getLogger(__name__)
@@ -153,14 +154,18 @@ def run(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
-    html = render_report.render(report_data)
-    paths = render_report.save(html, date_str, also_index=True)
-    for label, p in paths.items():
-        try:
-            rel = p.relative_to(ROOT)
-        except ValueError:
-            rel = p
-        logger.info("  ✓ %s: %s", label, rel)
+    # 2벌 렌더: full (대표님용) + share (햇님이들용)
+    for mode in ("full", "share"):
+        html = render_report.render(report_data, mode=mode)
+        paths = render_report.save(
+            html, date_str, mode=mode, also_index=(mode == "full")
+        )
+        for label, p in paths.items():
+            try:
+                rel = p.relative_to(ROOT)
+            except ValueError:
+                rel = p
+            logger.info("  ✓ [%s] %s: %s", mode, label, rel)
 
     # 5) git
     if push or dry_run_push:
@@ -169,9 +174,11 @@ def run(
 
     # 6) 카카오톡 알림 (best-effort — 실패해도 메인 흐름 OK)
     if notify:
-        logger.info("[kakao] 알림 전송 중...")
+        logger.info("[kakao] 알림 전송 중 (2버튼: 대표/공유)...")
         try:
-            notify_kakao.notify_from_report(report_data, REPORT_URL)
+            notify_kakao.notify_from_report(
+                report_data, REPORT_URL_FULL, REPORT_URL_SHARE
+            )
             logger.info("  ✓ 카카오톡 알림 전송 완료")
         except Exception as exc:
             logger.warning("  ⚠️  카카오톡 알림 실패 (보고서 자체는 정상): %s", exc)

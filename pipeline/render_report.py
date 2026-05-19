@@ -61,23 +61,38 @@ def _make_env() -> Environment:
     return env
 
 
-def render(context: dict) -> str:
-    """report.html.j2 → HTML 문자열."""
+def render(context: dict, mode: str = "full") -> str:
+    """report.html.j2 → HTML 문자열.
+
+    mode='full'  : 대표님용 — 뉴스/지표/친절한경제/래빗해빛 콘텐츠 소재
+    mode='share' : 공유용 (햇님이들) — 래빗해빛 콘텐츠 소재 제외, 푸터 브랜딩
+    """
     env = _make_env()
     tmpl = env.get_template("report.html.j2")
-    return tmpl.render(**context)
+    return tmpl.render(mode=mode, **context)
 
 
-def save(html: str, date_str: str, also_index: bool = False) -> dict[str, Path]:
-    """docs/latest.html + docs/archive/{date}.html 에 저장."""
+def save(
+    html: str, date_str: str, mode: str = "full", also_index: bool = False
+) -> dict[str, Path]:
+    """모드별 파일 경로에 저장.
+
+    full  → docs/latest.html, docs/archive/{date}.html (+ optional docs/index.html)
+    share → docs/share.html,  docs/archive/{date}-share.html
+    """
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     (DOCS_DIR / "archive").mkdir(parents=True, exist_ok=True)
-    latest = DOCS_DIR / "latest.html"
-    archive = DOCS_DIR / "archive" / f"{date_str}.html"
+    if mode == "share":
+        latest = DOCS_DIR / "share.html"
+        archive = DOCS_DIR / "archive" / f"{date_str}-share.html"
+    else:
+        latest = DOCS_DIR / "latest.html"
+        archive = DOCS_DIR / "archive" / f"{date_str}.html"
     latest.write_text(html, encoding="utf-8")
     archive.write_text(html, encoding="utf-8")
     out = {"latest": latest, "archive": archive}
-    if also_index:
+    # index.html은 full 버전(대표님용)이 메인
+    if also_index and mode == "full":
         index = DOCS_DIR / "index.html"
         index.write_text(html, encoding="utf-8")
         out["index"] = index
@@ -189,7 +204,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="손경제 Daily Brief 렌더러")
     parser.add_argument("--input", help="JSON 입력 경로 (또는 '-'로 stdin). 미지정+--mock 가능")
     parser.add_argument("--mock", action="store_true", help="내장 mock 데이터로 렌더")
-    parser.add_argument("--also-index", action="store_true", help="docs/index.html도 같이 갱신")
+    parser.add_argument("--also-index", action="store_true", help="docs/index.html도 같이 갱신 (full만)")
+    parser.add_argument("--mode", choices=["full", "share", "both"], default="both", help="렌더 모드")
     args = parser.parse_args()
 
     if args.mock:
@@ -197,7 +213,9 @@ if __name__ == "__main__":
     else:
         data = _load_input(args.input)
 
-    html = render(data)
-    paths = save(html, data["date"], also_index=args.also_index)
-    for label, p in paths.items():
-        print(f"✓ {label}: {p}")
+    modes = ["full", "share"] if args.mode == "both" else [args.mode]
+    for m in modes:
+        html = render(data, mode=m)
+        paths = save(html, data["date"], mode=m, also_index=args.also_index)
+        for label, p in paths.items():
+            print(f"✓ [{m}] {label}: {p}")

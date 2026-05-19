@@ -162,15 +162,42 @@ def get_access_token() -> str:
 # ── 메시지 전송 ───────────────────────────────────────────────────────
 
 
-def send_to_me(text: str, link_url: str, button_label: str = "보고서 보기") -> dict:
-    """카카오톡 '나에게 보내기' — text 템플릿."""
+def send_to_me(
+    text: str,
+    link_url: Optional[str] = None,
+    button_label: str = "보고서 보기",
+    buttons: Optional[list[dict]] = None,
+) -> dict:
+    """카카오톡 '나에게 보내기' — text 템플릿.
+
+    buttons (옵션): [{'title': str, 'url': str}, ...] 최대 2개.
+    - 지정되면 button_title 무시하고 다중 버튼 모드.
+    - 첫 버튼 URL이 메인 카드 link로도 사용됨 (link_url 우선).
+    """
     access_token = get_access_token()
-    template = {
-        "object_type": "text",
-        "text": text,
-        "link": {"web_url": link_url, "mobile_web_url": link_url},
-        "button_title": button_label,
-    }
+    if buttons:
+        primary = link_url or buttons[0]["url"]
+        template = {
+            "object_type": "text",
+            "text": text,
+            "link": {"web_url": primary, "mobile_web_url": primary},
+            "buttons": [
+                {
+                    "title": b["title"],
+                    "link": {"web_url": b["url"], "mobile_web_url": b["url"]},
+                }
+                for b in buttons[:2]  # 카카오 한도 2개
+            ],
+        }
+    else:
+        if not link_url:
+            raise ValueError("link_url 또는 buttons 중 하나는 필수")
+        template = {
+            "object_type": "text",
+            "text": text,
+            "link": {"web_url": link_url, "mobile_web_url": link_url},
+            "button_title": button_label,
+        }
     r = requests.post(
         SEND_TO_ME,
         headers={"Authorization": f"Bearer {access_token}"},
@@ -203,10 +230,25 @@ def _build_brief_message(report_data: dict) -> str:
     return msg
 
 
-def notify_from_report(report_data: dict, report_url: str) -> dict:
-    """run.py에서 호출하는 진입점."""
+def notify_from_report(
+    report_data: dict, full_url: str, share_url: Optional[str] = None
+) -> dict:
+    """run.py에서 호출하는 진입점.
+
+    share_url이 주어지면 [내 보고서 보기 | 공유용 보기] 2버튼 메시지.
+    None이면 단일 버튼 (호환).
+    """
     msg = _build_brief_message(report_data)
-    return send_to_me(msg, report_url)
+    if share_url:
+        return send_to_me(
+            msg,
+            link_url=full_url,
+            buttons=[
+                {"title": "내 보고서 보기", "url": full_url},
+                {"title": "공유용 보기", "url": share_url},
+            ],
+        )
+    return send_to_me(msg, link_url=full_url)
 
 
 # ── CLI ───────────────────────────────────────────────────────────────

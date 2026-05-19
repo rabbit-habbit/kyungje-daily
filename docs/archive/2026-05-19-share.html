@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>손경제 Daily Brief — 2026년 5월 19일 화요일</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFDF5;
+  --card-bg: #FFFFFF;
+  --border: #F0E8D8;
+  --text: #2D2A26;
+  --text-dim: rgba(45, 42, 38, 0.65);
+  --up: #E55C20;
+  --down: #3B82F6;
+  --flat: #888;
+  --shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-family: 'DM Sans', 'Pretendard Variable', sans-serif; font-feature-settings: 'tnum'; }
+
+.container { max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
+
+/* Header */
+.header {
+  position: relative;
+  background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+  padding: 40px 32px 36px;
+  border-radius: 0 0 24px 24px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.header__date { font-size: 14px; color: rgba(45,42,38,0.7); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 8px; }
+.header__title { font-size: 28px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px; }
+.header__subtitle { font-size: 15px; color: rgba(45,42,38,0.7); font-weight: 500; margin: 0; }
+.header__rabbit {
+  position: absolute;
+  right: 24px;
+  bottom: 16px;
+  font-size: 64px;
+  opacity: 0.25;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Section header / Badge */
+.badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #FFE8A3 0%, #FF9800 100%);
+  color: #FFFFFF;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(255,152,0,0.3);
+}
+.section-center { text-align: center; margin: 32px 0 18px; }
+.section-h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 36px 0 14px;
+  letter-spacing: -0.3px;
+}
+
+/* Episode */
+.episode {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.episode__label { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; }
+.episode__title { font-size: 17px; font-weight: 700; margin: 0 0 10px; }
+.episode__audio audio { width: 100%; margin-top: 8px; }
+
+/* Indicator */
+.ind-group { margin-bottom: 12px; }
+.ind-group__label {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin: 14px 0 8px;
+  padding-left: 4px;
+}
+.ind-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+.ind {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.ind__name { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
+.ind__value { font-size: 22px; font-weight: 700; }
+.ind__change { font-size: 13px; font-weight: 600; margin-top: 2px; }
+.ind__change.up { color: var(--up); }
+.ind__change.down { color: var(--down); }
+.ind__change.flat { color: var(--flat); }
+
+/* Policy bar */
+.policy {
+  background: linear-gradient(135deg, #FFF8E1 0%, #FFE8A3 100%);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 12px;
+}
+.policy__item { text-align: center; }
+.policy__label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; }
+.policy__value { font-size: 20px; font-weight: 700; }
+.policy__outlook { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+/* News card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.card__title { font-size: 17px; font-weight: 700; margin: 0 0 8px; line-height: 1.4; }
+.card__summary { font-size: 15px; color: var(--text); margin: 0 0 12px; }
+.card__why { font-size: 14px; color: var(--text); padding: 12px 14px; background: #FFFAEB; border-left: 3px solid #FFD97A; border-radius: 8px; margin: 12px 0; }
+.card__why-label { font-weight: 700; margin-right: 4px; }
+.card__points { font-size: 14px; color: var(--text); padding-left: 22px; margin: 8px 0; }
+.card__points li { margin-bottom: 4px; }
+.card__sources { font-size: 12px; color: var(--text-dim); margin-top: 12px; }
+.card__sources a { color: #3B82F6; text-decoration: none; }
+.card__sources a:hover { text-decoration: underline; }
+
+/* Friendly economics */
+.friendly {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.friendly__topic { font-size: 18px; font-weight: 700; margin: 0 0 12px; line-height: 1.4; }
+.friendly__explanation { font-size: 15px; line-height: 1.75; margin: 0 0 16px; }
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+.cmp-table th { background: #FFF3D0; padding: 10px; text-align: left; font-weight: 700; border: 1px solid var(--border); }
+.cmp-table td { padding: 10px; border: 1px solid var(--border); vertical-align: top; }
+.cmp-table tr:nth-child(even) td { background: #FFFDF5; }
+
+/* Rabbit idea */
+.idea {
+  background: linear-gradient(135deg, #FFFAEB 0%, #FFF3D0 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.idea__format { display: inline-block; background: var(--text); color: #FFFFFF; font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; font-weight: 600; }
+.idea__hook { font-size: 17px; font-weight: 700; margin: 0 0 10px; line-height: 1.4; }
+.idea__target { font-size: 13px; color: var(--text-dim); margin: 0 0 10px; }
+.idea__outline { font-size: 14px; padding-left: 22px; margin: 0; }
+.idea__outline li { margin-bottom: 4px; }
+
+/* Footer bar */
+.footer-bar {
+  height: 10px;
+  background: linear-gradient(90deg, #FFEB3B 0%, #FF9800 50%, #FF5722 100%);
+  margin-top: 40px;
+}
+.footer-note { text-align: center; font-size: 12px; color: var(--text-dim); padding: 16px; line-height: 1.6; }
+
+@media (max-width: 480px) {
+  .header__title { font-size: 22px; }
+  .header__rabbit { font-size: 48px; right: 16px; }
+  .ind__value { font-size: 19px; }
+  .card, .friendly, .idea { padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header__date">2026년 5월 19일 화요일</div>
+  <h1 class="header__title">손경제 Daily Brief</h1>
+  <p class="header__subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</p>
+  <div class="header__rabbit">🐰</div>
+</header>
+
+<main class="container">
+
+  <div class="episode">
+    <div class="episode__label">📻 오늘의 손경제</div>
+    <div class="episode__title">[손경제] 5/19(화) 소아 필수의약품 | 삼성전자 2차 사후조정 | 중국 CXMT 실적 | 국민연금법 개편</div>
+    <audio controls preload="none" src="https://podcastfile.imbc.com/cgi-bin/podcast.fcgi/podcast/economy/ECONOMY_20260519.mp3"></audio>
+  </div>
+
+  <div class="section-center">
+    <span class="badge">📊 오늘의 경제지표 한눈에 보기!</span>
+  </div>
+
+  <div class="ind-group">
+    <div class="ind-group__label">🇰🇷 국내</div>
+    <div class="ind-grid">
+      <div class="ind">
+        <div class="ind__name">원/달러 환율</div>
+        <div class="ind__value num">1,507.82원</div>
+        <div class="ind__change up num">
+▲          10.67원 (+0.71%)
+        </div>
+      </div>
+      <div class="ind">
+        <div class="ind__name">코스피</div>
+        <div class="ind__value num">7,271.66</div>
+        <div class="ind__change down num">
+▼          244.38 (-3.25%)
+        </div>
+      </div>
+      <div class="ind">
+        <div class="ind__name">국고채 10년</div>
+        <div class="ind__value num">2.60%</div>
+        <div class="ind__change up num">
+▲          0.40% (+18.18%)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ind-group">
+    <div class="ind-group__label">🌎 글로벌</div>
+    <div class="ind-grid">
+      <div class="ind">
+        <div class="ind__name">S&P 500</div>
+        <div class="ind__value num">7,403.05</div>
+        <div class="ind__change down num">
+▼          5.45 (-0.07%)
+        </div>
+      </div>
+      <div class="ind">
+        <div class="ind__name">다우존스</div>
+        <div class="ind__value num">49,686.12</div>
+        <div class="ind__change up num">
+▲          159.95 (+0.32%)
+        </div>
+      </div>
+      <div class="ind">
+        <div class="ind__name">WTI 원유</div>
+        <div class="ind__value num">$103.27</div>
+        <div class="ind__change down num">
+▼          $5.39 (-4.96%)
+        </div>
+      </div>
+      <div class="ind">
+        <div class="ind__name">금 (1g 한화)</div>
+        <div class="ind__value num">220,364원/g</div>
+        <div class="ind__change down num">
+▼          330원/g (-0.15%)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="policy">
+    <div class="policy__item">
+      <div class="policy__label">🇰🇷 한국 기준금리</div>
+      <div class="policy__value num">2.5%</div>
+      <div class="policy__outlook">동결 전망</div>
+    </div>
+    <div class="policy__item">
+      <div class="policy__label">🇺🇸 미국 기준금리</div>
+      <div class="policy__value num">3.75%</div>
+      <div class="policy__outlook">인하 가능성</div>
+    </div>
+  </div>
+
+  <h2 class="section-h2">📰 오늘의 뉴스 카드</h2>
+  <article class="card">
+    <h3 class="card__title">💊 소아 응급약 '아티반' 품절 위기…7월 진료 대란 초읽기</h3>
+    <p class="card__summary">소아 경련 응급 치료의 핵심 주사제 '아티반'이 약가 현실화 실패로 생산이 중단되면서, 전국 소아청소년병원의 71%가 올 여름 이전 재고 소진을 우려하고 있어요. 정부와 의료 현장의 입장이 엇갈리며 혼란이 계속되고 있어요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      아이 있는 가정이라면 직결되는 이야기예요. 응급실에서 경련 치료에 쓰이는 약이 없어지면 더 강한 2차 약제와 인공호흡기까지 동원해야 하는 상황이 올 수 있거든요. 의료비·치료 수준에 영향이 생길 수 있어요.
+    </div>
+    <ul class="card__points">
+<li>아티반은 소아 경련 시 5~10분 내 빠른 작용으로 뇌 손상을 막는 '응급실의 에어백'으로 불려요</li><li>국내 유일 생산처 일동제약이 지난해 말 노후 설비 등을 이유로 생산 중단을 신고했고, 약가(1,000원 미만)가 원가도 못 미쳐요</li><li>소아청소년병원 35곳 설문 결과 12곳은 이미 재고 소진 완료, 13곳은 1~2개월 내 소진 예정 — 총 71%가 '심각' 상태예요</li>    </ul>
+    <div class="card__sources">
+      출처:
+<a href="https://www.asiae.co.kr/article/2026051614245743951" target="_blank" rel="noopener">아시아경제 – 소아병원 비상</a>, <a href="https://www.joongboo.com/news/articleView.html?idxno=363726032" target="_blank" rel="noopener">중부일보 – 소아 필수의약품 부족 사태 사설</a>    </div>
+  </article>
+  <article class="card">
+    <h3 class="card__title">🏭 삼성전자 파업 D-2…2차 사후조정 오늘이 마지막 고비</h3>
+    <p class="card__summary">삼성전자 노사가 오늘(19일) 오전 10시부터 중노위 주재 2차 사후조정 2일차 협상을 이어가고 있어요. 파업 예고일(21일)이 코앞인데, 성과급 재원 기준을 두고 여전히 팽팽하게 맞서고 있어요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      삼성전자 주식을 갖고 있거나 반도체 관련 ETF를 보유 중이라면 오늘 협상 결과가 바로 포트폴리오에 영향을 줄 수 있어요. 삼성전자 협력사나 관련 업종 종사자라면 더 예의주시해야 해요.
+    </div>
+    <ul class="card__points">
+<li>노조는 영업이익 15% 재원 활용·성과급 제도화를 요구, 사측은 10% + 유연한 성과급을 제시하며 간극이 커요</li><li>한국은행 보고서에 따르면 18일 총파업 현실화 시 반도체 생산 차질 30조원, 경제성장률 최대 0.5%p 하락 추산이에요</li><li>법원은 삼성전자가 낸 위법 쟁의행위 금지 가처분을 일부 인용 — 안전보호시설·웨이퍼 변질 방지 작업은 평상시 수준 유지해야 해요</li>    </ul>
+    <div class="card__sources">
+      출처:
+<a href="https://www.fnnews.com/news/202605181842354313" target="_blank" rel="noopener">파이낸셜뉴스 – 2차 사후조정 1일차 종료</a>, <a href="https://www.hankyung.com/article/2026051846281" target="_blank" rel="noopener">한국경제 – 한은 보고서 성장률 0.5%p</a>    </div>
+  </article>
+  <article class="card">
+    <h3 class="card__title">🇨🇳 중국 CXMT, D램 호황에 1분기 매출 719% 폭증…한국 반도체 위협</h3>
+    <p class="card__summary">중국 최대 메모리 반도체 기업 CXMT가 AI 붐과 D램 공급 부족 덕에 2026년 1분기 매출이 전년 동기 대비 719% 폭증한 508억 위안(약 11조 원)을 기록했어요. 창사 이래 첫 연간 흑자에 이어 올해는 아예 IPO로 6조 원 조달에 나서고 있어요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      삼성전자·SK하이닉스 주주라면 CXMT의 성장이 범용 D램 가격 경쟁을 심화시킬 수 있다는 점이 장기 리스크예요. 반도체 ETF(예: KODEX 반도체) 투자자도 관심 가져야 해요.
+    </div>
+    <ul class="card__points">
+<li>CXMT 1분기 순이익은 247억 위안(약 5조 4,000억 원)으로 전년 동기 대비 1,688% 급증했어요</li><li>옴디아 기준 글로벌 D램 시장 점유율 7.67%, 중국 1위·세계 4위로 삼성·SK·마이크론 3강 체제를 위협하고 있어요</li><li>CXMT는 아직 HBM 등 첨단 분야엔 미진하지만, 범용 D램에서 저가 물량 공세로 한국 기업의 핵심 현금창출원을 흔들 수 있어요</li>    </ul>
+    <div class="card__sources">
+      출처:
+<a href="https://www.mt.co.kr/world/2026/05/18/2026051821322134004" target="_blank" rel="noopener">머니투데이 – CXMT 1분기 매출 700%↑</a>, <a href="https://biz.heraldcorp.com/article/10740360" target="_blank" rel="noopener">헤럴드경제 – CXMT IPO·1분기 실적</a>    </div>
+  </article>
+  <article class="card">
+    <h3 class="card__title">🧓 다음 달부터 일 많이 해도 국민연금 안 깎인다!</h3>
+    <p class="card__summary">오는 6월 17일부터 개정 국민연금법이 시행돼요. 월 소득 509만 원 미만이면 일을 하면서도 노령연금을 100% 받을 수 있어요. '재직자 노령연금 감액제도' 1·2 구간이 폐지되는 거예요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      직장인 본인보다는 부모님·시부모님 세대에게 직접적인 혜택이에요. 연금 수급 중에도 소득활동을 하고 있는 어르신이 주변에 있다면 꼭 알려드리세요. 2025년 감액 소득분은 소급 환급도 받을 수 있어요.
+    </div>
+    <ul class="card__points">
+<li>기존엔 평균소득(A값, 약 309만 원)을 1원이라도 넘으면 연금이 깎였는데, 6월부터 A값 초과 소득이 200만 원 미만이면 감액 없이 전액 수령 가능해요</li><li>2023년 기준 약 9만 8,000명(전체 감액대상자의 65%)이 혜택을 받게 돼요</li><li>2025년 소득에 대해 감액된 금액도 소급 환급 대상 — 국민연금공단에 확인해보세요</li>    </ul>
+    <div class="card__sources">
+      출처:
+<a href="https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1488048" target="_blank" rel="noopener">보건복지부 보도자료</a>, <a href="https://www.korea.kr/news/policyNewsView.do?newsId=148955561" target="_blank" rel="noopener">정책브리핑 – 국민연금 감액 제도 개선</a>    </div>
+  </article>
+  <article class="card">
+    <h3 class="card__title">📉 오늘 장 요약: 코스피 -3.25% 급락, 환율 1507원 돌파</h3>
+    <p class="card__summary">코스피가 오늘 244포인트 넘게 급락하며 7,271포인트를 기록했어요. 삼성전자 파업 리스크와 원/달러 환율 1,507원 돌파가 겹치면서 투자 심리가 얼어붙었어요. WTI 원유는 4.96% 하락, 금은 소폭 약세예요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      환율이 1,500원대를 넘어서면 수입물가 상승 → 생활물가 부담으로 이어져요. 해외 직구·여행 계획 있는 분들은 달러 환전 타이밍을 고민해볼 필요가 있어요. 코스피 급락은 삼성전자 파업 우려가 시장에 직접 반영된 결과예요.
+    </div>
+    <ul class="card__points">
+<li>코스피 -3.25%, 원/달러 +0.71% — 삼성 파업 리스크가 증시·환율 모두를 흔들었어요</li><li>반면 S&P 500(-0.07%)·다우존스(+0.32%)는 거의 보합권 — 국내 증시의 삼성 의존도가 새삼 부각됐어요</li><li>국고채 10년물 금리 +18.18% 급등은 시장 불안 심리의 또 다른 신호예요</li>    </ul>
+  </article>
+
+  <h2 class="section-h2">💡 친절한 경제</h2>
+  <div class="friendly">
+    <h3 class="friendly__topic">성과급 '제도화'가 뭐예요? — 삼성전자 파업 핵심 쟁점 뽀개기</h3>
+    <p class="friendly__explanation">삼성전자 노사 갈등의 핵심은 단순히 '성과급을 더 달라'가 아니에요. 노조가 요구하는 '성과급 제도화'란, 성과급 산정 기준과 지급 공식을 법적 효력 있는 단체협약에 명시해 회사가 마음대로 바꿀 수 없게 하는 거예요. 반면 사측은 경영 상황에 따라 유연하게 조정할 수 있어야 한다는 입장이에요. 우리나라 직장인 대부분도 이 두 가지 방식 중 하나의 성과급 체계 아래에 있어요. 어떤 게 나에게 유리할지 한번 비교해볼게요!</p>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>항목</th><th>제도화 성과급 (노조 요구)</th><th>재량형 성과급 (사측 현행)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>지급 기준</td><td>단체협약에 공식 명시 (예: 영업이익의 15%)</td><td>회사가 매년 임의로 결정</td></tr>
+        <tr><td>예측 가능성</td><td>높음 — 실적 나오면 내 몫 계산 가능</td><td>낮음 — 매년 '깜짝 발표'에 의존</td></tr>
+        <tr><td>회사 입장</td><td>경영 환경 악화 시 부담 급증 가능</td><td>유연하게 재원 조정 가능</td></tr>
+        <tr><td>직원 입장</td><td>열심히 일한 만큼 투명하게 보상받는 느낌</td><td>회사 눈치·로비 문화 생길 수 있음</td></tr>
+        <tr><td>글로벌 기업 사례</td><td>애플·구글 등 스톡옵션 방식으로 투명화</td><td>한국 대기업 기존 관행에 가까움</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</main>
+
+<div class="footer-bar"></div>
+<div class="footer-note" style="font-size: 14px; font-weight: 600;">
+  부자습관은 래빗해빛 🐰
+</div>
+
+</body>
+</html>
