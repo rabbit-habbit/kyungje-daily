@@ -1,0 +1,57 @@
+name: Daily Brief
+
+on:
+  schedule:
+    # 매일 평일 (월-금) 10:30 KST = 01:30 UTC
+    # GitHub Actions cron은 부하에 따라 몇 분 지연될 수 있음
+    - cron: '30 1 * * 1-5'
+  # Actions 탭에서 수동 실행
+  workflow_dispatch:
+
+permissions:
+  # run.py가 docs/를 commit + push 해야 하므로
+  contents: write
+
+concurrency:
+  group: daily-brief
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Seoul
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MODEL: claude-sonnet-4-6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run pipeline (RSS → indicators → Claude → render → push)
+        run: python pipeline/run.py --push
+
+      - name: Upload intermediate JSONs as artifact (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-debug-${{ github.run_id }}
+          path: |
+            out/
+          retention-days: 7
