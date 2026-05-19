@@ -192,6 +192,10 @@ body {
   margin-top: 40px;
 }
 .footer-note { text-align: center; font-size: 12px; color: var(--text-dim); padding: 16px; line-height: 1.6; }
+.footer-note.share { padding: 20px 16px 24px; }
+.footer-note.share .share-brand { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.footer-note.share .share-source { font-size: 12px; margin-bottom: 4px; }
+.footer-note.share .share-disclaimer { font-size: 11px; opacity: 0.8; }
 
 @media (max-width: 480px) {
   .header__title { font-size: 22px; }
@@ -227,9 +231,9 @@ body {
     <div class="ind-grid">
       <div class="ind">
         <div class="ind__name">원/달러 환율</div>
-        <div class="ind__value num">1,507.94원</div>
+        <div class="ind__value num">1,507.82원</div>
         <div class="ind__change up num">
-▲          10.79원 (+0.72%)
+▲          10.67원 (+0.71%)
         </div>
       </div>
       <div class="ind">
@@ -268,16 +272,16 @@ body {
       </div>
       <div class="ind">
         <div class="ind__name">WTI 원유</div>
-        <div class="ind__value num">$102.90</div>
+        <div class="ind__value num">$103.27</div>
         <div class="ind__change down num">
-▼          $5.76 (-5.30%)
+▼          $5.39 (-4.96%)
         </div>
       </div>
       <div class="ind">
         <div class="ind__name">금 (1g 한화)</div>
-        <div class="ind__value num">220,358원/g</div>
+        <div class="ind__value num">220,364원/g</div>
         <div class="ind__change down num">
-▼          354원/g (-0.16%)
+▼          330원/g (-0.15%)
         </div>
       </div>
     </div>
@@ -298,72 +302,82 @@ body {
 
   <h2 class="section-h2">📰 오늘의 뉴스 카드</h2>
   <article class="card">
-    <h3 class="card__title">🏥 소아 응급약 '아티반' 7월 전 소진 위기</h3>
-    <p class="card__summary">전국 소아청소년병원 71%가 소아 경련 1차 치료제 '아티반(로라제팜)' 재고 고갈 위기에 처했어요. 약가가 1,000원도 안 돼 40년 넘게 생산하던 제약사가 지난해 말 생산을 중단했고, 7월 이전 진료 대란이 우려되는 상황이에요.</p>
+    <h3 class="card__title">💊 소아 응급약 '아티반' 품절 위기…7월 진료 대란 초읽기</h3>
+    <p class="card__summary">소아 경련 응급 치료의 핵심 주사제 '아티반'이 약가 현실화 실패로 생산이 중단되면서, 전국 소아청소년병원의 71%가 올 여름 이전 재고 소진을 우려하고 있어요. 정부와 의료 현장의 입장이 엇갈리며 혼란이 계속되고 있어요.</p>
     <div class="card__why">
       <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      아이가 있는 직장인 부모라면 당장 여름 전 소아과 진료·응급처치 공백이 생길 수 있어요. 이 문제는 '낮은 약가 → 생산 포기 → 품절' 구조의 반복으로, 소아약 141개 품목이 이미 품절 상태예요.
+      아이 있는 가정이라면 직결되는 이야기예요. 응급실에서 경련 치료에 쓰이는 약이 없어지면 더 강한 2차 약제와 인공호흡기까지 동원해야 하는 상황이 올 수 있거든요. 의료비·치료 수준에 영향이 생길 수 있어요.
     </div>
     <ul class="card__points">
-<li>응답 소아청소년병원 35곳 중 34%(12곳)는 이미 아티반 재고 완전 소진, 37%(13곳)는 1~2개월 내 소진 예정</li><li>근본 원인은 약가 현실화 실패: 아티반 약가가 1,000원 미만으로 생산원가 유지 불가 → 일동제약 생산 중단</li><li>현장 전문의 86%는 정부의 '대체약이 있다'는 입장에 동의 안 함 — 아티반은 5~10분 내 작용하는 소아 경련 '유일한 1차 치료제'</li>    </ul>
+<li>아티반은 소아 경련 시 5~10분 내 빠른 작용으로 뇌 손상을 막는 '응급실의 에어백'으로 불려요</li><li>국내 유일 생산처 일동제약이 지난해 말 노후 설비 등을 이유로 생산 중단을 신고했고, 약가(1,000원 미만)가 원가도 못 미쳐요</li><li>소아청소년병원 35곳 설문 결과 12곳은 이미 재고 소진 완료, 13곳은 1~2개월 내 소진 예정 — 총 71%가 '심각' 상태예요</li>    </ul>
     <div class="card__sources">
       출처:
-<a href="https://biz.heraldcorp.com/article/10739260" target="_blank" rel="noopener">헤럴드경제 - 소아 '응급실 에어백' 터질라</a>, <a href="https://www.asiae.co.kr/article/2026051614245743951" target="_blank" rel="noopener">아시아경제 - 우리아이 아픈데 약이 없대요</a>    </div>
+<a href="https://www.asiae.co.kr/article/2026051614245743951" target="_blank" rel="noopener">아시아경제 – 소아병원 비상</a>, <a href="https://www.joongboo.com/news/articleView.html?idxno=363726032" target="_blank" rel="noopener">중부일보 – 소아 필수의약품 부족 사태 사설</a>    </div>
   </article>
   <article class="card">
-    <h3 class="card__title">🏭 삼성전자 파업 D-2, 2차 사후조정 오늘도 진행 중</h3>
-    <p class="card__summary">삼성전자 노사가 오늘(19일)도 중앙노동위원회 2차 사후조정을 이어가고 있어요. 1차 조정 결렬 후 어렵게 재개됐지만 성과급 규모·지급 방식 이견이 좁혀지지 않고 있고, 노조가 예고한 총파업은 21일부터 예정돼 있어요.</p>
+    <h3 class="card__title">🏭 삼성전자 파업 D-2…2차 사후조정 오늘이 마지막 고비</h3>
+    <p class="card__summary">삼성전자 노사가 오늘(19일) 오전 10시부터 중노위 주재 2차 사후조정 2일차 협상을 이어가고 있어요. 파업 예고일(21일)이 코앞인데, 성과급 재원 기준을 두고 여전히 팽팽하게 맞서고 있어요.</p>
     <div class="card__why">
       <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      삼성전자 주주라면 주가 변동성에 직접 영향을 받아요. 파업이 현실화하면 삼성 협력사·반도체 장비업종 주가, 원/달러 환율에도 파장이 올 수 있어 포트폴리오 점검이 필요해요.
+      삼성전자 주식을 갖고 있거나 반도체 관련 ETF를 보유 중이라면 오늘 협상 결과가 바로 포트폴리오에 영향을 줄 수 있어요. 삼성전자 협력사나 관련 업종 종사자라면 더 예의주시해야 해요.
     </div>
     <ul class="card__points">
-<li>쟁점: 노조는 '영업이익 15% 성과급 재원 + 제도화', 사측은 '영업이익 10% + 유연한 성과급' — 협상 중 노조가 13%로 일부 양보했지만 간극 여전</li><li>오늘(19일) 오후 7시까지 2차 조정 진행 예정 — 타결 안 되면 정부가 긴급조정권 발동 가능성 시사</li><li>한국은행 보고서: 18일 총파업 시 반도체 생산 차질 약 30조원, 경제성장률 최대 0.5%p 하락 추정</li>    </ul>
+<li>노조는 영업이익 15% 재원 활용·성과급 제도화를 요구, 사측은 10% + 유연한 성과급을 제시하며 간극이 커요</li><li>한국은행 보고서에 따르면 18일 총파업 현실화 시 반도체 생산 차질 30조원, 경제성장률 최대 0.5%p 하락 추산이에요</li><li>법원은 삼성전자가 낸 위법 쟁의행위 금지 가처분을 일부 인용 — 안전보호시설·웨이퍼 변질 방지 작업은 평상시 수준 유지해야 해요</li>    </ul>
     <div class="card__sources">
       출처:
-<a href="https://www.fnnews.com/news/202605181317223642" target="_blank" rel="noopener">파이낸셜뉴스 - 삼성전자 노사 2차 사후조정 19일까지</a>, <a href="https://www.hankyung.com/article/2026051846281" target="_blank" rel="noopener">한국경제 - 삼성전자 총파업땐 성장률 0.5%P 하락</a>    </div>
+<a href="https://www.fnnews.com/news/202605181842354313" target="_blank" rel="noopener">파이낸셜뉴스 – 2차 사후조정 1일차 종료</a>, <a href="https://www.hankyung.com/article/2026051846281" target="_blank" rel="noopener">한국경제 – 한은 보고서 성장률 0.5%p</a>    </div>
   </article>
   <article class="card">
-    <h3 class="card__title">🇨🇳 중국 CXMT D램, 매출 700% 폭증 — 삼성 위협 현실화</h3>
-    <p class="card__summary">중국 최대 D램 업체 CXMT(창신메모리테크놀로지)가 2026년 1분기 매출 508억 위안(약 11조 1,000억 원)을 기록하며 전년 동기 대비 719% 급증했어요. AI 슈퍼사이클 덕분에 순이익도 1,268% 늘었고, 세계 D램 시장 점유율은 7%대로 올라서며 세계 4위에 올랐어요.</p>
+    <h3 class="card__title">🇨🇳 중국 CXMT, D램 호황에 1분기 매출 719% 폭증…한국 반도체 위협</h3>
+    <p class="card__summary">중국 최대 메모리 반도체 기업 CXMT가 AI 붐과 D램 공급 부족 덕에 2026년 1분기 매출이 전년 동기 대비 719% 폭증한 508억 위안(약 11조 원)을 기록했어요. 창사 이래 첫 연간 흑자에 이어 올해는 아예 IPO로 6조 원 조달에 나서고 있어요.</p>
     <div class="card__why">
       <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      삼성전자·SK하이닉스 주주라면 중국발 경쟁 압력을 체크해야 해요. CXMT는 IPO로 약 6조 4,000억 원을 조달해 추가 투자에 나설 예정이라 한국 반도체 업계의 가격 경쟁·점유율 방어 부담이 커질 수 있어요.
+      삼성전자·SK하이닉스 주주라면 CXMT의 성장이 범용 D램 가격 경쟁을 심화시킬 수 있다는 점이 장기 리스크예요. 반도체 ETF(예: KODEX 반도체) 투자자도 관심 가져야 해요.
     </div>
     <ul class="card__points">
-<li>1분기 매출 11조 1,000억 원(+719%), 순이익 7조 2,000억 원(+1,268%) — 2024년 적자에서 올해 깜짝 실적으로 반전</li><li>AI 슈퍼사이클로 D램 공급 부족 → 2025년 하반기 이후 D램 가격 급등이 최대 수혜 배경</li><li>6월 IPO로 약 6조 4,000억 원 조달 예정 — HBM 생산 준비 중으로 삼성·SK하이닉스 핵심 시장 직접 공략 예고</li>    </ul>
+<li>CXMT 1분기 순이익은 247억 위안(약 5조 4,000억 원)으로 전년 동기 대비 1,688% 급증했어요</li><li>옴디아 기준 글로벌 D램 시장 점유율 7.67%, 중국 1위·세계 4위로 삼성·SK·마이크론 3강 체제를 위협하고 있어요</li><li>CXMT는 아직 HBM 등 첨단 분야엔 미진하지만, 범용 D램에서 저가 물량 공세로 한국 기업의 핵심 현금창출원을 흔들 수 있어요</li>    </ul>
     <div class="card__sources">
       출처:
-<a href="https://www.sedaily.com/article/20045577" target="_blank" rel="noopener">서울경제 - 삼성 총파업 직면했는데…中 CXMT, 매출 700% 폭증</a>, <a href="https://www.hankyung.com/article/2026051847047" target="_blank" rel="noopener">한국경제 - 중국판 삼성? 매출 700% 폭증하더니…D램 세계 4위</a>    </div>
+<a href="https://www.mt.co.kr/world/2026/05/18/2026051821322134004" target="_blank" rel="noopener">머니투데이 – CXMT 1분기 매출 700%↑</a>, <a href="https://biz.heraldcorp.com/article/10740360" target="_blank" rel="noopener">헤럴드경제 – CXMT IPO·1분기 실적</a>    </div>
   </article>
   <article class="card">
-    <h3 class="card__title">💰 6월부터 국민연금, 월 519만 원 벌어도 안 깎인다</h3>
-    <p class="card__summary">오는 6월 17일부터 국민연금 재직자 노령연금 감액 기준이 월 309만 원에서 519만 원으로 대폭 완화돼요. 연금을 받으면서 일을 해도 월 소득 519만 원까지는 연금이 전액 지급돼요.</p>
+    <h3 class="card__title">🧓 다음 달부터 일 많이 해도 국민연금 안 깎인다!</h3>
+    <p class="card__summary">오는 6월 17일부터 개정 국민연금법이 시행돼요. 월 소득 509만 원 미만이면 일을 하면서도 노령연금을 100% 받을 수 있어요. '재직자 노령연금 감액제도' 1·2 구간이 폐지되는 거예요.</p>
     <div class="card__why">
       <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      60대 초반 부모님이나 계획 중인 본인의 반은퇴 설계에 직접 영향을 줘요. '일하면 연금 깎인다'는 구조가 완화돼 연금 수령 시점 조정 전략도 바뀔 수 있어요.
+      직장인 본인보다는 부모님·시부모님 세대에게 직접적인 혜택이에요. 연금 수급 중에도 소득활동을 하고 있는 어르신이 주변에 있다면 꼭 알려드리세요. 2025년 감액 소득분은 소급 환급도 받을 수 있어요.
     </div>
     <ul class="card__points">
-<li>감액 기준 완화: 월 309만 원 초과 → 519만 원 초과로 상향 (2026년 6월 17일 시행)</li><li>수급 개시 후 5년간 적용 — 부업·파트타임 병행 은퇴자, 단기 계약직도 연금 전액 수령 범위 크게 확대</li><li>함께 바뀐 것: 보험료율 9% → 9.5%로 인상 (매년 0.5%p씩 2033년까지 13%), 소득대체율 41.5% → 43% 상향</li>    </ul>
+<li>기존엔 평균소득(A값, 약 309만 원)을 1원이라도 넘으면 연금이 깎였는데, 6월부터 A값 초과 소득이 200만 원 미만이면 감액 없이 전액 수령 가능해요</li><li>2023년 기준 약 9만 8,000명(전체 감액대상자의 65%)이 혜택을 받게 돼요</li><li>2025년 소득에 대해 감액된 금액도 소급 환급 대상 — 국민연금공단에 확인해보세요</li>    </ul>
     <div class="card__sources">
       출처:
-<a href="https://www.korea.kr/news/policyNewsView.do?newsId=148957270" target="_blank" rel="noopener">보건복지부 정책브리핑 - 국민연금 달라지는 것</a>, <a href="https://namu.wiki/w/%EA%B5%AD%EB%AF%BC%EC%97%B0%EA%B8%88" target="_blank" rel="noopener">나무위키 - 국민연금법 개정 2026년 6월 시행</a>    </div>
+<a href="https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1488048" target="_blank" rel="noopener">보건복지부 보도자료</a>, <a href="https://www.korea.kr/news/policyNewsView.do?newsId=148955561" target="_blank" rel="noopener">정책브리핑 – 국민연금 감액 제도 개선</a>    </div>
+  </article>
+  <article class="card">
+    <h3 class="card__title">📉 오늘 장 요약: 코스피 -3.25% 급락, 환율 1507원 돌파</h3>
+    <p class="card__summary">코스피가 오늘 244포인트 넘게 급락하며 7,271포인트를 기록했어요. 삼성전자 파업 리스크와 원/달러 환율 1,507원 돌파가 겹치면서 투자 심리가 얼어붙었어요. WTI 원유는 4.96% 하락, 금은 소폭 약세예요.</p>
+    <div class="card__why">
+      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
+      환율이 1,500원대를 넘어서면 수입물가 상승 → 생활물가 부담으로 이어져요. 해외 직구·여행 계획 있는 분들은 달러 환전 타이밍을 고민해볼 필요가 있어요. 코스피 급락은 삼성전자 파업 우려가 시장에 직접 반영된 결과예요.
+    </div>
+    <ul class="card__points">
+<li>코스피 -3.25%, 원/달러 +0.71% — 삼성 파업 리스크가 증시·환율 모두를 흔들었어요</li><li>반면 S&P 500(-0.07%)·다우존스(+0.32%)는 거의 보합권 — 국내 증시의 삼성 의존도가 새삼 부각됐어요</li><li>국고채 10년물 금리 +18.18% 급등은 시장 불안 심리의 또 다른 신호예요</li>    </ul>
   </article>
 
   <h2 class="section-h2">💡 친절한 경제</h2>
   <div class="friendly">
-    <h3 class="friendly__topic">삼성전자 파업이 왜 내 월급·투자까지 건드릴까? — '경제성장률 0.5%p'의 실체</h3>
-    <p class="friendly__explanation">한국은행이 삼성전자 총파업 시 경제성장률이 0.5%p 하락할 수 있다고 경고했어요. 0.5%p가 작아 보이지만, 한국의 GDP 규모(약 2,300조 원)에 대입하면 부가가치 약 15조 원이 증발하는 수준이에요. 삼성전자가 한국 수출의 약 15~20%를 차지하는 반도체 수출을 담당하고, 반도체 공장은 24시간 클린룸이 가동돼야 해서 파업 후 복구에만 3주가 걸리거든요. 단순히 '삼성 직원들의 월급 문제'가 아니라, 수출·환율·주가·소비까지 줄줄이 연결되는 이유예요.</p>
+    <h3 class="friendly__topic">성과급 '제도화'가 뭐예요? — 삼성전자 파업 핵심 쟁점 뽀개기</h3>
+    <p class="friendly__explanation">삼성전자 노사 갈등의 핵심은 단순히 '성과급을 더 달라'가 아니에요. 노조가 요구하는 '성과급 제도화'란, 성과급 산정 기준과 지급 공식을 법적 효력 있는 단체협약에 명시해 회사가 마음대로 바꿀 수 없게 하는 거예요. 반면 사측은 경영 상황에 따라 유연하게 조정할 수 있어야 한다는 입장이에요. 우리나라 직장인 대부분도 이 두 가지 방식 중 하나의 성과급 체계 아래에 있어요. 어떤 게 나에게 유리할지 한번 비교해볼게요!</p>
     <table class="cmp-table">
       <thead>
-        <tr><th>구분</th><th>파업 안 일어날 경우</th><th>총파업 현실화(최악 시나리오)</th></tr>
+        <tr><th>항목</th><th>제도화 성과급 (노조 요구)</th><th>재량형 성과급 (사측 현행)</th></tr>
       </thead>
       <tbody>
-        <tr><td>경제성장률 전망</td><td>약 2.5% 유지</td><td>약 2.0% 수준으로 하락 (0.5%p↓)</td></tr>
-        <tr><td>반도체 생산 차질</td><td>없음</td><td>약 30조 원 추산 (파업 18일 + 복구 3주 포함)</td></tr>
-        <tr><td>GDP 손실 부가가치</td><td>해당 없음</td><td>약 15조 원 증발 추정</td></tr>
-        <tr><td>내 주식·퇴직연금</td><td>삼성전자·코스피 상대적 안정</td><td>삼성전자·반도체 장비주 변동성 확대</td></tr>
-        <tr><td>환율</td><td>현재 수준 유지 가능성</td><td>원화 약세 압력 (수출 차질 반영)</td></tr>
+        <tr><td>지급 기준</td><td>단체협약에 공식 명시 (예: 영업이익의 15%)</td><td>회사가 매년 임의로 결정</td></tr>
+        <tr><td>예측 가능성</td><td>높음 — 실적 나오면 내 몫 계산 가능</td><td>낮음 — 매년 '깜짝 발표'에 의존</td></tr>
+        <tr><td>회사 입장</td><td>경영 환경 악화 시 부담 급증 가능</td><td>유연하게 재원 조정 가능</td></tr>
+        <tr><td>직원 입장</td><td>열심히 일한 만큼 투명하게 보상받는 느낌</td><td>회사 눈치·로비 문화 생길 수 있음</td></tr>
+        <tr><td>글로벌 기업 사례</td><td>애플·구글 등 스톡옵션 방식으로 투명화</td><td>한국 대기업 기존 관행에 가까움</td></tr>
       </tbody>
     </table>
   </div>
@@ -371,28 +385,28 @@ body {
   <h2 class="section-h2">🐰 래빗해빛 콘텐츠 소재</h2>
   <div class="idea">
     <span class="idea__format">유튜브 본편 10분</span>
-    <h3 class="idea__hook">삼성전자 파업하면 내 적금이자도 달라진다고요? 경제성장률 0.5%p의 진짜 의미</h3>
-<p class="idea__target">🎯 타깃: 삼성전자 주식·ETF 보유 직장인, 재테크 입문~중급자 (30~40대)</p>    <ol class="idea__outline">
-<li>도입: '파업이 나랑 무슨 상관이야?' — 아닌 이유를 3가지 예시로 후킹 (주가, 환율, 국민연금 기금 수익률)</li><li>전개1: 삼성전자 파업 타임라인 정리 — 1차 조정 결렬부터 오늘 2차 조정까지, 노사 쟁점 핵심 요약 (성과급 비율 13% vs 10%)</li><li>전개2: 한은 보고서 해부 — '0.5%p 하락'이 15조 원 소멸인 이유, 반도체 클린룸 복구 3주의 의미</li><li>전개3: 투자자 관점 체크리스트 — 삼성전자 직접 보유자 vs ETF 보유자 vs 무주식자, 각자 뭘 봐야 하나</li><li>마무리/CTA: '결국 합의될까?' 시나리오별 예상 + 주의할 경제지표 2가지 알려주기, 댓글로 의견 묻기</li>    </ol>
+    <h3 class="idea__hook">삼성전자 파업하면 내 국민연금도 위험하다고요? 진짜 숫자로 따져봤어요</h3>
+<p class="idea__target">🎯 타깃: 삼성전자 주식·반도체 ETF 보유 중인 30~40대 직장인 투자자</p>    <ol class="idea__outline">
+<li>도입: '오늘 코스피 -3.25%, 나한테 진짜 무슨 일이 생기는 건가요?' — 오늘 장 마감 수치로 공포감 환기</li><li>전개1: 삼성전자 파업 시나리오별 분석 — 한은 보고서 요약 (30조원 생산 차질, 성장률 0.5%p 하락, GDP 15조원 증발)</li><li>전개2: 내 포트폴리오 영향 계산기 — 삼성전자 직접 투자 vs 반도체 ETF vs 코스피 인덱스 펀드 보유자별 영향도 비교</li><li>전개3: 파업 끝나면 반등 기회? 역사적 사례 (2024년 삼성 파업 당시 주가 흐름) 와 지금의 차이점</li><li>마무리/CTA: '지금 당장 매도해야 하나요?' — 냉정한 3가지 체크리스트 + 구독·알림 설정 요청</li>    </ol>
   </div>
   <div class="idea">
     <span class="idea__format">인스타 릴스 60초</span>
-    <h3 class="idea__hook">6월부터 국민연금 일해도 안 깎인다! 부모님한테 꼭 알려드리세요</h3>
-<p class="idea__target">🎯 타깃: 30~40대 직장인, 부모님 노후 걱정하는 자녀 세대</p>    <ol class="idea__outline">
-<li>도입(0~5초): '부모님이 연금 받으면서 알바하다가 연금 깎인다고 하셨죠?' 공감 훅</li><li>전개1(5~25초): 바뀌는 것 3줄 요약 — ①감액 기준 309만→519만 원, ②6월 17일 시행, ③수급 후 5년 적용</li><li>전개2(25~45초): 전/후 비교 실사례 — '월 소득 350만 원이면 전에는 2만 원 깎였는데, 이제는 전액 수령'</li><li>마무리/CTA(45~60초): '보험료도 오른다'는 점 함께 안내 + '부모님께 카카오톡으로 영상 보내드리세요' CTA</li>    </ol>
+    <h3 class="idea__hook">다음 달부터 부모님 연금 안 깎인다! 3가지만 알면 돼요</h3>
+<p class="idea__target">🎯 타깃: 부모님 노후 걱정하는 30대 직장인 자녀</p>    <ol class="idea__outline">
+<li>도입(0~10초): '어머니, 일하면 연금 깎인다고 아르바이트 포기하셨죠? 이제 바뀌었어요!'</li><li>전개1(10~30초): 핵심 변경 3줄 요약 — ①6월 17일 시행 ②월 소득 509만 원 미만이면 전액 수령 ③작년 감액분 소급 환급 가능</li><li>전개2(30~50초): 수혜 대상 체크 — 부모님 국민연금 수급 중 + 소득활동 중이면 국민연금공단에 지금 바로 확인 요청</li><li>마무리/CTA(50~60초): '이거 모르면 손해예요, 저장하고 부모님께 공유하세요 🙏' + 팔로우 유도</li>    </ol>
   </div>
   <div class="idea">
-    <span class="idea__format">유튜브 본편 10분</span>
-    <h3 class="idea__hook">중국이 D램을 세계 4위까지 키웠다는데, 삼성전자 주식 팔아야 하나요?</h3>
-<p class="idea__target">🎯 타깃: 삼성전자·SK하이닉스 주식·ETF 보유 직장인 투자자 (25~45세)</p>    <ol class="idea__outline">
-<li>도입: 'CXMT 매출 700% 폭증' 뉴스를 처음 본 주주의 반응 — 저도 찐으로 뉴스 보고 찾아봤어요</li><li>전개1: CXMT가 뭔 회사인지 5분 설명 — 중국 정부 135조 원 반도체 펀드 수혜자, 현재 세계 4위 D램</li><li>전개2: 한국 vs 중국 D램 현주소 비교표 — 기술 격차·HBM·시장점유율로 정리 (삼성·SK하이닉스 90%+ vs CXMT 7.67%)</li><li>전개3: 삼성전자 파업 + CXMT 동시에 터진 지금, 투자자로서 어떻게 볼 것인가 — 단기 리스크 vs 장기 모멘텀</li><li>마무리/CTA: '지금 당장 팔 필요는 없지만 이건 꼭 체크하세요' 3가지 모니터링 포인트 + 구독 유도</li>    </ol>
+    <span class="idea__format">블로그 글</span>
+    <h3 class="idea__hook">중국 CXMT 매출 719% 폭증…삼성·하이닉스 주주라면 지금 알아야 할 것</h3>
+<p class="idea__target">🎯 타깃: 국내 반도체주 또는 반도체 ETF를 보유한 재테크 입문~중급 투자자</p>    <ol class="idea__outline">
+<li>도입: 오늘 CXMT 실적 발표 + 코스피 급락 연결고리 — '이게 우연의 일치일까요?'</li><li>전개1: CXMT가 뭐하는 회사인지 3분 요약 — 중국 정부 지원으로 태어난 D램 국산화 프로젝트의 결과물</li><li>전개2: 지금 당장의 위협 vs 장기 위협 — 범용 D램 가격 경쟁(단기) vs HBM 추격(중장기) 분리해서 이해</li><li>전개3: 삼성·SK하이닉스 투자자 관점 체크리스트 — HBM 비중, 레거시 D램 의존도, CXMT 점유율 추이 3가지</li><li>마무리/CTA: '저도 반도체 ETF 갖고 있는데 이렇게 보고 있어요' 개인 뷰 공유 + 뉴스레터 구독 유도</li>    </ol>
   </div>
 
 </main>
 
 <div class="footer-bar"></div>
 <div class="footer-note">
-  생성 시각: 2026-05-19 19:20 KST · Claude로 자동 생성됨<br>
+  생성 시각: 2026-05-19 17:58 KST · Claude로 자동 생성됨<br>
   손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
 </div>
 
