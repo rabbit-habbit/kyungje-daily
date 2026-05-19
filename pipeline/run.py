@@ -23,8 +23,10 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from pipeline import fetch_indicators, fetch_rss, render_report  # noqa: E402
+from pipeline import fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
 from pipeline import summarize as sm  # noqa: E402
+
+REPORT_URL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
 
 load_dotenv(override=True)
 logger = logging.getLogger(__name__)
@@ -85,6 +87,7 @@ def run(
     save_intermediate: bool = True,
     push: bool = False,
     dry_run_push: bool = False,
+    notify: bool = True,
 ) -> dict:
     now = _kst_now()
     date_str = now.strftime("%Y-%m-%d")
@@ -164,6 +167,15 @@ def run(
         logger.info("[git] 커밋·푸시...")
         _git_commit_push(ROOT, date_str, dry_run=dry_run_push)
 
+    # 6) 카카오톡 알림 (best-effort — 실패해도 메인 흐름 OK)
+    if notify:
+        logger.info("[kakao] 알림 전송 중...")
+        try:
+            notify_kakao.notify_from_report(report_data, REPORT_URL)
+            logger.info("  ✓ 카카오톡 알림 전송 완료")
+        except Exception as exc:
+            logger.warning("  ⚠️  카카오톡 알림 실패 (보고서 자체는 정상): %s", exc)
+
     logger.info("=== 완료 ===")
     return report_data
 
@@ -174,6 +186,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-save", action="store_true", help="중간 JSON 저장 안 함")
     parser.add_argument("--push", action="store_true", help="git commit + push 실행")
     parser.add_argument("--dry-run-push", action="store_true", help="git 변경사항 확인만")
+    parser.add_argument("--no-notify", action="store_true", help="카카오톡 알림 비활성화")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -184,6 +197,7 @@ if __name__ == "__main__":
             save_intermediate=not args.no_save,
             push=args.push,
             dry_run_push=args.dry_run_push,
+            notify=not args.no_notify,
         )
     except Exception as exc:
         logger.exception("파이프라인 실패: %s", exc)
