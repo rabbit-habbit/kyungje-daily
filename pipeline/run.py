@@ -132,7 +132,16 @@ def run(
         meta.get("output_tokens"),
     )
 
-    # 4) 렌더링
+    # 4) 렌더링 — Claude가 생성한 policy_outlook을 ind_data에 머지 (실패 시 기본값 유지)
+    policy_rates = {
+        k: {**v} for k, v in ind_data["policy_rates"].items()
+    }  # 얕은 복사
+    outlook_overrides = summary.get("policy_outlook") or {}
+    for country, text in outlook_overrides.items():
+        if country in policy_rates and isinstance(text, str) and text.strip():
+            policy_rates[country]["outlook"] = text.strip()
+            logger.info("  ✓ %s outlook 갱신: %s", country, text.strip())
+
     logger.info("[4/4] HTML 보고서 렌더 중...")
     report_data = {
         "date": date_str,
@@ -143,7 +152,7 @@ def run(
             "pub_date": episode.pub_date,
         },
         "indicators": _group_indicators(ind_data),
-        "policy_rates": ind_data["policy_rates"],
+        "policy_rates": policy_rates,
         "news_cards": summary.get("news_cards", []),
         "friendly_economics": summary.get("friendly_economics"),
         "rabbithat_ideas": summary.get("rabbithat_ideas", []),

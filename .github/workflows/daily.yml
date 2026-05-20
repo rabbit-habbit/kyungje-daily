@@ -2,9 +2,10 @@ name: Daily Brief
 
 on:
   schedule:
-    # 매일 평일 (월-금) 10:30 KST = 01:30 UTC
-    # GitHub Actions cron은 부하에 따라 몇 분 지연될 수 있음
-    - cron: '30 1 * * 1-5'
+    # 매일 평일 (월-금) 10:37 KST = 01:37 UTC
+    # :00 / :30 같은 흔한 분은 GitHub Actions 부하로 skip되는 경우가 있어 :37로 회피.
+    # (5/20 첫 :30 cron skip 사례 이후 변경)
+    - cron: '37 1 * * 1-5'
   # Actions 탭에서 수동 실행
   workflow_dispatch:
 

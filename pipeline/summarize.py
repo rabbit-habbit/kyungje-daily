@@ -39,6 +39,14 @@ SYSTEM_PROMPT = f"""\
 1) 뉴스 카드 3~5개 (각 토픽별): 1~2문장 요약 + "직장인이 알아야 하는 이유" + 핵심 포인트 3개 정도 + 가능하면 출처 1~2개
 2) 친절한 경제 1개: 오늘 가장 흥미로운 경제 개념/현상 1개 골라서 초보자도 이해할 비교표(2~4열, 3~5행)와 함께 설명
 3) 래빗해빛 콘텐츠 소재 2~3개: 유튜브 본편 또는 릴스 포맷으로, 직장인이 궁금해할 만한 각도 + outline 3~5단계
+4) 기준금리 전망 (policy_outlook): 한국·미국 각각 한 줄. web_search로 **반드시** 최신 정보 조사 후 작성.
+   ★ 길이 제약: **각 outlook은 50자 이내** (한국어 기준, 좁은 UI 박스 한 줄에 들어가야 함)
+   ★ 포함 정보: 다음 회의 날짜(M/DD) + 결정 전망(동결/인하) + 후속 회의/시점/컨센서스 중 1개만
+   ★ 줄바꿈/들여쓰기/마침표 금지, 콤마로만 구분
+   - 좋은 예: "5/28 금통위 동결, 7월 인하 재개 검토"
+   - 좋은 예: "6/18 FOMC 동결, 9월 25bp 인하 (CME 65%)"
+   - 나쁜 예: "5/28 금통위 동결 유력 (현 기준금리 2.50%), 신현송 신임 총재 고유가·환율 리스크 경계 — ..." (너무 길고 부가설명 많음 / 50자 초과 / 사용 금지)
+   - 나쁜 예: "동결 전망" (너무 일반적, 사용 금지)
 
 스타일 규칙:
 - 해요체 (예: "~예요", "~하죠")로 친근하게
@@ -48,6 +56,11 @@ SYSTEM_PROMPT = f"""\
 - 정치적 편향 없이 사실 기반
 
 [중요] 응답은 반드시 단일 JSON 객체로만 출력. 코드블록 ```json``` 으로 감싸도 됨. 마크다운 설명 금지.
+[중요] JSON 형식 엄격 검증:
+  · 모든 필드 사이 콤마 정확히, 마지막 필드 뒤에는 콤마 없음 (trailing comma 금지)
+  · 모든 키/문자열은 큰따옴표(")로 감싸기, 작은따옴표(') 사용 금지
+  · 문자열 안에 큰따옴표 나오면 \\" 로 이스케이프
+  · 출력 직전 JSON.parse 가능한지 머릿속으로 한 번 검증
 """
 
 OUTPUT_SCHEMA = """\
@@ -79,7 +92,11 @@ OUTPUT_SCHEMA = """\
       "target_audience": "구체적 타깃 (예: 30대 맞벌이 부부)",
       "outline": ["도입/후킹", "전개1", "전개2", "마무리/CTA"]
     }
-  ]
+  ],
+  "policy_outlook": {
+    "korea": "5/28 금통위 동결, 7월 25bp 인하 검토 (50자 이내)",
+    "us": "6/18 FOMC 동결, 9월 25bp 인하 (CME 65%) (50자 이내)"
+  }
 }
 """
 
@@ -188,12 +205,24 @@ def summarize(
     if not text.strip():
         raise RuntimeError("응답에 text 블록이 없습니다.")
 
-    data = _extract_json(text)
+    try:
+        data = _extract_json(text)
+    except (ValueError, json.JSONDecodeError) as exc:
+        # 디버깅: 파싱 실패한 raw 응답 보존
+        from pathlib import Path as _Path
+        raw_path = _Path(__file__).resolve().parents[1] / "out" / "summary_raw.txt"
+        raw_path.parent.mkdir(exist_ok=True)
+        raw_path.write_text(text, encoding="utf-8")
+        logger.error(
+            "JSON 파싱 실패: %s — raw 응답을 %s에 저장", exc, raw_path
+        )
+        raise
 
     # 사후 검증: 누락 키 채우기
     data.setdefault("news_cards", [])
     data.setdefault("friendly_economics", None)
     data.setdefault("rabbithat_ideas", [])
+    data.setdefault("policy_outlook", {})
 
     # 사용량 정보 첨부 (디버깅용, 후속 단계에서 무시 가능)
     data["_meta"] = {
