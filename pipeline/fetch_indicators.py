@@ -105,11 +105,15 @@ def fetch_wti() -> Indicator:
     return ind
 
 
-def fetch_gold_krw_per_gram(usd_krw: float) -> Indicator:
-    """Gold price in KRW per gram, derived from GC=F (USD/oz) × USDKRW."""
+def fetch_gold_krw_per_gram(usd_krw_last: float, usd_krw_prev: float) -> Indicator:
+    """KRW/g 환산 금 가격.
+
+    중요: prev 금 USD 가격에는 prev USDKRW를 적용해야 환율 변동을 이중 계상하지 않음.
+    (오늘 환율로 어제 금 가격 환산하면 환율 변동이 금 변동에 잘못 섞임)
+    """
     base = _fetch_yf("GC=F", "금 (1g 한화)", "gold_krw_g", "원/g")
-    last_krw_g = base.value * usd_krw / TROY_OZ_TO_GRAM
-    prev_krw_g = base.prev * usd_krw / TROY_OZ_TO_GRAM
+    last_krw_g = base.value * usd_krw_last / TROY_OZ_TO_GRAM
+    prev_krw_g = base.prev * usd_krw_prev / TROY_OZ_TO_GRAM
     return Indicator(
         key="gold_krw_g",
         name="금 (1g 한화)",
@@ -118,29 +122,48 @@ def fetch_gold_krw_per_gram(usd_krw: float) -> Indicator:
         change=round(last_krw_g - prev_krw_g, 0),
         change_pct=round((last_krw_g - prev_krw_g) / prev_krw_g * 100, 2),
         unit="원/g",
-        source=f"Yahoo Finance (GC=F) × USDKRW",
+        source="Yahoo Finance (GC=F) × USDKRW (last/prev 각각 적용)",
         fetched_at=_now_iso(),
     )
 
 
 def _parse_te_yield(html: str) -> Optional[tuple[float, float]]:
-    """Parse last & previous yield from tradingeconomics country bond page."""
+    """Parse the country bond yield's Actual + Previous from tradingeconomics.
+
+    한국 국채 10년 페이지 (`/south-korea/government-bond-yield`)는 다음 테이블들을 포함:
+      table #0 'Bonds | Yield ...'     → "South Korea 10Y 4.24" (메인 yield + 변동)
+      table #1 'Related | Last | ...'  → CPI, Interest Rate 등 다른 지표 (X)
+      table #2 ' | Actual | Previous'  → 메인 10년물 yield Actual/Previous
+
+    우선순위: 'actual'+'previous' 헤더 테이블 → 'South Korea 10Y' 행 fallback.
+    """
     soup = BeautifulSoup(html, "html.parser")
-    # tradingeconomics 페이지에는 보통 table#calendar 또는 .table-heatmap에 Last / Previous 컬럼이 있음.
-    # 가장 안정적인 방법: <table> 내에서 'Last' 'Previous' 헤더를 찾고 같은 행에서 첫 번째 숫자 셀 추출.
+
+    # 1순위: Actual + Previous 헤더 (10Y 메인 테이블)
     for table in soup.find_all("table"):
         headers = [th.get_text(strip=True).lower() for th in table.find_all("th")]
-        if "last" in headers and "previous" in headers:
-            last_idx = headers.index("last")
-            prev_idx = headers.index("previous")
+        if "actual" in headers and "previous" in headers:
+            a_idx = headers.index("actual")
+            p_idx = headers.index("previous")
             for tr in table.find_all("tr"):
                 cells = [td.get_text(strip=True) for td in tr.find_all("td")]
-                if len(cells) <= max(last_idx, prev_idx):
+                if len(cells) <= max(a_idx, p_idx):
                     continue
                 try:
-                    last = float(cells[last_idx].replace(",", ""))
-                    prev = float(cells[prev_idx].replace(",", ""))
-                    return last, prev
+                    actual = float(cells[a_idx].replace(",", ""))
+                    prev = float(cells[p_idx].replace(",", ""))
+                    return actual, prev
+                except (ValueError, IndexError):
+                    continue
+
+    # 2순위: "South Korea 10Y" 라벨이 있는 행 (Previous 없으면 actual=prev)
+    for table in soup.find_all("table"):
+        for tr in table.find_all("tr"):
+            cells = [td.get_text(strip=True) for td in tr.find_all("td")]
+            if len(cells) >= 2 and "korea" in cells[0].lower() and "10y" in cells[0].lower():
+                try:
+                    val = float(cells[1].replace(",", ""))
+                    return val, val
                 except (ValueError, IndexError):
                     continue
     return None
@@ -197,10 +220,13 @@ def fetch_all() -> dict:
     attempt("dow", fetch_dow)
     attempt("wti", fetch_wti)
 
-    # 금은 환율에 의존
+    # 금은 환율에 의존 — last와 prev에 각각 그날 환율 적용
     if "usd_krw" in results:
         try:
-            ind = fetch_gold_krw_per_gram(results["usd_krw"]["value"])
+            ind = fetch_gold_krw_per_gram(
+                usd_krw_last=results["usd_krw"]["value"],
+                usd_krw_prev=results["usd_krw"]["prev"],
+            )
             results["gold_krw_g"] = asdict(ind) | {"direction": ind.direction}
             logger.info("✓ gold_krw_g: %s 원/g (Δ%+g)", ind.value, ind.change)
         except Exception as exc:

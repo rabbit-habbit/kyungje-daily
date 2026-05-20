@@ -166,38 +166,23 @@ def send_to_me(
     text: str,
     link_url: Optional[str] = None,
     button_label: str = "보고서 보기",
-    buttons: Optional[list[dict]] = None,
 ) -> dict:
-    """카카오톡 '나에게 보내기' — text 템플릿.
+    """카카오톡 '나에게 보내기' — text 템플릿 단일 형식.
 
-    buttons (옵션): [{'title': str, 'url': str}, ...] 최대 2개.
-    - 지정되면 button_title 무시하고 다중 버튼 모드.
-    - 첫 버튼 URL이 메인 카드 link로도 사용됨 (link_url 우선).
+    카카오톡 클라이언트 동작 정리:
+    - text 템플릿의 buttons 배열: 클라이언트가 무시함 (단일 button_title만 지원)
+    - feed 템플릿: image_url 없이 보내면 PC·일부 모바일에서 카드 자체가 렌더 안 됨
+    - 가장 robust한 방법: text 본문에 URL을 직접 명시 → 카카오톡이 자동으로 링크화
     """
+    if not link_url:
+        raise ValueError("link_url 필수")
     access_token = get_access_token()
-    if buttons:
-        primary = link_url or buttons[0]["url"]
-        template = {
-            "object_type": "text",
-            "text": text,
-            "link": {"web_url": primary, "mobile_web_url": primary},
-            "buttons": [
-                {
-                    "title": b["title"],
-                    "link": {"web_url": b["url"], "mobile_web_url": b["url"]},
-                }
-                for b in buttons[:2]  # 카카오 한도 2개
-            ],
-        }
-    else:
-        if not link_url:
-            raise ValueError("link_url 또는 buttons 중 하나는 필수")
-        template = {
-            "object_type": "text",
-            "text": text,
-            "link": {"web_url": link_url, "mobile_web_url": link_url},
-            "button_title": button_label,
-        }
+    template = {
+        "object_type": "text",
+        "text": text,
+        "link": {"web_url": link_url, "mobile_web_url": link_url},
+        "button_title": button_label,
+    }
     r = requests.post(
         SEND_TO_ME,
         headers={"Authorization": f"Bearer {access_token}"},
@@ -209,46 +194,48 @@ def send_to_me(
     return r.json()
 
 
-def _build_brief_message(report_data: dict) -> str:
-    """report_data → 카카오 메시지 텍스트. 카카오 text 템플릿은 최대 200자."""
-    date_kr = report_data.get("date_kr", "오늘")
-    cards = report_data.get("news_cards", []) or []
-    # 헤드라인만 (제목에서 이모지 포함, 너무 길면 잘림)
-    headlines = []
-    for c in cards[:4]:
-        title = (c.get("title") or "").strip()
-        # 제목 너무 길면 줄임
-        if len(title) > 38:
-            title = title[:37] + "…"
-        headlines.append(f"• {title}")
-    body = "\n".join(headlines) if headlines else "(헤드라인 없음)"
+TEXT_LIMIT = 200
 
-    msg = f"📰 손경제 Daily Brief\n{date_kr}\n\n{body}"
-    # 200자 가드
-    if len(msg) > 195:
-        msg = msg[:194] + "…"
+
+def _short_date(date_kr: str) -> str:
+    """'2026년 5월 20일 수요일' → '5/20 수' 형태로 압축."""
+    import re as _re
+    m = _re.match(r"\d+년 (\d+)월 (\d+)일\s*(.)?", date_kr)
+    if m:
+        mo, d, wk = m.group(1), m.group(2), m.group(3) or ""
+        return f"{mo}/{d} {wk}".strip()
+    return date_kr
+
+
+def _compose_message(
+    report_data: dict,
+    full_url: str,
+    share_url: Optional[str],
+    limit: int = TEXT_LIMIT,
+) -> str:
+    """제목 + URL 2개만 (헤드라인 없음). 카카오톡이 URL을 자동 링크화."""
+    date_kr = report_data.get("date_kr", "오늘")
+    date_short = _short_date(date_kr)
+
+    header = f"📰 손경제 Daily Brief\n{date_short}"
+    url_lines = [f"🔗 내 보고서\n{full_url}"]
+    if share_url:
+        url_lines.append(f"🔗 공유용\n{share_url}")
+    url_block = "\n\n" + "\n\n".join(url_lines)
+
+    msg = header + url_block
+    if len(msg) > limit:
+        msg = msg[: limit - 1] + "…"
     return msg
 
 
 def notify_from_report(
     report_data: dict, full_url: str, share_url: Optional[str] = None
 ) -> dict:
-    """run.py에서 호출하는 진입점.
-
-    share_url이 주어지면 [내 보고서 보기 | 공유용 보기] 2버튼 메시지.
-    None이면 단일 버튼 (호환).
-    """
-    msg = _build_brief_message(report_data)
-    if share_url:
-        return send_to_me(
-            msg,
-            link_url=full_url,
-            buttons=[
-                {"title": "내 보고서 보기", "url": full_url},
-                {"title": "공유용 보기", "url": share_url},
-            ],
-        )
-    return send_to_me(msg, link_url=full_url)
+    """run.py에서 호출. 본문에 URL 직접 명시 (카카오톡이 자동 링크화)."""
+    msg = _compose_message(report_data, full_url, share_url)
+    # 카드 button_title은 단일 "내 보고서 보기" — 공유용은 본문 URL 클릭으로 접근
+    return send_to_me(msg, link_url=full_url, button_label="내 보고서 보기")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────

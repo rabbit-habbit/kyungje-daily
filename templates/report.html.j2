@@ -240,7 +240,11 @@ body {
         <div class="ind__value num">{{ ind.value | fmt_value(ind.unit) }}</div>
         <div class="ind__change {{ ind.direction }} num">
           {% if ind.direction == 'up' %}▲{% elif ind.direction == 'down' %}▼{% else %}―{% endif %}
-          {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
+          {% if ind.unit == '%' %}
+            {{ (ind.change | abs) | round(3) }}%p
+          {% else %}
+            {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
+          {% endif %}
         </div>
       </div>
       {% endfor %}
@@ -258,7 +262,11 @@ body {
         <div class="ind__value num">{{ ind.value | fmt_value(ind.unit) }}</div>
         <div class="ind__change {{ ind.direction }} num">
           {% if ind.direction == 'up' %}▲{% elif ind.direction == 'down' %}▼{% else %}―{% endif %}
-          {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
+          {% if ind.unit == '%' %}
+            {{ (ind.change | abs) | round(3) }}%p
+          {% else %}
+            {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
+          {% endif %}
         </div>
       </div>
       {% endfor %}
