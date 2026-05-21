@@ -2,11 +2,12 @@ name: Daily Brief
 
 on:
   schedule:
-    # 매일 평일 (월-금) 10:37 KST = 01:37 UTC
-    # :00 / :30 같은 흔한 분은 GitHub Actions 부하로 skip되는 경우가 있어 :37로 회피.
-    # (5/20 첫 :30 cron skip 사례 이후 변경)
-    - cron: '37 1 * * 1-5'
-  # Actions 탭에서 수동 실행
+    # 매일 평일 (월-금) 다중 cron으로 신뢰성 보강.
+    # GitHub Actions schedule은 best-effort라 skip되는 경우가 있어 3번 시도.
+    # run.py가 같은 날 archive 존재 시 자동 skip (idempotent) → 비용은 한 번분만.
+    - cron: '37 1 * * 1-5'   # KST 10:37 (1차)
+    - cron: '7 2 * * 1-5'    # KST 11:07 (백업1)
+    - cron: '47 2 * * 1-5'   # KST 11:47 (백업2)
   workflow_dispatch:
 
 permissions:
@@ -49,7 +50,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run pipeline (RSS → indicators → Claude → render → push)
-        run: python pipeline/run.py --push
+        # 수동 dispatch는 항상 강제 재생성, schedule은 idempotent (오늘 archive 있으면 skip)
+        run: python pipeline/run.py --push ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: Upload intermediate JSONs as artifact (on failure)
         if: failure()

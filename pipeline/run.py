@@ -89,9 +89,20 @@ def run(
     push: bool = False,
     dry_run_push: bool = False,
     notify: bool = True,
-) -> dict:
+    force: bool = False,
+) -> dict | None:
     now = _kst_now()
     date_str = now.strftime("%Y-%m-%d")
+
+    # Idempotent: 같은 날 여러 cron이 트리거되어도 첫 실행만 진짜 수행.
+    # docs/archive/{date}.html이 main에 이미 있으면 fresh clone에 존재 → skip.
+    archive_path = ROOT / "docs" / "archive" / f"{date_str}.html"
+    if archive_path.exists() and not force:
+        logger.info(
+            "=== %s 보고서 이미 존재 — skip (재생성하려면 --force) ===", date_str
+        )
+        return None
+
     logger.info("=== 손경제 Daily Brief 파이프라인 시작 (%s) ===", date_str)
 
     out_dir = ROOT / "out"
@@ -203,6 +214,7 @@ if __name__ == "__main__":
     parser.add_argument("--push", action="store_true", help="git commit + push 실행")
     parser.add_argument("--dry-run-push", action="store_true", help="git 변경사항 확인만")
     parser.add_argument("--no-notify", action="store_true", help="카카오톡 알림 비활성화")
+    parser.add_argument("--force", action="store_true", help="오늘 보고서가 이미 있어도 재생성")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -214,6 +226,7 @@ if __name__ == "__main__":
             push=args.push,
             dry_run_push=args.dry_run_push,
             notify=not args.no_notify,
+            force=args.force,
         )
     except Exception as exc:
         logger.exception("파이프라인 실패: %s", exc)
