@@ -1,372 +1,614 @@
+{# templates/report.html.j2 — share 모드 수정 반영본 #}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% if mode == 'share' %}오늘의 경제 뉴스{% else %}손경제 Daily Brief{% endif %} — {{ date_kr }}</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #FFFDF5;
-  --card-bg: #FFFFFF;
-  --border: #F0E8D8;
-  --text: #2D2A26;
-  --text-dim: rgba(45, 42, 38, 0.65);
-  --up: #E55C20;
-  --down: #3B82F6;
-  --flat: #888;
-  --shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-}
-.num { font-family: 'DM Sans', 'Pretendard Variable', sans-serif; font-feature-settings: 'tnum'; }
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
 
-.container { max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-/* Header */
-.header {
-  position: relative;
-  background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
-  padding: 40px 32px 36px;
-  border-radius: 0 0 24px 24px;
-  margin-bottom: 24px;
-  overflow: hidden;
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.header__date { font-size: 14px; color: rgba(45,42,38,0.7); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 8px; }
-.header__title { font-size: 28px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px; }
-.header__subtitle { font-size: 15px; color: rgba(45,42,38,0.7); font-weight: 500; margin: 0; }
-.header__rabbit {
-  position: absolute;
-  right: 24px;
-  bottom: 16px;
-  font-size: 64px;
-  opacity: 0.25;
-  line-height: 1;
-  user-select: none;
-}
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Section header / Badge */
-.badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #FFE8A3 0%, #FF9800 100%);
-  color: #FFFFFF;
-  padding: 10px 22px;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 700;
-  box-shadow: 0 3px 8px rgba(255,152,0,0.3);
-}
-.section-center { text-align: center; margin: 32px 0 18px; }
-.section-h2 {
-  font-size: 18px;
-  font-weight: 800;
-  margin: 36px 0 14px;
-  letter-spacing: -0.3px;
-}
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-/* Episode */
-.episode {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-}
-.episode__label { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; }
-.episode__title { font-size: 17px; font-weight: 700; margin: 0 0 10px; }
-.episode__audio audio { width: 100%; margin-top: 8px; }
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
 
-/* Indicator */
-.ind-group { margin-bottom: 12px; }
-.ind-group__label {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-weight: 600;
-  margin: 14px 0 8px;
-  padding-left: 4px;
-}
-.ind-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-}
-.ind {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  box-shadow: var(--shadow);
-}
-.ind__name { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
-.ind__value { font-size: 22px; font-weight: 700; }
-.ind__change { font-size: 13px; font-weight: 600; margin-top: 2px; }
-.ind__change.up { color: var(--up); }
-.ind__change.down { color: var(--down); }
-.ind__change.flat { color: var(--flat); }
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
 
-/* Policy bar */
-.policy {
-  background: linear-gradient(135deg, #FFF8E1 0%, #FFE8A3 100%);
-  border-radius: 14px;
-  padding: 16px 18px;
-  margin-top: 14px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 12px;
-}
-.policy__item { text-align: center; }
-.policy__label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; }
-.policy__value { font-size: 20px; font-weight: 700; }
-.policy__outlook { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
 
-/* News card */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.card__title { font-size: 17px; font-weight: 700; margin: 0 0 8px; line-height: 1.4; }
-.card__summary { font-size: 15px; color: var(--text); margin: 0 0 12px; }
-.card__why { font-size: 14px; color: var(--text); padding: 12px 14px; background: #FFFAEB; border-left: 3px solid #FFD97A; border-radius: 8px; margin: 12px 0; }
-.card__why-label { font-weight: 700; margin-right: 4px; }
-.card__points { font-size: 14px; color: var(--text); padding-left: 22px; margin: 8px 0; }
-.card__points li { margin-bottom: 4px; }
-.card__sources { font-size: 12px; color: var(--text-dim); margin-top: 12px; }
-.card__sources a { color: #3B82F6; text-decoration: none; }
-.card__sources a:hover { text-decoration: underline; }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
 
-/* Friendly economics */
-.friendly {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 22px 24px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.friendly__topic { font-size: 18px; font-weight: 700; margin: 0 0 12px; line-height: 1.4; }
-.friendly__explanation { font-size: 15px; line-height: 1.75; margin: 0 0 16px; }
-.cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
-.cmp-table th { background: #FFF3D0; padding: 10px; text-align: left; font-weight: 700; border: 1px solid var(--border); }
-.cmp-table td { padding: 10px; border: 1px solid var(--border); vertical-align: top; }
-.cmp-table tr:nth-child(even) td { background: #FFFDF5; }
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
 
-/* Rabbit idea */
-.idea {
-  background: linear-gradient(135deg, #FFFAEB 0%, #FFF3D0 100%);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.idea__format { display: inline-block; background: var(--text); color: #FFFFFF; font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; font-weight: 600; }
-.idea__hook { font-size: 17px; font-weight: 700; margin: 0 0 10px; line-height: 1.4; }
-.idea__target { font-size: 13px; color: var(--text-dim); margin: 0 0 10px; }
-.idea__outline { font-size: 14px; padding-left: 22px; margin: 0; }
-.idea__outline li { margin-bottom: 4px; }
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
 
-/* Footer bar */
-.footer-bar {
-  height: 10px;
-  background: linear-gradient(90deg, #FFEB3B 0%, #FF9800 50%, #FF5722 100%);
-  margin-top: 40px;
-}
-.footer-note { text-align: center; font-size: 12px; color: var(--text-dim); padding: 16px; line-height: 1.6; }
-.footer-note.share { padding: 20px 16px 24px; }
-.footer-note.share .share-brand { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.footer-note.share .share-source { font-size: 12px; margin-bottom: 4px; }
-.footer-note.share .share-disclaimer { font-size: 11px; opacity: 0.8; }
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
 
-@media (max-width: 480px) {
-  .header__title { font-size: 22px; }
-  .header__rabbit { font-size: 48px; right: 16px; }
-  .ind__value { font-size: 19px; }
-  .card, .friendly, .idea { padding: 16px 18px; }
-}
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); }
+  .pulse-row-global { grid-template-columns: repeat(4, 1fr); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (full 모드 - 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header__date">{{ date_kr }}</div>
-  <h1 class="header__title">{% if mode == 'share' %}오늘의 경제 뉴스{% else %}손경제 Daily Brief{% endif %}</h1>
-  <p class="header__subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</p>
-  <div class="header__rabbit">🐰</div>
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">{% if mode == 'share' %}래빗해빛 경제 브리핑{% else %}손경제 Daily Brief{% endif %}</div>
+      <div class="date-badge">{{ date_kr }}</div>
+    </div>
+    <h1 class="header__title">{% if mode == 'share' %}오늘의 경제 뉴스{% else %}{{ headline | default('오늘의 경제 브리핑') }}{% endif %}</h1>
+    <div class="header-subtitle">
+      {% if mode == 'share' %}
+        햇님이들을 위한 오늘의 경제 한 입 🌞
+      {% else %}
+        출처: <strong>이진우의 손에 잡히는 경제</strong> · MBC 표준FM · 평일 08:30
+      {% endif %}
+    </div>
+  </div>
 </header>
 
-<main class="container">
+<div class="container">
 
-  {% if mode != 'share' and episode %}
-  <div class="episode">
-    <div class="episode__label">📻 오늘의 손경제</div>
-    <div class="episode__title">{{ episode.title }}</div>
-    {% if episode.audio_url %}
-    <audio controls preload="none" src="{{ episode.audio_url }}"></audio>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  <div class="section-center">
-    <span class="badge">📊 오늘의 경제지표 한눈에 보기!</span>
-  </div>
-
-  {% if indicators and indicators.domestic %}
-  <div class="ind-group">
-    <div class="ind-group__label">🇰🇷 국내</div>
-    <div class="ind-grid">
-      {% for ind in indicators.domestic %}
-      <div class="ind">
-        <div class="ind__name">{{ ind.name }}</div>
-        <div class="ind__value num">{{ ind.value | fmt_value(ind.unit) }}</div>
-        <div class="ind__change {{ ind.direction }} num">
-          {% if ind.direction == 'up' %}▲{% elif ind.direction == 'down' %}▼{% else %}―{% endif %}
-          {% if ind.unit == '%' %}
-            {{ (ind.change | abs) | round(3) }}%p
-          {% else %}
-            {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
-          {% endif %}
+  {# Market Pulse #}
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        {% for item in indicators.domestic %}
+        <div class="pulse-item">
+          <div class="pulse-label">{{ item.label }}</div>
+          <div class="pulse-value {{ item.direction }}">{{ item.display }}</div>
+          <div class="pulse-change {{ item.direction }}">{{ item.change_display }}</div>
         </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if indicators and indicators.world %}
-  <div class="ind-group">
-    <div class="ind-group__label">🌎 글로벌</div>
-    <div class="ind-grid">
-      {% for ind in indicators.world %}
-      <div class="ind">
-        <div class="ind__name">{{ ind.name }}</div>
-        <div class="ind__value num">{{ ind.value | fmt_value(ind.unit) }}</div>
-        <div class="ind__change {{ ind.direction }} num">
-          {% if ind.direction == 'up' %}▲{% elif ind.direction == 'down' %}▼{% else %}―{% endif %}
-          {% if ind.unit == '%' %}
-            {{ (ind.change | abs) | round(3) }}%p
-          {% else %}
-            {{ ind.change | fmt_abs(ind.unit) }} ({{ ind.change_pct | fmt_pct }})
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if policy_rates %}
-  <div class="policy">
-    <div class="policy__item">
-      <div class="policy__label">🇰🇷 한국 기준금리</div>
-      <div class="policy__value num">{{ policy_rates.korea.value }}%</div>
-      <div class="policy__outlook">{{ policy_rates.korea.outlook }}</div>
-    </div>
-    <div class="policy__item">
-      <div class="policy__label">🇺🇸 미국 기준금리</div>
-      <div class="policy__value num">{{ policy_rates.us.value }}%</div>
-      <div class="policy__outlook">{{ policy_rates.us.outlook }}</div>
-    </div>
-  </div>
-  {% endif %}
-
-  {% if news_cards %}
-  <h2 class="section-h2">📰 오늘의 뉴스 카드</h2>
-  {% for n in news_cards %}
-  <article class="card">
-    <h3 class="card__title">{{ n.title }}</h3>
-    <p class="card__summary">{{ n.summary }}</p>
-    {% if n.why_it_matters %}
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      {{ n.why_it_matters }}
-    </div>
-    {% endif %}
-    {% if n.key_points %}
-    <ul class="card__points">
-      {% for p in n.key_points %}<li>{{ p }}</li>{% endfor %}
-    </ul>
-    {% endif %}
-    {% if n.sources %}
-    <div class="card__sources">
-      출처:
-      {% for s in n.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.title }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
-    </div>
-    {% endif %}
-  </article>
-  {% endfor %}
-  {% endif %}
-
-  {% if friendly_economics %}
-  <h2 class="section-h2">💡 친절한 경제</h2>
-  <div class="friendly">
-    <h3 class="friendly__topic">{{ friendly_economics.topic }}</h3>
-    <p class="friendly__explanation">{{ friendly_economics.explanation }}</p>
-    {% if friendly_economics.comparison_table and friendly_economics.comparison_table.rows %}
-    <table class="cmp-table">
-      <thead>
-        <tr>{% for h in friendly_economics.comparison_table.headers %}<th>{{ h }}</th>{% endfor %}</tr>
-      </thead>
-      <tbody>
-        {% for row in friendly_economics.comparison_table.rows %}
-        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
         {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        {% for item in indicators.global %}
+        <div class="pulse-item">
+          <div class="pulse-label">{{ item.label }}</div>
+          <div class="pulse-value {{ item.direction }}">{{ item.display }}</div>
+          <div class="pulse-change {{ item.direction }}">{{ item.change_display }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">{{ base_rates.kr }}</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">{{ base_rates.us }}</strong> <span style="opacity:0.5;">(한미 금리차 {{ base_rates.spread }})</span></div>
+      <div style="margin-top:6px; font-size:11px;">
+        🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">{{ base_rates.kr_outlook }}</span> | 🇺🇸 <span style="color:#3B82F6; font-weight:600;">{{ base_rates.us_outlook }}</span>
+      </div>
+    </div>
+  </div>
+
+  {# 에피소드 카드: full 모드에서만 #}
+  {% if mode != 'share' and episode %}
+  <div class="section">
+    <div class="section-label">📻 오늘의 손경제</div>
+    <div class="news-card">
+      <div class="news-title">{{ episode.title }}</div>
+      <div class="news-body">{{ episode.description | safe }}</div>
+    </div>
   </div>
   {% endif %}
 
+  {# NEWS 섹션 #}
+  <div class="section">
+    <div class="section-label">📰 {% if mode == 'share' %}오늘의 주요 경제뉴스{% else %}오늘의 경제 뉴스{% endif %}</div>
+    {% for news in news_cards %}
+    <div class="news-card">
+      <div class="news-num">{{ loop.index }}</div>
+      <h2 class="news-title">{{ news.title }}</h2>
+      <div class="news-body">
+        {% for para in news.body %}<p>{{ para }}</p>{% endfor %}
+      </div>
+      {% if news.key_numbers %}
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        {% for row in news.key_numbers %}
+        <div class="data-row">
+          <span class="data-label">{{ row.label }}</span>
+          <span class="data-value {{ row.direction | default('') }}">{{ row.value }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if mode == 'share' %}
+        {# share 모드: 직장인이 알아야 하는 이유 + 출처 #}
+        {% if news.why_for_workers %}
+        <div class="why-box">
+          <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+          <div class="why-text">{{ news.why_for_workers }}</div>
+        </div>
+        {% endif %}
+        {% if news.sources %}
+        <div class="source-link">출처: 
+          {% for src in news.sources %}<a href="{{ src.url }}" target="_blank">{{ src.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        </div>
+        {% endif %}
+      {% else %}
+        {# full 모드: 기존 태그 유지 #}
+        {% for tag in news.tags | default([]) %}
+        <span class="tag tag-{{ tag.color | default('red') }}">{{ tag.label }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {# 친절한 경제 — full 모드에서만 #}
+  {% if mode != 'share' and explainer %}
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">{{ explainer.title }}</h3>
+      <div class="explainer-body">{{ explainer.body | safe }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  {# 오늘의 한줄 인사이트 — share 모드에서만 #}
+  {% if mode == 'share' and insight %}
+  <div class="section">
+    <div class="section-label">💡 오늘의 한줄 인사이트</div>
+    <div class="insight-box">
+      <div class="insight-header">
+        <span class="insight-icon">🐰</span>
+        <span class="insight-title">래빗해빛이 보는 오늘의 핵심</span>
+      </div>
+      <div class="insight-body">{{ insight | safe }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  {# 래빗해빛 콘텐츠 소재 — full 모드에서만 #}
   {% if mode != 'share' and rabbithat_ideas %}
-  <h2 class="section-h2">🐰 래빗해빛 콘텐츠 소재</h2>
-  {% for idea in rabbithat_ideas %}
-  <div class="idea">
-    <span class="idea__format">{{ idea.format }}</span>
-    <h3 class="idea__hook">{{ idea.hook }}</h3>
-    {% if idea.target_audience %}<p class="idea__target">🎯 타깃: {{ idea.target_audience }}</p>{% endif %}
-    {% if idea.outline %}
-    <ol class="idea__outline">
-      {% for line in idea.outline %}<li>{{ line }}</li>{% endfor %}
-    </ol>
-    {% endif %}
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      {% for idea in rabbithat_ideas %}
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">{{ idea.label }}</div>
+        <div class="rabbit-idea-text">{{ idea.text }}</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
-  {% endfor %}
   {% endif %}
 
-</main>
+  {# Footer #}
+  {% if mode == 'share' %}
+  <footer>
+    <div class="logo-text">부자습관은 래빗해빛 🐰</div>
+    <p>햇님이들을 위한 오늘의 경제 한 입 🌞</p>
+    <p style="margin-top:8px;">
+      <a href="https://www.youtube.com/@rabbit._.habbit" target="_blank">유튜브</a> · 
+      <a href="https://www.instagram.com/rabbit._.habbit/" target="_blank">인스타그램</a>
+    </p>
+    <p style="margin-top:8px; opacity:0.5;">본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.</p>
+  </footer>
+  {% else %}
+  <div class="footer-note">
+    생성 시각: {{ generated_at }} · Claude로 자동 생성됨<br>
+    손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
+  </div>
+  {% endif %}
 
-<div class="footer-bar"></div>
-{% if mode == 'share' %}
-<div class="footer-note share">
-  <div class="share-brand">손경제 × 래빗해빛 🐰</div>
-  <div class="share-source">이진우의 손에 잡히는 경제 (MBC 표준FM) 기반 AI 요약 보고서</div>
-  <div class="share-disclaimer">본 보고서는 자동 생성된 요약이며, 투자 판단의 근거가 될 수 없습니다.</div>
 </div>
-{% else %}
-<div class="footer-note">
-  생성 시각: {{ generated_at }} · Claude로 자동 생성됨<br>
-  손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
-</div>
-{% endif %}
 
 </body>
 </html>

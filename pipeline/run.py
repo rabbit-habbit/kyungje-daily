@@ -1,11 +1,13 @@
 """손경제 Daily Brief 오케스트레이터.
 
 흐름:
-  1) MBC RSS에서 오늘 손경제 에피소드
-  2) 경제지표 7개 (환율/코스피/국고채10년 + S&P500/다우/WTI/금)
-  3) Claude API로 뉴스카드 + 친절한 경제 + 래빗해빛 콘텐츠 소재 생성 (web_search)
-  4) HTML 보고서 렌더링 → docs/latest.html, docs/index.html, docs/archive/{date}.html
-  5) (옵션 --push) git commit + push
+  1) MBC RSS — 오늘 손경제 에피소드
+  2) 경제지표 7개 — 환율/코스피/국고채/S&P/다우/WTI/금
+  3) Claude API 통합 호출 — news 5개 + insight + explainer + rabbithat_ideas + policy_outlook
+  4) 데이터 모델을 new spec(indicators.global/base_rates 등)으로 정리해 보고서 데이터 조립
+  5) HTML 렌더 — full(latest.html, index.html) + share(share.html) + 일자별 archive
+  6) (옵션 --push) git commit + push
+  7) (옵션 --notify) 카카오톡 알림
 """
 from __future__ import annotations
 
@@ -26,18 +28,20 @@ sys.path.insert(0, str(ROOT))
 from pipeline import fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
 from pipeline import summarize as sm  # noqa: E402
 
-REPORT_URL_FULL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
-REPORT_URL_SHARE = "https://arum0807.github.io/sonkyungje-daily/share.html"
-
 load_dotenv(override=True)
 logger = logging.getLogger(__name__)
 
 KST = timezone(timedelta(hours=9))
 WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 
-# 표시 순서
 DOMESTIC_KEYS = ["usd_krw", "kospi", "kr_10y"]
 WORLD_KEYS = ["sp500", "dow", "wti", "gold_krw_g"]
+
+REPORT_URL_FULL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
+REPORT_URL_SHARE = "https://arum0807.github.io/sonkyungje-daily/share.html"
+
+
+# ── 시간 / 표시 ─────────────────────────────────────────────────────
 
 
 def _kst_now() -> datetime:
@@ -48,12 +52,105 @@ def _date_kr(dt: datetime) -> str:
     return f"{dt.year}년 {dt.month}월 {dt.day}일 {WEEKDAYS_KR[dt.weekday()]}요일"
 
 
-def _group_indicators(ind_data: dict) -> dict:
+# ── 숫자 포매팅 (fetch_indicators 출력 → 표시용) ──────────────────
+
+
+def _fmt_value(value, unit: str) -> str:
+    if value is None:
+        return "—"
+    if unit == "원":
+        return f"{value:,.2f}"
+    if unit == "p":
+        return f"{value:,.2f}"
+    if unit == "%":
+        return f"{value:.2f}%"
+    if unit == "$/배럴":
+        return f"${value:,.2f}"
+    if unit == "원/g":
+        return f"{value:,.0f}원"
+    return f"{value:,}"
+
+
+def _fmt_change_display(ind: dict) -> str:
+    """'▲ 9.43 (+0.63%)' / '▼ 0.050%p' 형태."""
+    direction = ind.get("direction", "flat")
+    arrow = "▲" if direction == "up" else "▼" if direction == "down" else "―"
+    unit = ind.get("unit", "")
+    chg = abs(ind.get("change", 0))
+    if unit == "%":
+        return f"{arrow} {chg:.3f}%p"
+    if unit == "원":
+        chg_str = f"{chg:,.2f}"
+    elif unit == "p":
+        chg_str = f"{chg:,.2f}"
+    elif unit == "$/배럴":
+        chg_str = f"${chg:,.2f}"
+    elif unit == "원/g":
+        chg_str = f"{chg:,.0f}원"
+    else:
+        chg_str = f"{chg:,}"
+    pct = ind.get("change_pct")
+    if pct is None:
+        return f"{arrow} {chg_str}"
+    sign = "+" if pct > 0 else ""
+    return f"{arrow} {chg_str} ({sign}{pct:.2f}%)"
+
+
+# ── 데이터 모델 변환: fetch_indicators 결과 → new spec ──────────────
+
+
+# 짧은 라벨 (UI 좁은 column 대응)
+INDICATOR_LABEL = {
+    "usd_krw": "환율 (KRW/USD)",
+    "kospi": "코스피",
+    "kr_10y": "국고채 10년",
+    "sp500": "S&P 500",
+    "dow": "다우",
+    "wti": "WTI",
+    "gold_krw_g": "금/g",
+}
+
+
+def _adapt_indicator(key: str, ind: dict) -> dict:
+    return {
+        "label": INDICATOR_LABEL.get(key, ind.get("name", key)),
+        "display": _fmt_value(ind.get("value"), ind.get("unit", "")),
+        "change_display": _fmt_change_display(ind),
+        "direction": ind.get("direction", "flat"),
+    }
+
+
+def _adapt_indicators_block(ind_data: dict) -> dict:
+    """fetch_indicators 결과 → {domestic: [...], global: [...]}."""
     inds = ind_data.get("indicators", {})
     return {
-        "domestic": [inds[k] for k in DOMESTIC_KEYS if k in inds],
-        "world": [inds[k] for k in WORLD_KEYS if k in inds],
+        "domestic": [_adapt_indicator(k, inds[k]) for k in DOMESTIC_KEYS if k in inds],
+        "global": [_adapt_indicator(k, inds[k]) for k in WORLD_KEYS if k in inds],
     }
+
+
+def _adapt_base_rates(ind_data: dict, outlook: dict) -> dict:
+    """policy_rates + summarize의 policy_outlook → base_rates."""
+    pr = ind_data.get("policy_rates", {})
+    kr_val = pr.get("korea", {}).get("value")
+    us_val = pr.get("us", {}).get("value")
+    spread_text = ""
+    if isinstance(kr_val, (int, float)) and isinstance(us_val, (int, float)):
+        diff = kr_val - us_val
+        sign = "+" if diff > 0 else ""
+        spread_text = f"{sign}{diff:.2f}%p"
+    kr_outlook = (outlook or {}).get("korea") or pr.get("korea", {}).get("outlook", "")
+    us_outlook = (outlook or {}).get("us") or pr.get("us", {}).get("outlook", "")
+    return {
+        "kr": f"{kr_val:.2f}%" if isinstance(kr_val, (int, float)) else "—",
+        "us": f"{us_val:.2f}%" if isinstance(us_val, (int, float)) else "—",
+        "spread": spread_text,
+        "kr_outlook": kr_outlook,
+        "us_outlook": us_outlook,
+    }
+
+
+# ── git ─────────────────────────────────────────────────────────────
 
 
 def _git(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
@@ -82,6 +179,9 @@ def _git_commit_push(repo: Path, date_str: str, *, dry_run: bool) -> bool:
     return True
 
 
+# ── 메인 ────────────────────────────────────────────────────────────
+
+
 def run(
     *,
     use_search: bool = True,
@@ -94,8 +194,7 @@ def run(
     now = _kst_now()
     date_str = now.strftime("%Y-%m-%d")
 
-    # Idempotent: 같은 날 여러 cron이 트리거되어도 첫 실행만 진짜 수행.
-    # docs/archive/{date}.html이 main에 이미 있으면 fresh clone에 존재 → skip.
+    # Idempotent: 같은 날 archive 있으면 skip (workflow_dispatch는 --force로 우회)
     archive_path = ROOT / "docs" / "archive" / f"{date_str}.html"
     if archive_path.exists() and not force:
         logger.info(
@@ -104,7 +203,6 @@ def run(
         return None
 
     logger.info("=== 손경제 Daily Brief 파이프라인 시작 (%s) ===", date_str)
-
     out_dir = ROOT / "out"
     out_dir.mkdir(exist_ok=True)
 
@@ -128,8 +226,8 @@ def run(
             json.dumps(ind_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
-    # 3) Claude API
-    logger.info("[3/4] Claude API로 요약·인사이트·콘텐츠 소재 생성 중...")
+    # 3) Claude API 통합 호출
+    logger.info("[3/4] Claude API 통합 요약 (news 5 + insight + explainer + ideas + outlook)...")
     summary = sm.summarize(episode_dict, ind_data, use_web_search=use_search)
     if save_intermediate:
         (out_dir / "summary.json").write_text(
@@ -137,35 +235,31 @@ def run(
         )
     meta = summary.get("_meta", {})
     logger.info(
-        "  ✓ model=%s, in=%s, out=%s",
+        "  ✓ model=%s, in=%s, out=%s, news=%d, ideas=%d",
         meta.get("model"),
         meta.get("input_tokens"),
         meta.get("output_tokens"),
+        len(summary.get("news_cards", [])),
+        len(summary.get("rabbithat_ideas", [])),
     )
 
-    # 4) 렌더링 — Claude가 생성한 policy_outlook을 ind_data에 머지 (실패 시 기본값 유지)
-    policy_rates = {
-        k: {**v} for k, v in ind_data["policy_rates"].items()
-    }  # 얕은 복사
-    outlook_overrides = summary.get("policy_outlook") or {}
-    for country, text in outlook_overrides.items():
-        if country in policy_rates and isinstance(text, str) and text.strip():
-            policy_rates[country]["outlook"] = text.strip()
-            logger.info("  ✓ %s outlook 갱신: %s", country, text.strip())
-
-    logger.info("[4/4] HTML 보고서 렌더 중...")
+    # 4) 데이터 모델 정리 (new spec) + 렌더
+    logger.info("[4/4] 보고서 데이터 조립 + HTML 렌더 (full + share)...")
     report_data = {
         "date": date_str,
         "date_kr": _date_kr(now),
+        "headline": "",  # 현재는 헤더 fallback에 의존, 추후 LLM에서 채울 수 있음
         "episode": {
             "title": episode.title,
+            "description": episode.description,
             "audio_url": episode.audio_url,
             "pub_date": episode.pub_date,
         },
-        "indicators": _group_indicators(ind_data),
-        "policy_rates": policy_rates,
+        "indicators": _adapt_indicators_block(ind_data),
+        "base_rates": _adapt_base_rates(ind_data, summary.get("policy_outlook") or {}),
         "news_cards": summary.get("news_cards", []),
-        "friendly_economics": summary.get("friendly_economics"),
+        "insight": summary.get("insight", ""),
+        "explainer": summary.get("explainer"),
         "rabbithat_ideas": summary.get("rabbithat_ideas", []),
         "generated_at": now.strftime("%Y-%m-%d %H:%M KST"),
     }
@@ -174,7 +268,6 @@ def run(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
-    # 2벌 렌더: full (대표님용) + share (햇님이들용)
     for mode in ("full", "share"):
         html = render_report.render(report_data, mode=mode)
         paths = render_report.save(
@@ -192,9 +285,9 @@ def run(
         logger.info("[git] 커밋·푸시...")
         _git_commit_push(ROOT, date_str, dry_run=dry_run_push)
 
-    # 6) 카카오톡 알림 (best-effort — 실패해도 메인 흐름 OK)
+    # 6) 카카오톡 알림 (best-effort)
     if notify:
-        logger.info("[kakao] 알림 전송 중 (2버튼: 대표/공유)...")
+        logger.info("[kakao] 알림 전송 중 (2 링크: 대표/공유)...")
         try:
             notify_kakao.notify_from_report(
                 report_data, REPORT_URL_FULL, REPORT_URL_SHARE
