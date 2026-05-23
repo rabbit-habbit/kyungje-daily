@@ -2,415 +2,687 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>손경제 Daily Brief — 2026년 5월 22일 금요일</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>손경제 Daily Brief — 2026년 5월 23일 토요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #FFFDF5;
-  --card-bg: #FFFFFF;
-  --border: #F0E8D8;
-  --text: #2D2A26;
-  --text-dim: rgba(45, 42, 38, 0.65);
-  --up: #E55C20;
-  --down: #3B82F6;
-  --flat: #888;
-  --shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-}
-.num { font-family: 'DM Sans', 'Pretendard Variable', sans-serif; font-feature-settings: 'tnum'; }
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
 
-.container { max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-/* Header */
-.header {
-  position: relative;
-  background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
-  padding: 40px 32px 36px;
-  border-radius: 0 0 24px 24px;
-  margin-bottom: 24px;
-  overflow: hidden;
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.header__date { font-size: 14px; color: rgba(45,42,38,0.7); font-weight: 500; letter-spacing: 0.5px; margin-bottom: 8px; }
-.header__title { font-size: 28px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px; }
-.header__subtitle { font-size: 15px; color: rgba(45,42,38,0.7); font-weight: 500; margin: 0; }
-.header__rabbit {
-  position: absolute;
-  right: 24px;
-  bottom: 16px;
-  font-size: 64px;
-  opacity: 0.25;
-  line-height: 1;
-  user-select: none;
-}
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Section header / Badge */
-.badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #FFE8A3 0%, #FF9800 100%);
-  color: #FFFFFF;
-  padding: 10px 22px;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 700;
-  box-shadow: 0 3px 8px rgba(255,152,0,0.3);
-}
-.section-center { text-align: center; margin: 32px 0 18px; }
-.section-h2 {
-  font-size: 18px;
-  font-weight: 800;
-  margin: 36px 0 14px;
-  letter-spacing: -0.3px;
-}
+  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-/* Episode */
-.episode {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px 22px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-}
-.episode__label { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; }
-.episode__title { font-size: 17px; font-weight: 700; margin: 0 0 10px; }
-.episode__audio audio { width: 100%; margin-top: 8px; }
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
 
-/* Indicator */
-.ind-group { margin-bottom: 12px; }
-.ind-group__label {
-  font-size: 13px;
-  color: var(--text-dim);
-  font-weight: 600;
-  margin: 14px 0 8px;
-  padding-left: 4px;
-}
-.ind-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-}
-.ind {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  box-shadow: var(--shadow);
-}
-.ind__name { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
-.ind__value { font-size: 22px; font-weight: 700; }
-.ind__change { font-size: 13px; font-weight: 600; margin-top: 2px; }
-.ind__change.up { color: var(--up); }
-.ind__change.down { color: var(--down); }
-.ind__change.flat { color: var(--flat); }
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
 
-/* Policy bar */
-.policy {
-  background: linear-gradient(135deg, #FFF8E1 0%, #FFE8A3 100%);
-  border-radius: 14px;
-  padding: 16px 18px;
-  margin-top: 14px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 12px;
-}
-.policy__item { text-align: center; }
-.policy__label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; }
-.policy__value { font-size: 20px; font-weight: 700; }
-.policy__outlook { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
 
-/* News card */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.card__title { font-size: 17px; font-weight: 700; margin: 0 0 8px; line-height: 1.4; }
-.card__summary { font-size: 15px; color: var(--text); margin: 0 0 12px; }
-.card__why { font-size: 14px; color: var(--text); padding: 12px 14px; background: #FFFAEB; border-left: 3px solid #FFD97A; border-radius: 8px; margin: 12px 0; }
-.card__why-label { font-weight: 700; margin-right: 4px; }
-.card__points { font-size: 14px; color: var(--text); padding-left: 22px; margin: 8px 0; }
-.card__points li { margin-bottom: 4px; }
-.card__sources { font-size: 12px; color: var(--text-dim); margin-top: 12px; }
-.card__sources a { color: #3B82F6; text-decoration: none; }
-.card__sources a:hover { text-decoration: underline; }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
 
-/* Friendly economics */
-.friendly {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 22px 24px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.friendly__topic { font-size: 18px; font-weight: 700; margin: 0 0 12px; line-height: 1.4; }
-.friendly__explanation { font-size: 15px; line-height: 1.75; margin: 0 0 16px; }
-.cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
-.cmp-table th { background: #FFF3D0; padding: 10px; text-align: left; font-weight: 700; border: 1px solid var(--border); }
-.cmp-table td { padding: 10px; border: 1px solid var(--border); vertical-align: top; }
-.cmp-table tr:nth-child(even) td { background: #FFFDF5; }
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
 
-/* Rabbit idea */
-.idea {
-  background: linear-gradient(135deg, #FFFAEB 0%, #FFF3D0 100%);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 20px 22px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.idea__format { display: inline-block; background: var(--text); color: #FFFFFF; font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; font-weight: 600; }
-.idea__hook { font-size: 17px; font-weight: 700; margin: 0 0 10px; line-height: 1.4; }
-.idea__target { font-size: 13px; color: var(--text-dim); margin: 0 0 10px; }
-.idea__outline { font-size: 14px; padding-left: 22px; margin: 0; }
-.idea__outline li { margin-bottom: 4px; }
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
 
-/* Footer bar */
-.footer-bar {
-  height: 10px;
-  background: linear-gradient(90deg, #FFEB3B 0%, #FF9800 50%, #FF5722 100%);
-  margin-top: 40px;
-}
-.footer-note { text-align: center; font-size: 12px; color: var(--text-dim); padding: 16px; line-height: 1.6; }
-.footer-note.share { padding: 20px 16px 24px; }
-.footer-note.share .share-brand { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.footer-note.share .share-source { font-size: 12px; margin-bottom: 4px; }
-.footer-note.share .share-disclaimer { font-size: 11px; opacity: 0.8; }
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
 
-@media (max-width: 480px) {
-  .header__title { font-size: 22px; }
-  .header__rabbit { font-size: 48px; right: 16px; }
-  .ind__value { font-size: 19px; }
-  .card, .friendly, .idea { padding: 16px 18px; }
-}
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); }
+  .pulse-row-global { grid-template-columns: repeat(4, 1fr); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (full 모드 - 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header__date">2026년 5월 22일 금요일</div>
-  <h1 class="header__title">손경제 Daily Brief</h1>
-  <p class="header__subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</p>
-  <div class="header__rabbit">🐰</div>
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">손경제 Daily Brief</div>
+      <div class="date-badge">2026년 5월 23일 토요일</div>
+    </div>
+    <h1 class="header__title"></h1>
+    <div class="header-subtitle">
+        출처: <strong>이진우의 손에 잡히는 경제</strong> · MBC 표준FM · 평일 08:30
+    </div>
+  </div>
 </header>
 
-<main class="container">
+<div class="container">
 
-  <div class="episode">
-    <div class="episode__label">📻 오늘의 손경제</div>
-    <div class="episode__title">[손경제] 5/22(금) 돈 벌 때 더 써야 산다? 메모리 초격차의 조건 - 김정호 교수 (카이스트 전자및전기공학부)</div>
-    <audio controls preload="none" src="https://podcastfile.imbc.com/cgi-bin/podcast.fcgi/podcast/economy/ECONOMY_20260522.mp3"></audio>
-  </div>
-
-  <div class="section-center">
-    <span class="badge">📊 오늘의 경제지표 한눈에 보기!</span>
-  </div>
-
-  <div class="ind-group">
-    <div class="ind-group__label">🇰🇷 국내</div>
-    <div class="ind-grid">
-      <div class="ind">
-        <div class="ind__name">원/달러 환율</div>
-        <div class="ind__value num">1,516.68원</div>
-        <div class="ind__change up num">
-▲            16.91원 (+1.13%)
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value up">1,520.53</div>
+          <div class="pulse-change up">▲ 16.13 (+1.07%)</div>
         </div>
-      </div>
-      <div class="ind">
-        <div class="ind__name">코스피</div>
-        <div class="ind__value num">7,868.53</div>
-        <div class="ind__change up num">
-▲            52.94 (+0.68%)
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value up">7,847.71</div>
+          <div class="pulse-change up">▲ 32.12 (+0.41%)</div>
         </div>
-      </div>
-      <div class="ind">
-        <div class="ind__name">국고채 10년</div>
-        <div class="ind__value num">4.13%</div>
-        <div class="ind__change down num">
-▼            0.05%p
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">4.14%</div>
+          <div class="pulse-change down">▼ 0.040%p</div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="ind-group">
-    <div class="ind-group__label">🌎 글로벌</div>
-    <div class="ind-grid">
-      <div class="ind">
-        <div class="ind__name">S&P 500</div>
-        <div class="ind__value num">7,445.72</div>
-        <div class="ind__change up num">
-▲            12.75 (+0.17%)
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value up">7,473.47</div>
+          <div class="pulse-change up">▲ 27.75 (+0.37%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value up">50,579.70</div>
+          <div class="pulse-change up">▲ 294.04 (+0.58%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value up">$96.60</div>
+          <div class="pulse-change up">▲ $0.25 (+0.26%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value up">221,014원</div>
+          <div class="pulse-change up">▲ 1,435원 (+0.65%)</div>
         </div>
       </div>
-      <div class="ind">
-        <div class="ind__name">다우존스</div>
-        <div class="ind__value num">50,285.66</div>
-        <div class="ind__change up num">
-▲            276.31 (+0.55%)
-        </div>
-      </div>
-      <div class="ind">
-        <div class="ind__name">WTI 원유</div>
-        <div class="ind__value num">$97.74</div>
-        <div class="ind__change up num">
-▲            $1.39 (+1.44%)
-        </div>
-      </div>
-      <div class="ind">
-        <div class="ind__name">금 (1g 한화)</div>
-        <div class="ind__value num">220,884원/g</div>
-        <div class="ind__change up num">
-▲            1,981원/g (+0.90%)
-        </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">2.50%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -1.25%p)</span></div>
+      <div style="margin-top:6px; font-size:11px;">
+        🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">5/28 금통위 2.50% 동결 유력, 인상 소수의견 1명·점도표 2.75% 인상 신호 전망 (신한투자증권)</span> | 🇺🇸 <span style="color:#3B82F6; font-weight:600;">6/18 FOMC 동결 전망, 중동발 인플레 압력·신임 워시 의장 첫 점도표 공개로 하반기 인하 경로 재평가 예상</span>
       </div>
     </div>
   </div>
 
-  <div class="policy">
-    <div class="policy__item">
-      <div class="policy__label">🇰🇷 한국 기준금리</div>
-      <div class="policy__value num">2.5%</div>
-      <div class="policy__outlook">5/28 금통위 동결, 7월 25bp 인상 전망 (전문가 컨센서스)</div>
-    </div>
-    <div class="policy__item">
-      <div class="policy__label">🇺🇸 미국 기준금리</div>
-      <div class="policy__value num">3.75%</div>
-      <div class="policy__outlook">6/17 FOMC 동결, 연내 인하 가능성 낮음 (CME 동결 65%)</div>
+  <div class="section">
+    <div class="section-label">📻 오늘의 손경제</div>
+    <div class="news-card">
+      <div class="news-title">커피타임 - 삼전닉스, 샌디스크 그 다음 타자는?</div>
+      <div class="news-body">협찬문의 : hand-economy@naver.com</div>
     </div>
   </div>
 
-  <h2 class="section-h2">📰 오늘의 뉴스 카드</h2>
-  <article class="card">
-    <h3 class="card__title">🧠 돈 벌 때 더 써야 산다? 메모리 초격차의 조건</h3>
-    <p class="card__summary">카이스트 김정호 교수가 오늘 손경제에 출연해 메모리 반도체 초격차 전략의 핵심 조건을 짚었어요. AI 시대엔 호황일 때 오히려 공격적으로 투자해야 격차가 벌어진다는 논리예요.</p>
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      삼성전자·SK하이닉스가 코스피 비중의 절반 가까이를 차지하는 만큼, 두 회사의 투자 전략은 곧 내 퇴직연금·ETF 수익률과 직결돼요. AI 메모리 슈퍼사이클이 얼마나 지속될지, 초격차 조건이 무엇인지 알면 투자 판단에 직접 도움이 돼요.
-    </div>
-    <ul class="card__points">
-<li>삼성전자는 2026년 HBM 월 생산량을 17만 장 → 25만 장으로 늘리고 평택 P4-4 준공도 2027년에서 2026년 4분기로 앞당기는 공격 투자 중</li><li>SK증권은 SK하이닉스 목표주가 300만 원, 삼성전자 50만 원 제시 — AI가 메모리를 '사이클 산업'이 아닌 '대순환 주기 산업'으로 바꿨다는 게 핵심 논거</li><li>3~5년 장기공급계약(LTA) 확산으로 메모리 기업 실적 안정성이 구조적으로 올라가고 있어, 과거식 '박살 후 반등' 패턴이 달라질 수 있음</li>    </ul>
-    <div class="card__sources">
-      출처:
-<a href="https://www.g-enews.com/article/Global-Biz/2026/01/202601201808373567fbbec65dfb_1" target="_blank" rel="noopener">글로벌이코노믹 — SK하이닉스·삼성, 2026년 250조 잭팟</a>, <a href="https://www.bizhankook.com/bk/article/32208" target="_blank" rel="noopener">비즈한국 — 삼성전자·SK하이닉스 주가 3가지 동력</a>    </div>
-  </article>
-  <article class="card">
-    <h3 class="card__title">💸 원/달러 1516원 돌파, '네오 노멀' 논란</h3>
-    <p class="card__summary">원/달러 환율이 5거래일 연속 1,500원대를 유지하다 오늘 1,516원대까지 올랐어요. 미·이란 전쟁 장기화로 인한 유가 상승 → 인플레이션 우려 → 달러 강세 → 원화 약세의 악순환이 원인이에요.</p>
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      환율 1,500원대는 수입 물가 상승 → 생필품·에너지 요금 인상으로 이어져 내 가계를 직접 압박해요. 해외 직구, 해외여행, 달러 자산 보유 여부에 따라 '득'이냐 '독'이냐가 갈려요.
-    </div>
-    <ul class="card__points">
-<li>유가 상승 → 미국 CPI 4월 3.8%(전년비) → 국채금리 급등 → 달러 강세 → 원화 약세로 이어지는 연쇄 압력 구조</li><li>외국인 투자자의 국내 주식 대규모 순매도(한 주간 5조 원대)가 달러 환전 수요를 자극, 환율 상방 압력 가중</li><li>전문가들은 1,450~1,510원을 '적정 환율 범위'로 보지만, 미·이란 전쟁 추가 확전 시 추가 상승 가능성도 열려 있다고 경고</li>    </ul>
-    <div class="card__sources">
-      출처:
-<a href="https://www.fnnews.com/news/202605181545494266" target="_blank" rel="noopener">파이낸셜뉴스 — 원·달러 환율 1500원대 안착</a>, <a href="https://www.ytn.co.kr/_ln/0102_202605191341411031" target="_blank" rel="noopener">YTN — 환율 1500원대 '네오노멀'이 온다</a>    </div>
-  </article>
-  <article class="card">
-    <h3 class="card__title">🛢️ WTI 97달러, 유가가 흔드는 내 월급봉투</h3>
-    <p class="card__summary">WTI 국제유가가 배럴당 97.74달러까지 올랐어요. 미·이란 전쟁에 따른 호르무즈 해협 공급 불안이 주요 원인으로, 에너지 가격이 전체 미국 CPI 상승분의 40% 이상을 차지했을 정도예요.</p>
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      유가 상승은 주유비·도시가스·전기요금 등 에너지 비용을 직접 올리고, 물류비·식품값 인상으로도 이어져요. 물가 상승이 금리 인하 기대를 누르면 대출 이자 부담도 길어지는 구조예요.
-    </div>
-    <ul class="card__points">
-<li>미·이란 전쟁 장기화로 호르무즈 해협 공급 불안이 상존 — IEA의 전략비축유 방출에도 유가 하락 효과 제한적</li><li>WTI 97달러대는 고물가→금리 동결 장기화 경로를 강화, 한미 양국 중앙은행 모두 '매파적 동결' 유지 명분 제공</li><li>금(1g 22만 원대) 동반 상승 중 — 지정학 리스크 헤지 수요 + 인플레이션 헤지 수요가 겹쳐 금값도 강세</li>    </ul>
-    <div class="card__sources">
-      출처:
-<a href="https://biz.newdaily.co.kr/site/data/html/2026/05/13/2026051300295.html" target="_blank" rel="noopener">뉴데일리 — 환율 1500원·국채금리 4% 돌파, 美 물가 쇼크</a>, <a href="https://www.etoday.co.kr/news/view/2585087" target="_blank" rel="noopener">이투데이 — 원달러 환율 1500원대, 어디로</a>    </div>
-  </article>
-  <article class="card">
-    <h3 class="card__title">🏦 5/28 금통위 동결 유력, 그런데 이번엔 다르다?</h3>
-    <p class="card__summary">오는 5월 28일 한국은행 금융통화위원회에서 기준금리는 현행 2.50%로 동결될 것이 확실시돼요. 다만 이번엔 '동결'이지만 하반기 인상을 예고하는 매파적 메시지가 함께 나올 것이라는 게 전문가들의 공통 전망이에요.</p>
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      금리 동결이라도 점도표에 인상 신호가 실리면 시중금리가 먼저 오를 수 있어요. 변동금리 대출자는 이자 부담 증가를 미리 대비해야 하고, 예·적금 금리 변화도 체크할 타이밍이에요.
-    </div>
-    <ul class="card__points">
-<li>전문가 8인 전원 5/28 동결 예상 — 단, 물가 상방 압력 대응 위해 금리 인상 소수의견 및 점도표 상향 가능성 높음</li><li>신현송 신임 한은 총재 첫 회의 주재 — 취임 연설에서 '신중하고 유연하게' 대처 강조, 금리 방향을 열어둔 발언</li><li>시장 컨센서스: 첫 인상은 7월(만장일치 인상 예상), 연내 2회 인상 시 연말 기준금리 3.00% 가능성도 거론</li>    </ul>
-    <div class="card__sources">
-      출처:
-<a href="https://www.ajunews.com/view/20260521135324973" target="_blank" rel="noopener">아주경제 — 5월 금통위 설문조사, 동결 후 7월 피봇</a>, <a href="https://www.newspim.com/news/view/20260522000088" target="_blank" rel="noopener">뉴스핌 — 5월 금통위 동결 전망·인상 소수의견</a>    </div>
-  </article>
-  <article class="card">
-    <h3 class="card__title">🎰 삼성전자 성과급 '6억 잭팟' — 직장인이 봐야 할 지점</h3>
-    <p class="card__summary">삼성전자가 DS(반도체) 부문에 특별경영성과급 제도를 신설, 연봉 1억 기준 최대 6억 원대 성과급 지급 가능성이 나왔어요. 단, 성과급은 현금이 아닌 자사주로 지급되고 일부 매각 제한이 붙어요.</p>
-    <div class="card__why">
-      <span class="card__why-label">🔍 직장인이 알아야 하는 이유</span>
-      자사주 성과급은 회사 주가에 직접 영향을 줘요. 삼성전자 주주라면 오버행(매도 물량) 리스크를, 삼성전자 직원이라면 세금 구조를 꼭 파악해야 해요. '현금 아닌 주식 성과급' 트렌드는 다른 대기업으로 확산될 수 있어요.
-    </div>
-    <ul class="card__points">
-<li>성과급은 세후 전액 자사주로 지급 — 1/3은 즉시 매각 가능, 나머지 2/3는 각 1년·2년 매각 제한 (오버행 리스크 분산)</li><li>DS부문 특별경영성과급은 향후 10년 적용 — 2026~2028년은 영업이익 200조 원, 2029~2035년은 100조 원 달성이 조건</li><li>비메모리(파운드리 등) 적자 부문도 DS 공통 배분 재원 활용, 최소 1억 6000만 원 성과급 받을 수 있다는 분석</li>    </ul>
-    <div class="card__sources">
-      출처:
-<a href="https://www.newspim.com/news/view/20260522000088" target="_blank" rel="noopener">뉴스핌 — 삼성전자 성과급 노사 잠정 합의</a>    </div>
-  </article>
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">💸 원/달러 환율 1520원 돌파, 외환당국 긴급 구두개입</h2>
+      <div class="news-body">
+<p>원/달러 환율이 5월 22일(금) 장중 한때 1519.4원까지 치솟으며 1520원선을 강하게 위협했어요. 저도 환율 뉴스 볼 때마다 가슴이 쫄깃해지는데, 이번에는 기재부와 한국은행이 함께 긴급 구두개입까지 나설 만큼 분위기가 심상치 않았거든요.</p><p>이번 급등의 핵심 원인은 미·이란 종전 협상 교착이에요. 이란 최고지도자가 고농축 우라늄 해외 반출을 금지하면서 평화 기대감이 꺾였고, 그 여파로 국제유가(WTI)가 배럴당 98달러선까지 올라서며 수입 물가 부담이 커졌어요. 여기에 엔화 약세까지 겹치며 원화 가치가 동반 하락했죠.</p><p>기재부와 한국은행은 공동 메시지를 내고 "환율 변동성이 펀더멘털 대비 과도하다"며 단호한 조치를 예고했어요. 5월 23일 현재 1520.53원으로 +1.07% 추가 상승한 상태라 주말 이후 시장 방향이 중요한 변수가 될 것 같아요.</p>      </div>
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">원/달러 환율</span>
+          <span class="data-value up">1,520.53원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">당일 상승폭</span>
+          <span class="data-value up">+16.13원 (+1.07%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">장중 최고</span>
+          <span class="data-value up">1,519.4원 (전일)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">WTI 원유</span>
+          <span class="data-value up">96.6$/배럴</span>
+        </div>
+      </div>
 
-  <h2 class="section-h2">💡 친절한 경제</h2>
-  <div class="friendly">
-    <h3 class="friendly__topic">메모리 반도체, 이제 더 이상 '사이클 산업'이 아니라고?</h3>
-    <p class="friendly__explanation">예전 메모리 반도체는 스마트폰·PC 교체 주기에 맞춰 '호황 → 불황 → 호황'을 짧게 반복하는 전형적인 사이클 산업이었어요. 그런데 AI 데이터센터 투자가 폭발하면서 HBM(고대역폭메모리) 수요가 교체 주기에 상관없이 지속적으로 늘어나는 구조로 바뀌었어요. AI 학습·추론용 서버는 한 번 짓기 시작하면 수년간 계속 메모리를 사야 하거든요. 저도 찐으로 삼전·하이닉스 ETF 들고 있는데요 — 이게 왜 중요하냐면, 사이클 산업은 '쌀 때 사고 비쌀 때 팔자'가 맞는데, 구조가 바뀌면 평가 방식 자체(PBR→PER)와 목표주가 산정 기준이 달라지기 때문이에요.</p>
-    <table class="cmp-table">
-      <thead>
-        <tr><th>항목</th><th>과거 메모리 (소순환 주기)</th><th>AI시대 메모리 (대순환 주기)</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>수요 원천</td><td>스마트폰·PC 교체 주기</td><td>AI 데이터센터 지속 투자</td></tr>
-        <tr><td>수요 성격</td><td>경기·교체 주기에 민감</td><td>AI 인프라 확장과 함께 장기 지속</td></tr>
-        <tr><td>공급 계약</td><td>단기 현물 중심</td><td>3~5년 장기공급계약(LTA) 확산</td></tr>
-        <tr><td>기업 평가법</td><td>PBR (순자산 기준)</td><td>PER (이익 성장 기준)</td></tr>
-        <tr><td>투자 전략</td><td>불황에 사고 호황에 팔기</td><td>실적 성장 속도 따라 장기 보유 고려</td></tr>
-      </tbody>
-    </table>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">🏭 삼성전자 노사 성과급 극적 합의, DS부문 최대 6억 자사주</h2>
+      <div class="news-body">
+<p>총파업 하루 전날 밤, 삼성전자 노사가 극적으로 2026년 성과급 잠정 합의안에 서명했어요. 반도체(DS) 부문에 '특별경영성과급' 제도를 새로 만들어, 사업성과의 10.5%를 재원으로 쓰는 구조예요. 상한도 없애버렸어요.</p><p>올해 DS부문 영업이익 전망치 약 300조원 기준으로 성과급 재원이 무려 31조 5000억원에 달하고, 메모리사업부 직원 기준 연봉 1억원인 사람이 최대 약 6억원의 성과급을 받을 수 있어요. 단, 전액 자사주로 지급되고 3분의 2는 최대 2년간 매각이 제한돼 즉시 현금화는 어려워요.</p><p>DX(완제품) 부문은 600만원 상당 자사주를 받는 데 그쳐 사내에서 '6억 vs 600만원' 갈등이 불거지고 있어요. 찬반 투표는 5월 22일~27일 진행 중이라 최종 결과는 곧 나와요. 이번 합의가 대기업 보상체계의 새 기준이 될 수도 있어요.</p>      </div>
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">특별성과급 재원 비율</span>
+          <span class="data-value up">사업성과의 10.5%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">성과급 재원 규모</span>
+          <span class="data-value up">약 31.5조원 (추정)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">메모리부문 1인당 최대</span>
+          <span class="data-value up">약 6억원 (자사주)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">올해 임금 인상률</span>
+          <span class="data-value up">6.2% (기본 4.1%+성과 2.1%)</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">📡 낸드 슈퍼사이클 속 '다음 주자' 누구? 삼전·닉스 주가 도약 기대</h2>
+      <div class="news-body">
+<p>올해 글로벌 반도체 주식 시장에서 낸드플래시 전문 상장사들의 상승이 압도적이에요. 샌디스크는 연초 대비 558% 폭등했고, 일본 키옥시아도 326% 뛰었어요. 같은 기간 삼성전자는 138%, SK하이닉스는 188% 올랐는데, AI 데이터센터용 대용량 저장장치 수요가 폭발한 덕분이죠.</p><p>AI가 부른 반도체 슈퍼 호황으로 D램과 낸드플래시 가격이 1년 새 2배 이상 오르고 있어요. 삼성전자와 SK하이닉스의 올해 영업이익 전망치는 노무라증권 기준 279조원(+9% 상향)이고, 두 회사 합산 현금성 자산은 연말 450~500조원에 달할 전망이에요.</p><p>특히 SK하이닉스는 지난 5월 4일 장중 시가총액 1,000조원을 돌파하며 삼성전자에 이은 두 번째 1,000조 기업이 됐어요. 지금 코스피가 7,847포인트인 배경에 이 두 회사의 기여가 압도적이에요. 손경제가 '그다음 타자'를 묻는 이유가 바로 여기에 있죠.</p>      </div>
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">샌디스크 연초 대비 주가</span>
+          <span class="data-value up">+558%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">SK하이닉스 연초 대비 주가</span>
+          <span class="data-value up">+188%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">삼성+SK 현금성 자산 (연말 전망)</span>
+          <span class="data-value up">450~500조원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">SK하이닉스 시가총액</span>
+          <span class="data-value up">1,000조원 돌파</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">🏦 한국은행 기준금리 5/28 금통위, 동결 속 '인상 신호' 주목</h2>
+      <div class="news-body">
+<p>5월 28일(목) 한국은행 금융통화위원회가 열려요. 시장 전망은 압도적으로 '동결'이에요. 한은은 올해 1월부터 4월까지 7회 연속으로 기준금리를 2.50%에 묶어뒀거든요. 미·이란 전쟁發 물가 상방 압력과 성장 하방 위험이 동시에 존재하는 스태그플레이션 우려가 동결의 핵심 이유예요.</p><p>그런데 이번 회의는 결과보다 '신호'가 더 중요해요. 신한투자증권은 인상 소수의견 1명이 나오고, 향후 6개월 금리 점도표에서 2.75%에 다수 의견이 집중될 것으로 봤어요. 동결이지만 '인상 검토 시작'이라는 메시지가 채권 시장과 대출금리에 곧바로 영향을 줄 수 있어요.</p><p>한은 신현송 신임 총재도 취임 연설에서 중동 분쟁발 공급충격이 인플레이션과 성장 경로를 복잡하게 만든다며 '신중하고 유연한' 통화정책을 강조했어요. 당장 금리 변화는 없지만, 채권·주택담보대출 금리 방향을 가늠하는 데 이번 금통위 결과가 매우 중요해요.</p>      </div>
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">현재 한국 기준금리</span>
+          <span class="data-value ">연 2.50% (7연속 동결)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">5/28 금통위 동결 전망</span>
+          <span class="data-value ">시장 컨센서스 동결</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">3월 소비자물가 상승률</span>
+          <span class="data-value up">연 2.2% (목표 2% 초과)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국고채 10년물</span>
+          <span class="data-value down">4.14% (-0.04%p)</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">📈 코스피 7847p, 글로벌 증시와 동반 상승… 반도체 랠리 지속</h2>
+      <div class="news-body">
+<p>5월 23일 코스피가 7,847.71포인트로 +0.41% 상승했어요. 미국 증시도 S&P 500이 7,473p(+0.37%), 다우존스가 50,579p(+0.58%) 오르며 글로벌 증시가 함께 좋은 분위기예요. 금(金) 가격도 1g당 221,014원으로 역대 최고 수준을 유지 중이에요.</p><p>반도체 슈퍼사이클 기대감과 삼성전자 성과급 합의가 투자 심리에 긍정적으로 작용하고 있어요. 다만 원/달러 환율 1,520원과 국제유가 96달러대라는 부담 변수가 동시에 존재해서, 지금은 '좋은 지표'와 '불안 요소'가 교차하는 미묘한 시장 국면이에요.</p><p>금 가격이 꾸준히 높게 유지되는 건 지정학적 불안이 여전하다는 신호예요. 저도 요즘 자산의 일부를 금 ETF나 달러 자산으로 분산해두는 게 맞는 시기인지 계속 고민 중이거든요. 한 자산에 몰빵하기보다 분산 접근이 유효한 환경이에요.</p>      </div>
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">코스피</span>
+          <span class="data-value up">7,847.71p (+0.41%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">S&P 500</span>
+          <span class="data-value up">7,473.47p (+0.37%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">금 (한화)</span>
+          <span class="data-value up">221,014원/g (+0.65%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국고채 10년물</span>
+          <span class="data-value down">4.14% (-0.04%p)</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <h2 class="section-h2">🐰 래빗해빛 콘텐츠 소재</h2>
-  <div class="idea">
-    <span class="idea__format">유튜브 본편 10분</span>
-    <h3 class="idea__hook">"삼전 50만, 하이닉스 300만"… 이 애널리스트의 근거가 뭔지 들어보세요</h3>
-<p class="idea__target">🎯 타깃: 삼성전자·SK하이닉스 주식·ETF 보유 중인 30~40대 직장인 투자자</p>    <ol class="idea__outline">
-<li>도입: '반도체 주가가 이미 많이 올랐는데 더 살 수 있을까?' 라는 직장인의 흔한 고민으로 시작</li><li>전개1: AI가 메모리 산업의 구조를 바꾼 이유 — 소순환 vs 대순환 주기를 실생활 비유로 설명 (스마트폰 교체 vs 전기처럼 쓰는 AI 서버)</li><li>전개2: 평가 방식이 PBR에서 PER로 바뀐 게 왜 중요한지 — 목표주가가 어떻게 달라지는지 숫자로 보여주기</li><li>전개3: 리스크 체크 — AI 투자 지속성 우려, 단기 과열·수급 이슈, 오버행 리스크(자사주 성과급)</li><li>마무리/CTA: '그래서 나는 어떻게 대응할 것인가' — ETF vs 단일 종목 선택 기준 제시, 구독·좋아요 유도</li>    </ol>
-  </div>
-  <div class="idea">
-    <span class="idea__format">인스타 릴스 60초</span>
-    <h3 class="idea__hook">환율 1,500원 시대, 내 돈은 지금 어디 있어야 해?</h3>
-<p class="idea__target">🎯 타깃: 환율 뉴스를 보며 불안하지만 어떻게 대응할지 모르는 25~35세 직장인</p>    <ol class="idea__outline">
-<li>도입 3초: '원달러 환율 1516원, 이게 나랑 무슨 상관이에요?' 질문 화면</li><li>전개1 (15초): 환율이 오르면 달라지는 내 지갑 — 수입 물가·여행·해외직구·대출이자 순서로 임팩트 설명</li><li>전개2 (25초): 환율 1500원 시대 직장인 체크리스트 — ①달러 자산 있다면 환차익 실현 타이밍 ②해외여행 예정이면 환전 분할 매수 ③변동금리 대출자는 고정 전환 검토</li><li>마무리/CTA (17초): '전쟁 종전 협상 진행 중, 단기 고점 가능성도 있어요' 한 마디 + 블로그 링크 유도</li>    </ol>
-  </div>
-  <div class="idea">
-    <span class="idea__format">유튜브 본편 10분</span>
-    <h3 class="idea__hook">삼성전자 성과급 "6억"? 자사주로 준다는 게 뭔 뜻인지 알고 가세요</h3>
-<p class="idea__target">🎯 타깃: 삼성전자 재직자 또는 주주인 30~40대, '성과급 세금' 궁금한 직장인</p>    <ol class="idea__outline">
-<li>도입: '뉴스에서 6억 성과급 나왔는데, 나한테도 해당되나요? 세금은요?' 라는 댓글 질문으로 시작</li><li>전개1: 삼성 DS부문 특별성과급 구조 해설 — 현금 vs 자사주 차이, 1/3 즉시 매각·2/3 락업 구조 쉽게 설명</li><li>전개2: 자사주 성과급의 세금 구조 — 근로소득세 vs 양도소득세 어떻게 나뉘는지, 실수령액 계산 예시</li><li>전개3: 주주 관점에서 보는 오버행 리스크 — 락업 해제 시점에 주가 어떻게 움직일 수 있는지</li><li>마무리/CTA: '자사주 성과급 트렌드, 다른 대기업으로 퍼질까?' 전망 + 구독 유도</li>    </ol>
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">낸드플래시 전문 기업이 삼성전자보다 더 많이 올랐다고? HBM vs 낸드 뭐가 다른가요?</h3>
+      <div class="explainer-body">메모리 반도체에는 크게 두 종류가 있어요. D램(DRAM)은 컴퓨터가 작업 중 데이터를 임시로 저장하는 '작업대'이고, 낸드플래시(NAND Flash)는 전원이 꺼져도 데이터가 남는 '창고'예요. HBM(고대역폭메모리)은 D램을 수십 겹 쌓아 AI 학습 속도를 극대화한 특수 제품으로 SK하이닉스가 세계 1위예요. 샌디스크와 키옥시아는 낸드플래시 전문 기업인데, AI 데이터센터에 엄청난 저장공간이 필요해지면서 SSD·낸드 수요가 폭발, 주가가 삼성·SK하이닉스보다 훨씬 더 크게 뛰었어요. 쉽게 말하면 HBM은 '두뇌 역할', 낸드는 '창고 역할'인데 창고도 AI 시대에 엄청 필요해진 거죠.<table border='1' style='border-collapse:collapse;font-size:13px;margin-top:8px'><tr style='background:#f5f5f5'><th style='padding:6px'>구분</th><th style='padding:6px'>HBM (D램 기반)</th><th style='padding:6px'>낸드플래시</th></tr><tr><td style='padding:6px'>역할</td><td style='padding:6px'>AI 연산용 초고속 메모리</td><td style='padding:6px'>대용량 데이터 저장</td></tr><tr><td style='padding:6px'>대표 기업</td><td style='padding:6px'>SK하이닉스, 삼성전자</td><td style='padding:6px'>샌디스크, 키옥시아, 삼성전자</td></tr><tr><td style='padding:6px'>2026 주가 상승</td><td style='padding:6px'>SK하이닉스 +188%</td><td style='padding:6px'>샌디스크 +558%</td></tr><tr><td style='padding:6px'>우리 생활 영향</td><td style='padding:6px'>AI 서비스 속도</td><td style='padding:6px'>SSD·USB 가격 급등</td></tr></table></div>
+    </div>
   </div>
 
-</main>
 
-<div class="footer-bar"></div>
-<div class="footer-note">
-  생성 시각: 2026-05-22 14:43 KST · Claude로 자동 생성됨<br>
-  손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"삼성전자 직원은 6억, 나는 왜 월급쟁이인가" 🎯 25~40 직장인 재테크 관심자 · 도입: 삼성전자 성과급 6억 자사주 합의 뉴스로 후킹 → 전개1: 반도체 슈퍼사이클이 왜 이런 성과급을 만들었나 (낸드·HBM 쉽게 설명) → 전개2: 삼성·SK 주가에 이 성과급이 미치는 영향, 내 퇴직연금 어떻게 됨? → 전개3: 나는 어떻게 반도체 랠리에 올라탈 수 있나 (ETF 리스트 제안) · CTA: "내 IRP에 반도체 ETF 한 줌 담아야 할까? 댓글로 알려주세요"</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"환율 1520원, 내 지갑에 생기는 일 5가지" 🎯 해외여행·직구 관심 20~35세 직장인 · 후킹: '환율 1520원이면 내 일상이 얼마나 더 비싸지나?' 체크리스트 영상 → 5가지 항목 (①해외직구 비용 ②해외여행 ③달러 ETF 평가익 ④수입품 물가 ⑤대출금리 연동) · CTA: 저장해두고 환율 더 오르면 재확인</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"낸드플래시가 뭐길래 샌디스크 주가가 6배 올랐나? HBM vs 낸드 한눈에 비교" 🎯 주식 입문~중급 직장인 · 목차: ①반도체 종류 쉬운 설명 ②AI가 왜 낸드 수요를 폭발시켰나 ③삼성·SK하이닉스·샌디스크·키옥시아 주가 비교표 ④국내에서 낸드 관련 투자 방법 (ETF 포함) · 장점: SEO 친화 롱테일 키워드 공략 가능</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-05-23 18:12 KST · Claude로 자동 생성됨<br>
+    손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
+  </div>
+
 </div>
 
 </body>
