@@ -253,7 +253,7 @@ if __name__ == "__main__":
     p_send.add_argument(
         "--url",
         default=os.environ.get(
-            "REPORT_URL", "https://arum0807.github.io/sonkyungje-daily/latest.html"
+            "REPORT_URL", "https://rabbit-habbit.github.io/kyungje-daily/latest.html"
         ),
     )
     args = parser.parse_args()

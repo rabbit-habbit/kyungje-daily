@@ -1,4 +1,4 @@
-# sonkyungje-daily
+# kyungje-daily
 
 손에 잡히는 경제(MBC) Daily Brief 자동화 보고서.
 
@@ -7,7 +7,7 @@
 ## 구조
 
 ```
-sonkyungje-daily/
+kyungje-daily/
 ├── pipeline/
 │   ├── fetch_rss.py        # MBC 손경제 RSS 수집
 │   ├── fetch_indicators.py # 환율/코스피/국고채/S&P500/다우/WTI/금 수집
@@ -91,13 +91,13 @@ python pipeline/summarize.py \
 매일 한국 시간 9시(손경제 방송 30분 후)에 실행하려면 GitHub Actions 워크플로 추가 (예: `.github/workflows/daily.yml`). 로컬 cron으로도 가능:
 
 ```
-0 9 * * 1-5 cd /path/to/sonkyungje-daily && .venv/bin/python pipeline/run.py --push
+0 9 * * 1-5 cd /path/to/kyungje-daily && .venv/bin/python pipeline/run.py --push
 ```
 
 ## GitHub Pages
 
 - Settings → Pages에서 `Branch: main / Folder: /docs` 활성화
-- URL: https://arum0807.github.io/sonkyungje-daily/
+- URL: https://rabbit-habbit.github.io/kyungje-daily/
 
 ## 알려진 이슈
 

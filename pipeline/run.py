@@ -37,8 +37,8 @@ WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 DOMESTIC_KEYS = ["usd_krw", "kospi", "kr_10y"]
 WORLD_KEYS = ["sp500", "dow", "wti", "gold_krw_g"]
 
-REPORT_URL_FULL = "https://arum0807.github.io/sonkyungje-daily/latest.html"
-REPORT_URL_SHARE = "https://arum0807.github.io/sonkyungje-daily/share.html"
+REPORT_URL_FULL = "https://rabbit-habbit.github.io/kyungje-daily/latest.html"
+REPORT_URL_SHARE = "https://rabbit-habbit.github.io/kyungje-daily/share.html"
 
 
 # ── 시간 / 표시 ─────────────────────────────────────────────────────

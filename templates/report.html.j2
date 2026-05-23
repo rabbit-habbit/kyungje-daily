@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% if mode == 'share' %}오늘의 경제 뉴스{% else %}손경제 Daily Brief{% endif %} — {{ date_kr }}</title>
+<title>오늘의 경제 뉴스 — {{ date_kr }}</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -436,17 +436,11 @@
 <header>
   <div class="container">
     <div class="header-top">
-      <div class="brand">{% if mode == 'share' %}래빗해빛 경제 브리핑{% else %}손경제 Daily Brief{% endif %}</div>
+      <div class="brand">래빗해빛 경제 브리핑</div>
       <div class="date-badge">{{ date_kr }}</div>
     </div>
-    <h1 class="header__title">{% if mode == 'share' %}오늘의 경제 뉴스{% else %}{{ headline | default('오늘의 경제 브리핑') }}{% endif %}</h1>
-    <div class="header-subtitle">
-      {% if mode == 'share' %}
-        햇님이들을 위한 오늘의 경제 한 입 🌞
-      {% else %}
-        출처: <strong>이진우의 손에 잡히는 경제</strong> · MBC 표준FM · 평일 08:30
-      {% endif %}
-    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
   </div>
 </header>
 
@@ -483,8 +477,9 @@
     </div>
     <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
       <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">{{ base_rates.kr }}</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">{{ base_rates.us }}</strong> <span style="opacity:0.5;">(한미 금리차 {{ base_rates.spread }})</span></div>
-      <div style="margin-top:6px; font-size:11px;">
-        🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">{{ base_rates.kr_outlook }}</span> | 🇺🇸 <span style="color:#3B82F6; font-weight:600;">{{ base_rates.us_outlook }}</span>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">{{ base_rates.kr_outlook }}</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">{{ base_rates.us_outlook }}</span></div>
       </div>
     </div>
   </div>
@@ -510,6 +505,16 @@
       <div class="news-body">
         {% for para in news.body %}<p>{{ para }}</p>{% endfor %}
       </div>
+
+      {# 직장인이 알아야 하는 이유 (full + share 둘 다) #}
+      {% if news.why_for_workers %}
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">{{ news.why_for_workers }}</div>
+      </div>
+      {% endif %}
+
+      {# Key Numbers #}
       {% if news.key_numbers %}
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
@@ -522,24 +527,15 @@
       </div>
       {% endif %}
 
-      {% if mode == 'share' %}
-        {# share 모드: 직장인이 알아야 하는 이유 + 출처 #}
-        {% if news.why_for_workers %}
-        <div class="why-box">
-          <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-          <div class="why-text">{{ news.why_for_workers }}</div>
-        </div>
-        {% endif %}
-        {% if news.sources %}
-        <div class="source-link">출처: 
-          {% for src in news.sources %}<a href="{{ src.url }}" target="_blank">{{ src.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
-        </div>
-        {% endif %}
-      {% else %}
-        {# full 모드: 기존 태그 유지 #}
-        {% for tag in news.tags | default([]) %}
-        <span class="tag tag-{{ tag.color | default('red') }}">{{ tag.label }}</span>
-        {% endfor %}
+      {% if news.sources %}
+      <div class="source-link">출처:
+        {% for src in news.sources %}<a href="{{ src.url }}" target="_blank">{{ src.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+      </div>
+      {% endif %}
+      {% if mode != 'share' %}
+      {% for tag in news.tags | default([]) %}
+      <span class="tag tag-{{ tag.color | default('red') }}">{{ tag.label }}</span>
+      {% endfor %}
       {% endif %}
     </div>
     {% endfor %}
