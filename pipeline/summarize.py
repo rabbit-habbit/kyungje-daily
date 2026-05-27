@@ -90,6 +90,18 @@ title: 질문형 권장. body: 3~5 문장 + HTML 비교표 가능 (선택).
 좋은 예: "5/28 금통위 동결, 7월 인하 재개 검토" / "6/18 FOMC 동결, 9월 25bp 인하 (CME 65%)"
 나쁜 예: "동결 전망" (너무 일반적, 금지)
 
+## ★ 출처 비공개 규칙 (반드시 지킬 것)
+보고서를 받아보는 독자는 자료 원천이 어디인지 몰라야 합니다. **모든 본문(body, why_for_workers,
+insight, explainer.body, rabbithat_ideas.text)에서 다음 표현을 절대 쓰지 마세요:**
+  - "손경제", "이진우", "MBC", "라디오", "팟캐스트", "방송에서"
+  - "오늘 손경제에서 다룬", "손경제는 분석했어요" 등 출처를 암시하는 모든 표현
+대신 일반적 표현으로 바꾸세요:
+  - ❌ "손경제는 4조원을 추가로 채워줄 거라 분석했어요"
+  - ✅ "시장 분석가들은 4조원 추가 매수를 예상하고 있어요"
+  - ✅ "업계에서는 4조원이 추가로 유입될 것으로 보고 있어요"
+  - ❌ "오늘 손경제에서 다룬 ..."
+  - ✅ "오늘 핵심 이슈는 ..." 또는 "최근 시장의 주목 포인트는 ..."
+
 ## 출력 형식 — 단일 JSON 객체만. 코드블록 ```json``` 가능, 마크다운 설명 금지.
 
 JSON 형식 엄격 검증:
@@ -254,6 +266,29 @@ def summarize(
     data.setdefault("explainer", None)
     data.setdefault("rabbithat_ideas", [])
     data.setdefault("policy_outlook", {})
+
+    # 출처 비공개 — 본문에 "손경제/이진우/MBC" 등이 새어 들어왔는지 사후 점검 (경고만)
+    FORBIDDEN = ("손경제", "이진우", "MBC", "손에 잡히는 경제", "팟캐스트", "라디오 방송")
+    def _scan(obj, path=""):
+        hits = []
+        if isinstance(obj, str):
+            for w in FORBIDDEN:
+                if w in obj:
+                    hits.append((path, w, obj[:80]))
+        elif isinstance(obj, dict):
+            for k, v in obj.items():
+                if k == "_meta":
+                    continue
+                hits += _scan(v, f"{path}.{k}")
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                hits += _scan(v, f"{path}[{i}]")
+        return hits
+    leaks = _scan(data)
+    if leaks:
+        logger.warning("⚠️  본문에 출처 금칙어 발견 (%d건) — prompt 보강 필요", len(leaks))
+        for p, w, snip in leaks[:5]:
+            logger.warning("    %s : '%s' in %r", p, w, snip)
 
     data["_meta"] = {
         "model": model,

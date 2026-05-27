@@ -484,16 +484,7 @@
     </div>
   </div>
 
-  {# 에피소드 카드: full 모드에서만 #}
-  {% if mode != 'share' and episode %}
-  <div class="section">
-    <div class="section-label">📻 오늘의 손경제</div>
-    <div class="news-card">
-      <div class="news-title">{{ episode.title }}</div>
-      <div class="news-body">{{ episode.description | safe }}</div>
-    </div>
-  </div>
-  {% endif %}
+  {# 에피소드 카드 제거 — 받는 사람들이 출처를 모르게 (사용자 요청) #}
 
   {# NEWS 섹션 #}
   <div class="section">
@@ -600,7 +591,7 @@
   {% else %}
   <div class="footer-note">
     생성 시각: {{ generated_at }} · Claude로 자동 생성됨<br>
-    손경제(MBC) 콘텐츠는 MBC 저작권을 따릅니다 · 본 페이지는 학습·참고 목적
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
   </div>
   {% endif %}
 
