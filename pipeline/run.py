@@ -37,8 +37,17 @@ WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 DOMESTIC_KEYS = ["usd_krw", "kospi", "kr_10y"]
 WORLD_KEYS = ["sp500", "dow", "wti", "gold_krw_g"]
 
-REPORT_URL_FULL = "https://rabbit-habbit.github.io/kyungje-daily/latest.html"
-REPORT_URL_SHARE = "https://rabbit-habbit.github.io/kyungje-daily/share.html"
+PAGES_BASE = "https://rabbit-habbit.github.io/kyungje-daily"
+# latest.html / share.html은 매일 덮어쓰므로 카톡으로는 영구 archive URL을 보냄
+# (어제 받은 카톡 링크를 클릭하면 어제 보고서가 그대로 보이도록)
+
+
+def _archive_urls(date_str: str) -> tuple[str, str]:
+    """그 날짜 영구 archive URL (full, share)."""
+    return (
+        f"{PAGES_BASE}/archive/{date_str}.html",
+        f"{PAGES_BASE}/archive/{date_str}-share.html",
+    )
 
 
 # ── 시간 / 표시 ─────────────────────────────────────────────────────
@@ -285,12 +294,13 @@ def run(
         logger.info("[git] 커밋·푸시...")
         _git_commit_push(ROOT, date_str, dry_run=dry_run_push)
 
-    # 6) 카카오톡 알림 (best-effort)
+    # 6) 카카오톡 알림 (best-effort) — 영구 archive URL 사용
     if notify:
-        logger.info("[kakao] 알림 전송 중 (2 링크: 대표/공유)...")
+        full_url, share_url = _archive_urls(date_str)
+        logger.info("[kakao] 알림 전송 중 (영구 archive 링크): %s", full_url)
         try:
             notify_kakao.notify_from_report(
-                report_data, REPORT_URL_FULL, REPORT_URL_SHARE
+                report_data, full_url, share_url
             )
             logger.info("  ✓ 카카오톡 알림 전송 완료")
         except Exception as exc:
