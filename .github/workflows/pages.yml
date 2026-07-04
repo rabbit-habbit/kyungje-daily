@@ -1,0 +1,43 @@
+name: Deploy Pages
+
+# docs/ 변경 시 또는 수동 트리거 시 GitHub Actions로 Pages 배포.
+# legacy 빌더(hang 이슈)에서 벗어나 안정성 확보.
+# 사전 조건: Settings → Pages → Build and deployment → Source = "GitHub Actions"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포 중 다른 배포가 큐잉되면 대기 (덮어쓰기 X)
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Upload docs/ as artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - id: deployment
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
