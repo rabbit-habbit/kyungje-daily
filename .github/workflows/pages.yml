@@ -10,6 +10,12 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/pages.yml'
+  # daily.yml이 GITHUB_TOKEN으로 push한 커밋은 위 on:push를 트리거하지 않음
+  # (GitHub Actions의 무한 루프 방지 정책). 그래서 workflow_run으로 명시적 chaining.
+  workflow_run:
+    workflows: ["Daily Brief"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -24,6 +30,8 @@ concurrency:
 
 jobs:
   deploy:
+    # daily.yml이 실패한 경우엔 배포 안 함 (workflow_run 트리거인 경우에만 조건 검사)
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
