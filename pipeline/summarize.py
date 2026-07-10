@@ -223,42 +223,62 @@ def summarize(
 
     user_prompt = _build_user_prompt(episode, indicators)
 
-    logger.info("Claude API 호출: model=%s, web_search=%s", model, use_web_search)
-    try:
-        response = client.messages.create(
-            model=model,
-            max_tokens=10000,
-            system=SYSTEM_PROMPT,
-            tools=tools or None,
-            messages=[{"role": "user", "content": user_prompt}],
+    # JSON 파싱 실패 시 최대 1회 자동 재시도 (LLM이 가끔 형식 어긋난 응답 반환).
+    MAX_ATTEMPTS = 2
+    last_text = ""
+    last_response = None
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        logger.info(
+            "Claude API 호출 (%d/%d): model=%s, web_search=%s",
+            attempt, MAX_ATTEMPTS, model, use_web_search,
         )
-    except Exception as exc:
-        if use_web_search:
-            logger.warning("web_search 호출 실패: %s — 도구 없이 재시도", exc)
-            return summarize(
-                episode, indicators, use_web_search=False, model=model
+        try:
+            response = client.messages.create(
+                model=model,
+                max_tokens=10000,
+                system=SYSTEM_PROMPT,
+                tools=tools or None,
+                messages=[{"role": "user", "content": user_prompt}],
             )
-        raise
+        except Exception as exc:
+            if use_web_search and attempt == 1:
+                logger.warning("web_search 호출 실패: %s — 도구 없이 재시도", exc)
+                return summarize(
+                    episode, indicators, use_web_search=False, model=model
+                )
+            raise
 
-    logger.info(
-        "응답 수신: stop_reason=%s, in=%d, out=%d",
-        response.stop_reason,
-        response.usage.input_tokens,
-        response.usage.output_tokens,
-    )
+        last_response = response
+        logger.info(
+            "응답 수신: stop_reason=%s, in=%d, out=%d",
+            response.stop_reason,
+            response.usage.input_tokens,
+            response.usage.output_tokens,
+        )
 
-    text = _collect_response_text(response)
-    if not text.strip():
-        raise RuntimeError("응답에 text 블록이 없습니다.")
+        text = _collect_response_text(response)
+        last_text = text
+        if not text.strip():
+            raise RuntimeError("응답에 text 블록이 없습니다.")
 
-    try:
-        data = _extract_json(text)
-    except (ValueError, json.JSONDecodeError) as exc:
-        raw_path = Path(__file__).resolve().parents[1] / "out" / "summary_raw.txt"
-        raw_path.parent.mkdir(exist_ok=True)
-        raw_path.write_text(text, encoding="utf-8")
-        logger.error("JSON 파싱 실패: %s — raw 응답을 %s에 저장", exc, raw_path)
-        raise
+        try:
+            data = _extract_json(text)
+            break  # 파싱 성공 → 루프 종료
+        except (ValueError, json.JSONDecodeError) as exc:
+            if attempt < MAX_ATTEMPTS:
+                logger.warning(
+                    "JSON 파싱 실패 (%d/%d): %s — Claude에 재요청",
+                    attempt, MAX_ATTEMPTS, exc,
+                )
+                continue
+            # 마지막 시도도 실패 → raw 저장 + raise
+            raw_path = Path(__file__).resolve().parents[1] / "out" / "summary_raw.txt"
+            raw_path.parent.mkdir(exist_ok=True)
+            raw_path.write_text(last_text, encoding="utf-8")
+            logger.error("JSON 파싱 최종 실패: %s — raw 응답을 %s에 저장", exc, raw_path)
+            raise
+
+    response = last_response  # 아래 코드 호환성용
 
     # 누락 키 폴백
     data.setdefault("news_cards", [])
