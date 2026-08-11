@@ -44,11 +44,16 @@ jobs:
       - name: Install Chromium (Playwright)
         run: python -m playwright install --with-deps chromium
 
-      - name: Restore publ session (선택 · 있으면 로그인 skip)
-        if: ${{ secrets.PUBL_SESSION_B64 != '' }}
+      - name: Restore publ session (있으면 로그인 skip)
+        env:
+          SESSION_B64: ${{ secrets.PUBL_SESSION_B64 }}
         run: |
-          echo "${{ secrets.PUBL_SESSION_B64 }}" | base64 -d > .publ_session.json
-          echo "✓ 세션 파일 복원"
+          if [ -n "$SESSION_B64" ]; then
+            echo "$SESSION_B64" | base64 -d > .publ_session.json
+            echo "✓ 세션 파일 복원 ($(wc -c < .publ_session.json) bytes)"
+          else
+            echo "세션 secret 없음 · 로그인으로 fallback"
+          fi
 
       - name: Post today's brief to publ group chat
         run: python pipeline/notify_publ.py --today
