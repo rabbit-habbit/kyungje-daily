@@ -1,0 +1,70 @@
+name: Publ Article Post
+
+# publ-post.yml(그룹톡 링크 게시)이 성공적으로 완료되면 자동 실행
+# → publ 아티클 앱에 그날 브리핑 HTML 자동 등록 (썸네일·커버 포함).
+# 수동 트리거(workflow_dispatch)도 지원 · Actions 탭에서 Run workflow.
+
+on:
+  workflow_run:
+    workflows: ["Publ Group Post"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publ-article
+  cancel-in-progress: false
+
+jobs:
+  post:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Seoul
+      PUBL_EMAIL: ${{ secrets.PUBL_EMAIL }}
+      PUBL_PASSWORD: ${{ secrets.PUBL_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Chromium (Playwright)
+        run: python -m playwright install --with-deps chromium
+
+      - name: Restore publ session (있으면 로그인 skip)
+        env:
+          SESSION_B64: ${{ secrets.PUBL_SESSION_B64 }}
+        run: |
+          if [ -n "$SESSION_B64" ]; then
+            echo "$SESSION_B64" | base64 -d > .publ_session.json
+            echo "✓ 세션 파일 복원 ($(wc -c < .publ_session.json) bytes)"
+          else
+            echo "세션 secret 없음 · 로그인으로 fallback"
+          fi
+
+      - name: Post today's brief as publ article
+        run: python pipeline/notify_publ_article.py --today
+
+      - name: Upload debug artifact (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publ-article-debug-${{ github.run_id }}
+          path: |
+            .publ_images/
+            .publ_session.json
+          retention-days: 3
+          if-no-files-found: ignore

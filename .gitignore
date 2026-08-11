@@ -8,3 +8,4 @@ out/
 tmp/
 .kakao_tokens.json
 .publ_session.json
+.publ_images/
