@@ -2,12 +2,13 @@ name: Daily Brief
 
 on:
   schedule:
-    # 매일 평일 (월-금) 다중 cron으로 신뢰성 보강.
+    # 매일 평일 (월-금) KST 08:37 시작 · 다중 cron으로 신뢰성 보강.
     # GitHub Actions schedule은 best-effort라 skip되는 경우가 있어 3번 시도.
     # run.py가 같은 날 archive 존재 시 자동 skip (idempotent) → 비용은 한 번분만.
-    - cron: '37 1 * * 1-5'   # KST 10:37 (1차)
-    - cron: '7 2 * * 1-5'    # KST 11:07 (백업1)
-    - cron: '47 2 * * 1-5'   # KST 11:47 (백업2)
+    # ※ UTC 기준. KST = UTC+9. KST 월-금 아침이면 UTC는 일-목 전날 밤.
+    - cron: '37 23 * * 0-4'  # KST 08:37 (1차, 주요 트리거)
+    - cron: '7 0 * * 1-5'    # KST 09:07 (백업1)
+    - cron: '37 0 * * 1-5'   # KST 09:37 (백업2)
   workflow_dispatch:
 
 permissions:

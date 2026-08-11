@@ -1,0 +1,64 @@
+name: Publ Group Post
+
+# daily.yml이 성공적으로 완료되면 자동 실행 → publ 그룹 채팅방에 오늘 브리핑 링크 게시.
+# 수동 트리거도 지원 (Actions 탭에서 Run workflow).
+
+on:
+  workflow_run:
+    workflows: ["Daily Brief"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publ-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    # daily.yml 실패 시엔 게시 안 함 (workflow_run 이벤트일 때만 조건 검사)
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TZ: Asia/Seoul
+      PUBL_EMAIL: ${{ secrets.PUBL_EMAIL }}
+      PUBL_PASSWORD: ${{ secrets.PUBL_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies (Playwright 포함)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Chromium (Playwright)
+        run: python -m playwright install --with-deps chromium
+
+      - name: Restore publ session (선택 · 있으면 로그인 skip)
+        if: ${{ secrets.PUBL_SESSION_B64 != '' }}
+        run: |
+          echo "${{ secrets.PUBL_SESSION_B64 }}" | base64 -d > .publ_session.json
+          echo "✓ 세션 파일 복원"
+
+      - name: Post today's brief to publ group chat
+        run: python pipeline/notify_publ.py --today
+
+      - name: Upload debug artifact (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publ-debug-${{ github.run_id }}
+          path: |
+            .publ_session.json
+          retention-days: 3
+          if-no-files-found: ignore
