@@ -114,9 +114,13 @@ def _send_message(page, room_url: str, message: str) -> None:
     page.goto(room_url, wait_until="networkidle")
     page.wait_for_timeout(1_500)  # 채팅 UI 로딩
 
-    # 메시지 입력창: placeholder 기반 (screenshot에서 확인: "메시지를 입력해 주세요.")
+    # 메시지 입력창: publ UI가 한/영 오갈 수 있어 다국어 placeholder 커버
+    # (한글: "메시지를 입력해 주세요." · 영문: "Enter chat")
     input_box = page.locator(
-        'textarea[placeholder*="메시지"], input[placeholder*="메시지"], [contenteditable="true"]'
+        'textarea[placeholder*="메시지"], input[placeholder*="메시지"], '
+        'textarea[placeholder*="Enter chat"], textarea[placeholder="Enter chat"], '
+        'textarea[placeholder*="Type a message"], textarea[placeholder*="chat"], '
+        '[contenteditable="true"]'
     ).first
     input_box.wait_for(state="visible", timeout=15_000)
     input_box.click()
