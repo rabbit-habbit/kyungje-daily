@@ -25,7 +25,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from pipeline import fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
+from pipeline import build_inline, fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
 from pipeline import summarize as sm  # noqa: E402
 
 load_dotenv(override=True)
@@ -43,10 +43,15 @@ PAGES_BASE = "https://rabbit-habbit.github.io/kyungje-daily"
 
 
 def _archive_urls(date_str: str) -> tuple[str, str]:
-    """그 날짜 영구 archive URL (full, share)."""
+    """그 날짜 영구 archive URL (full, share-inline).
+
+    공유용은 인라인 강화 버전(-share-inline.html)으로 연결 —
+    블로그·티스토리에 그대로 붙여넣기 가능한 self-contained 스타일.
+    원본 -share.html도 배포하되 카톡 링크는 인라인 버전.
+    """
     return (
         f"{PAGES_BASE}/archive/{date_str}.html",
-        f"{PAGES_BASE}/archive/{date_str}-share.html",
+        f"{PAGES_BASE}/archive/{date_str}-share-inline.html",
     )
 
 
@@ -277,8 +282,11 @@ def run(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
+    share_html: str | None = None
     for mode in ("full", "share"):
         html = render_report.render(report_data, mode=mode)
+        if mode == "share":
+            share_html = html
         paths = render_report.save(
             html, date_str, mode=mode, also_index=(mode == "full")
         )
@@ -288,6 +296,22 @@ def run(
             except ValueError:
                 rel = p
             logger.info("  ✓ [%s] %s: %s", mode, label, rel)
+
+    # 4b) share.html → 인라인 강화 버전 저장 (블로그·티스토리 붙여넣기용, 카톡 링크 대상)
+    if share_html:
+        try:
+            inline_html = build_inline.build_inline(
+                share_html, base_url=f"{PAGES_BASE}/"
+            )
+            inline_path = ROOT / "docs" / "archive" / f"{date_str}-share-inline.html"
+            inline_path.write_text(inline_html, encoding="utf-8")
+            logger.info(
+                "  ✓ [share-inline] %s (%d KB)",
+                inline_path.relative_to(ROOT),
+                len(inline_html) // 1024,
+            )
+        except Exception as exc:
+            logger.warning("  ⚠️  인라인 변환 실패 (원본 share는 정상): %s", exc)
 
     # 5) git
     if push or dry_run_push:

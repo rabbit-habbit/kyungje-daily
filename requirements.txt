@@ -5,3 +5,4 @@ beautifulsoup4>=4.12
 anthropic>=0.39
 jinja2>=3.1
 python-dotenv>=1.0
+premailer>=3.10
