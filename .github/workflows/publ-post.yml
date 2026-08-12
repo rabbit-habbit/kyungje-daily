@@ -4,10 +4,8 @@ name: Publ Group Post
 # 수동 트리거도 지원 (Actions 탭에서 Run workflow).
 
 on:
-  workflow_run:
-    workflows: ["Daily Brief"]
-    types: [completed]
-    branches: [main]
+  # daily.yml이 실제로 재생성한 경우에만 gh workflow run으로 트리거함 (중복 방지).
+  # 수동 실행도 지원.
   workflow_dispatch:
 
 permissions:
@@ -19,9 +17,10 @@ concurrency:
 
 jobs:
   post:
-    # daily.yml 실패 시엔 게시 안 함 (workflow_run 이벤트일 때만 조건 검사)
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     timeout-minutes: 8
     env:
       TZ: Asia/Seoul
@@ -57,6 +56,13 @@ jobs:
 
       - name: Post today's brief to publ group chat
         run: python pipeline/notify_publ.py --today
+
+      - name: Trigger publ-article workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run publ-article.yml --repo ${{ github.repository }}
+          echo "✓ publ-article 트리거"
 
       - name: Upload debug artifact (on failure)
         if: failure()

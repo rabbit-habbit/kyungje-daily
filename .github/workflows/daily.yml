@@ -10,10 +10,18 @@ on:
     - cron: '7 0 * * 1-5'    # KST 09:07 (백업1)
     - cron: '37 0 * * 1-5'   # KST 09:37 (백업2)
   workflow_dispatch:
+    inputs:
+      force:
+        description: '오늘 archive 이미 있어도 재생성하고 카톡/publ 재전송'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 permissions:
-  # run.py가 docs/를 commit + push 해야 하므로
+  # run.py가 docs/를 commit + push · gh workflow run이 actions:write 필요
   contents: write
+  actions: write
 
 concurrency:
   group: daily-brief
@@ -23,6 +31,8 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      did_regenerate: ${{ steps.pipeline.outputs.did_regenerate }}
     env:
       TZ: Asia/Seoul
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -51,8 +61,36 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run pipeline (RSS → indicators → Claude → render → push)
-        # 수동 dispatch는 항상 강제 재생성, schedule은 idempotent (오늘 archive 있으면 skip)
-        run: python pipeline/run.py --push ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+        id: pipeline
+        # 기본은 idempotent. dispatch에서도 force input이 'true'일 때만 --force.
+        # skip된 경우 did_regenerate=false → 후속 publ workflow가 다시 발송하지 않도록 게이팅.
+        env:
+          FORCE_FLAG: ${{ github.event_name == 'workflow_dispatch' && inputs.force == 'true' && '--force' || '' }}
+        run: |
+          # archive 존재 여부를 사전에 기록해서 skip 여부 판단
+          DATE=$(date +%F)
+          ARCHIVE="docs/archive/${DATE}.html"
+          EXISTED=false
+          [ -f "$ARCHIVE" ] && EXISTED=true
+
+          python pipeline/run.py --push $FORCE_FLAG
+
+          # 재생성 여부: 기존에 없었거나 force면 새로 만든 것
+          if [ "$EXISTED" = "false" ] || [ "$FORCE_FLAG" = "--force" ]; then
+            echo "did_regenerate=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "did_regenerate=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  오늘 archive 이미 존재 · skip 완료 (후속 카톡/publ 발송 안 함)"
+          fi
+
+      - name: Trigger publ workflows (only when regenerated)
+        # 재생성한 경우에만 후속 파이프라인 실행 → skip 시 카톡/publ 재발송 방지
+        if: steps.pipeline.outputs.did_regenerate == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run publ-post.yml --repo ${{ github.repository }}
+          echo "✓ publ-post 트리거 (publ-article은 publ-post 완료 시 자동 체이닝)"
 
       - name: Upload intermediate JSONs as artifact (on failure)
         if: failure()
