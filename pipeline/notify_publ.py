@@ -172,7 +172,12 @@ def post_daily(
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=headless)
         session_available = use_session and SESSION_PATH.exists()
-        context_kwargs = {"viewport": {"width": 1280, "height": 900}}
+        # publ은 브라우저 로케일에 따라 UI 언어를 바꿈 → 한글로 고정
+        context_kwargs = {
+            "viewport": {"width": 1280, "height": 900},
+            "locale": "ko-KR",
+            "extra_http_headers": {"Accept-Language": "ko-KR,ko;q=0.9,en;q=0.5"},
+        }
         if session_available:
             context_kwargs["storage_state"] = str(SESSION_PATH)
         context = browser.new_context(**context_kwargs)

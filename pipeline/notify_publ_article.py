@@ -149,14 +149,17 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
     page.goto(LIST_URL, wait_until="networkidle")
     page.wait_for_timeout(2_000)
 
-    logger.info("'새 글' 클릭")
-    page.locator('button:has-text("새 글")').first.click()
+    logger.info("'새 글 / Create Post' 클릭")
+    page.locator('button:has-text("새 글"), button:has-text("Create Post")').first.click()
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(2_500)
 
-    # 제목
+    # 제목 (한/영 UI 커버)
     logger.info("제목 입력: %s", title)
-    title_input = page.locator('textarea[placeholder*="제목"]').first
+    title_input = page.locator(
+        'textarea[placeholder*="제목"], textarea[placeholder*="Title"], '
+        'textarea[placeholder*="title"], input[placeholder*="제목"], input[placeholder*="Title"]'
+    ).first
     title_input.wait_for(state="visible", timeout=10_000)
     title_input.fill(title)
     page.wait_for_timeout(400)
@@ -176,25 +179,35 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
     page.locator('.tox-dialog button:has-text("Save")').click()
     page.wait_for_timeout(1_500)
 
-    # 공개 상태: 비공개 → 공개
+    # 공개 상태: 비공개/Private → 공개/Public
     logger.info("공개 상태 = 공개")
-    dropdown = page.locator('div[class*="container"]:has-text("비공개")').first
+    dropdown = page.locator(
+        'div[class*="container"]:has-text("비공개"), div[class*="container"]:has-text("Private")'
+    ).first
     dropdown.click()
     page.wait_for_timeout(600)
-    page.locator('li:has-text("공개")').first.click()
+    page.locator('li:has-text("공개"), li:has-text("Public")').first.click()
     page.wait_for_timeout(600)
 
-    # 카테고리 = 💙 경제 브리핑
+    # 카테고리 = 💙 경제 브리핑 (카테고리 라벨은 자체 텍스트라 언어 무관)
     logger.info("카테고리 = %s", CATEGORY_LABEL)
-    cat_dd = page.locator('div[class*="container"]:has-text("선택하지 않음")').first
+    cat_dd = page.locator(
+        'div[class*="container"]:has-text("선택하지 않음"), div[class*="container"]:has-text("Not selected")'
+    ).first
     cat_dd.click()
     page.wait_for_timeout(600)
     page.locator(f'li:has-text("{CATEGORY_LABEL}")').first.click()
     page.wait_for_timeout(600)
 
-    # 이미지 탭
+    # 이미지 탭 (한/영)
     logger.info("이미지 탭 이동 → 썸네일·커버 업로드")
-    page.get_by_text("이미지", exact=True).first.click()
+    img_tab = page.locator(
+        ':is(button, [role="tab"], div, a):has-text("이미지"), '
+        ':is(button, [role="tab"], div, a):has-text("Image")'
+    )
+    # 위 셀렉터는 부모까지 잡힐 수 있어 텍스트 정확 매칭 우선 시도
+    exact = page.get_by_text("이미지", exact=True).or_(page.get_by_text("Image", exact=True)).first
+    (exact if exact.count() > 0 else img_tab.first).click()
     page.wait_for_timeout(1_000)
 
     file_inputs = page.locator('input[type="file"]')
@@ -215,7 +228,7 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
         return
 
     logger.info("생성 버튼 클릭")
-    create_btn = page.locator('button:has-text("생성")').first
+    create_btn = page.locator('button:has-text("생성"), button:has-text("Create")').first
     create_btn.wait_for(state="visible", timeout=10_000)
     if not create_btn.is_enabled():
         raise RuntimeError("생성 버튼 비활성 상태 · 필수 필드 누락")
@@ -246,7 +259,12 @@ def post_article(html_path: Path, title: str, headless: bool = True, use_session
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=headless)
         session_available = use_session and SESSION_PATH.exists()
-        ctx_kwargs = {"viewport": {"width": 1440, "height": 900}}
+        # publ은 브라우저 로케일에 따라 UI 언어를 바꿈 → 한글로 고정
+        ctx_kwargs = {
+            "viewport": {"width": 1440, "height": 900},
+            "locale": "ko-KR",
+            "extra_http_headers": {"Accept-Language": "ko-KR,ko;q=0.9,en;q=0.5"},
+        }
         if session_available:
             ctx_kwargs["storage_state"] = str(SESSION_PATH)
         context = browser.new_context(**ctx_kwargs)
