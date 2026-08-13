@@ -35,6 +35,8 @@ SESSION_PATH = ROOT / ".publ_session.json"
 
 LOGIN_URL = "https://console.publ.biz/"
 LIST_URL = "https://console.publ.biz/channels/L2NoYW5uZWxzLzIzMDY0/p-apps/B00001/posts"
+MONETIZE_URL = "https://console.publ.biz/channels/L2NoYW5uZWxzLzIzMDY0/p-apps/B00001/monetization/catalogs"
+CATALOG_ROW_LABEL = "유료 콘텐츠들(경제)"
 
 KST = timezone(timedelta(hours=9))
 WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"]
@@ -238,7 +240,69 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
     logger.info("생성 완료 → %s", page.url)
 
 
-def post_article(html_path: Path, title: str, headless: bool = True, use_session: bool = True, dry_run: bool = False) -> None:
+def _link_to_paid_catalog(page, article_title: str) -> None:
+    """유료 콘텐츠 카테고리에 오늘 아티클 연결.
+
+    수익창출 → 카탈로그 행 hover → 콘텐츠 관리(Contents) → +추가(Add) →
+    모달에서 오늘 제목 체크 → Add N Post(s) 클릭.
+    """
+    logger.info("=== 유료 콘텐츠 카테고리 연결 ===")
+    page.goto(MONETIZE_URL, wait_until="domcontentloaded", timeout=45_000)
+    page.wait_for_timeout(2_500)
+
+    # 행 hover → 우측 액션(Contents / 콘텐츠 관리) 노출
+    logger.info("카탈로그 행 hover: %s", CATALOG_ROW_LABEL)
+    row = page.locator(f'div:has-text("{CATALOG_ROW_LABEL}")').first
+    row.hover()
+    page.wait_for_timeout(600)
+
+    # "콘텐츠 관리" / "Contents" 링크 클릭
+    contents_link = page.get_by_text("콘텐츠 관리", exact=True).or_(
+        page.get_by_text("콘텐츠관리", exact=True)
+    ).or_(page.get_by_text("Contents", exact=True)).first
+    contents_link.wait_for(state="visible", timeout=10_000)
+    contents_link.click()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(2_000)
+
+    # +추가 / Add 버튼 (우측 하단)
+    logger.info("추가 버튼 클릭")
+    # 페이지 상단에도 '추가하기' 같은 유사 텍스트가 있을 수 있어 last 사용
+    add_btn = page.locator(
+        'button:has-text("+ 추가"), button:has-text("추가"), '
+        'button:has-text("+ Add"), button:has-text("Add")'
+    ).last
+    add_btn.click()
+    page.wait_for_timeout(1_500)
+
+    # 모달: 오늘 아티클 행 클릭 (체크박스 커스텀 UI)
+    logger.info("모달에서 오늘 아티클 체크: %s", article_title)
+    target_row = page.locator(f'div:has-text("{article_title}")').first
+    target_row.wait_for(state="visible", timeout=8_000)
+    target_row.click()
+    page.wait_for_timeout(500)
+
+    # 확인: "Add 1 Post(s)" / "포스트 1개 추가하기"
+    confirm = page.locator(
+        'button:has-text("포스트 1개 추가하기"), button:has-text("포스트"), '
+        'button:has-text("Add 1 Post"), button:has-text("Add ")'
+    ).last
+    confirm.wait_for(state="visible", timeout=5_000)
+    if not confirm.is_enabled():
+        raise RuntimeError("확인 버튼 비활성 · 체크 안 됨")
+    confirm.click()
+    page.wait_for_timeout(2_500)
+    logger.info("✓ 유료 콘텐츠 연결 완료")
+
+
+def post_article(
+    html_path: Path,
+    title: str,
+    headless: bool = True,
+    use_session: bool = True,
+    dry_run: bool = False,
+    link_only: bool = False,
+) -> None:
     from playwright.sync_api import sync_playwright
 
     email = os.environ.get("PUBL_EMAIL")
@@ -246,15 +310,16 @@ def post_article(html_path: Path, title: str, headless: bool = True, use_session
     if not email or not password:
         raise RuntimeError("PUBL_EMAIL / PUBL_PASSWORD 필요")
 
-    if not html_path.exists():
-        raise RuntimeError(f"HTML 없음: {html_path}")
-    html_body = html_path.read_text(encoding="utf-8")
-    logger.info("HTML 로드: %s (%d bytes)", html_path.name, len(html_body))
+    if not link_only:
+        if not html_path.exists():
+            raise RuntimeError(f"HTML 없음: {html_path}")
+        html_body = html_path.read_text(encoding="utf-8")
+        logger.info("HTML 로드: %s (%d bytes)", html_path.name, len(html_body))
 
-    # 이미지 생성
-    logger.info("=== 썸네일·커버 캡처 ===")
-    tmp_dir = ROOT / ".publ_images"
-    thumb, cover = _render_and_capture(html_path, tmp_dir)
+        # 이미지 생성
+        logger.info("=== 썸네일·커버 캡처 ===")
+        tmp_dir = ROOT / ".publ_images"
+        thumb, cover = _render_and_capture(html_path, tmp_dir)
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=headless)
@@ -271,17 +336,28 @@ def post_article(html_path: Path, title: str, headless: bool = True, use_session
         page = context.new_page()
 
         try:
+            initial_url = MONETIZE_URL if link_only else LIST_URL
             if session_available:
                 logger.info("세션 로드: %s", SESSION_PATH.name)
-                page.goto(LIST_URL, wait_until="networkidle")
-                page.wait_for_timeout(1_500)
+                # networkidle은 광고·마케팅 픽셀 때문에 안 잡히는 경우 있음 → domcontentloaded 사용
+                page.goto(initial_url, wait_until="domcontentloaded", timeout=45_000)
+                page.wait_for_timeout(2_500)
                 if "login" in page.url.lower() or "console.publ.biz" not in page.url:
                     logger.warning("세션 만료 · 재로그인")
                     _perform_login(page, email, password)
             else:
                 _perform_login(page, email, password)
 
-            _create_article(page, title, html_body, thumb, cover, dry_run=dry_run)
+            if not link_only:
+                _create_article(page, title, html_body, thumb, cover, dry_run=dry_run)
+
+            # dry-run이 아니면 유료 콘텐츠 카테고리에 연결
+            if not dry_run:
+                try:
+                    _link_to_paid_catalog(page, title)
+                except Exception as exc:
+                    logger.error("유료 콘텐츠 연결 실패 (아티클 자체는 등록됨): %s", exc)
+                    raise
 
             context.storage_state(path=str(SESSION_PATH))
             logger.info("세션 저장: %s", SESSION_PATH.name)
@@ -298,6 +374,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-session", action="store_true")
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="생성 버튼 누르지 않고 스크린샷만")
+    parser.add_argument("--link-only", action="store_true", help="아티클 등록 skip · 유료 카테고리 연결만")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
@@ -319,5 +396,11 @@ if __name__ == "__main__":
     post_article(
         html_path=html_path, title=title, headless=headless,
         use_session=not args.no_session, dry_run=args.dry_run,
+        link_only=args.link_only,
     )
-    print("✅ publ 아티클 등록 완료" if not args.dry_run else "🧪 DRY-RUN 완료")
+    if args.dry_run:
+        print("🧪 DRY-RUN 완료")
+    elif args.link_only:
+        print("✅ 유료 카테고리 연결 완료")
+    else:
+        print("✅ publ 아티클 등록 + 유료 연결 완료")

@@ -55,7 +55,8 @@ jobs:
           fi
 
       - name: Post today's brief to publ group chat
-        run: python pipeline/notify_publ.py --today
+        # publ 관리자 콘솔 세션이 24시간 미만이라 매일 fresh 로그인이 더 안정적
+        run: python pipeline/notify_publ.py --today --no-session
 
       - name: Trigger publ-article workflow
         env:
