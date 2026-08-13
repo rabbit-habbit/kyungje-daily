@@ -100,6 +100,7 @@ def _audio_url(entry) -> Optional[str]:
 
 
 def fetch_latest_episode() -> Episode:
+    """정규 [손경제] 편만 픽. [플러스] 대담편은 뉴스 큐레이션 소스가 아니라 스킵."""
     logger.info("RSS 가져오는 중: %s", RSS_URL)
     feed = feedparser.parse(RSS_URL)
     if feed.bozo and not feed.entries:
@@ -107,7 +108,13 @@ def fetch_latest_episode() -> Episode:
     if not feed.entries:
         raise RuntimeError("RSS에 에피소드가 없습니다.")
 
-    entry = feed.entries[0]
+    entry = next(
+        (e for e in feed.entries if e.get("title", "").strip().startswith("[손경제]")),
+        None,
+    )
+    if entry is None:
+        raise RuntimeError("RSS에 [손경제] 정규 에피소드가 없습니다. (최근 항목은 모두 [플러스] 등)")
+    logger.info("픽한 에피소드: %s", entry.get("title", "")[:80])
     description_html = entry.get("summary") or entry.get("description") or ""
     description = _dedup_description(_strip_html(description_html))
 
