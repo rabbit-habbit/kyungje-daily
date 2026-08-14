@@ -66,3 +66,4 @@ jobs:
             .publ_session.json
           retention-days: 3
           if-no-files-found: ignore
+          include-hidden-files: true  # .publ_images 같은 dot-prefix 폴더 업로드용

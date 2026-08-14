@@ -244,19 +244,34 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
         page.wait_for_timeout(500)
     else:
         raise RuntimeError("생성 버튼 10초간 비활성 · 이미지 업로드 미완료 또는 필수 필드 누락")
+
+    # 진단: 클릭 직전 상태 저장 (폼 완성도 확인용)
+    dbg = ROOT / ".publ_images"
+    dbg.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(dbg / "before_create.png"), full_page=True)
+
     create_btn.click()
     page.wait_for_load_state("networkidle", timeout=30_000)
     page.wait_for_timeout(2_000)
     logger.info("생성 후 URL: %s", page.url)
 
     # 발행 성공 검증: URL이 /posts/create에서 벗어나야 함
-    # (실패 시 create 페이지 그대로 남아있고 에러 배너만 뜸)
     if page.url.rstrip("/").endswith("/posts/create"):
-        err_shot = ROOT / ".publ_images" / "create_failed.png"
-        err_shot.parent.mkdir(parents=True, exist_ok=True)
-        page.screenshot(path=str(err_shot), full_page=True)
+        # 에러 dialog / 배너 텍스트 수집 (원인 진단용)
+        try:
+            body_text = page.evaluate("() => document.body.innerText")[:3000]
+        except Exception:
+            body_text = "(innerText 추출 실패)"
+        (dbg / "after_create_bodytext.txt").write_text(body_text, encoding="utf-8")
+        page.screenshot(path=str(dbg / "create_failed.png"), full_page=True)
+        # 페이지 HTML도 덤프 (에러 요소 찾기용)
+        try:
+            (dbg / "create_failed.html").write_text(page.content(), encoding="utf-8")
+        except Exception:
+            pass
         raise RuntimeError(
-            f"발행 실패 · URL이 create 페이지 그대로: {page.url} · 스크린샷: {err_shot}"
+            f"발행 실패 · URL이 create 페이지 그대로: {page.url} · "
+            f"스크린샷/텍스트/HTML: {dbg}"
         )
     logger.info("✓ 발행 완료")
 
