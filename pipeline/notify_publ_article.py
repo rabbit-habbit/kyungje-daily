@@ -218,9 +218,14 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
         raise RuntimeError(f"이미지 탭 file input {n}개 · 2개 필요")
     # 순서: 첫 번째 = 썸네일, 두 번째 = 커버 (탐색 시 확인됨)
     file_inputs.nth(0).set_input_files(str(thumb))
-    page.wait_for_timeout(1_500)
+    page.wait_for_timeout(3_000)  # 썸네일 서버 업로드 대기
     file_inputs.nth(1).set_input_files(str(cover))
-    page.wait_for_timeout(2_000)
+    page.wait_for_timeout(5_000)  # 커버 서버 업로드 대기 (이전 2초는 너무 짧아 실패 유발)
+    # 업로드 트래픽 정리 대기 (이미지 크면 몇 초 더 필요)
+    try:
+        page.wait_for_load_state("networkidle", timeout=15_000)
+    except Exception:
+        logger.warning("이미지 업로드 networkidle 대기 타임아웃 · 계속 진행")
 
     # 생성 (dry-run이면 클릭 건너뛰고 스크린샷만)
     if dry_run:
@@ -232,12 +237,28 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
     logger.info("생성 버튼 클릭")
     create_btn = page.locator('button:has-text("생성"), button:has-text("Create")').first
     create_btn.wait_for(state="visible", timeout=10_000)
-    if not create_btn.is_enabled():
-        raise RuntimeError("생성 버튼 비활성 상태 · 필수 필드 누락")
+    # 생성 버튼이 실제로 enabled 될 때까지 대기 (이미지 서버 처리 완료 시그널)
+    for _ in range(20):
+        if create_btn.is_enabled():
+            break
+        page.wait_for_timeout(500)
+    else:
+        raise RuntimeError("생성 버튼 10초간 비활성 · 이미지 업로드 미완료 또는 필수 필드 누락")
     create_btn.click()
     page.wait_for_load_state("networkidle", timeout=30_000)
     page.wait_for_timeout(2_000)
-    logger.info("생성 완료 → %s", page.url)
+    logger.info("생성 후 URL: %s", page.url)
+
+    # 발행 성공 검증: URL이 /posts/create에서 벗어나야 함
+    # (실패 시 create 페이지 그대로 남아있고 에러 배너만 뜸)
+    if page.url.rstrip("/").endswith("/posts/create"):
+        err_shot = ROOT / ".publ_images" / "create_failed.png"
+        err_shot.parent.mkdir(parents=True, exist_ok=True)
+        page.screenshot(path=str(err_shot), full_page=True)
+        raise RuntimeError(
+            f"발행 실패 · URL이 create 페이지 그대로: {page.url} · 스크린샷: {err_shot}"
+        )
+    logger.info("✓ 발행 완료")
 
 
 def _link_to_paid_catalog(page, article_title: str) -> None:
@@ -278,7 +299,17 @@ def _link_to_paid_catalog(page, article_title: str) -> None:
     # 모달: 오늘 아티클 행 클릭 (체크박스 커스텀 UI)
     logger.info("모달에서 오늘 아티클 체크: %s", article_title)
     target_row = page.locator(f'div:has-text("{article_title}")').first
-    target_row.wait_for(state="visible", timeout=8_000)
+    try:
+        target_row.wait_for(state="visible", timeout=8_000)
+    except Exception:
+        # 모달 리스트 로딩이 늦거나 스크롤이 필요할 수 있음 → scroll_into_view 시도
+        logger.info("첫 시도 실패 · scroll_into_view 후 재시도")
+        page.wait_for_timeout(2_000)
+        try:
+            target_row.scroll_into_view_if_needed(timeout=5_000)
+        except Exception:
+            pass
+        target_row.wait_for(state="visible", timeout=8_000)
     target_row.click()
     page.wait_for_timeout(500)
 
