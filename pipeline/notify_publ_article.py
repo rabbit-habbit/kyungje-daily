@@ -250,9 +250,35 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
     dbg.mkdir(parents=True, exist_ok=True)
     page.screenshot(path=str(dbg / "before_create.png"), full_page=True)
 
-    create_btn.click()
-    page.wait_for_load_state("networkidle", timeout=30_000)
-    page.wait_for_timeout(2_000)
+    # 클릭 재시도 루프: publ 생성 버튼은 첫 .click()이 이벤트로 발화 안 되는 케이스 관찰됨
+    # (버튼 활성, 스크린샷도 동일, 네트워크 요청 0건). hover → click → force click 순으로 시도.
+    def _url_left_create() -> bool:
+        return not page.url.rstrip("/").endswith("/posts/create")
+
+    click_success = False
+    for attempt, method in enumerate([
+        lambda: create_btn.click(),
+        lambda: (create_btn.hover(), page.wait_for_timeout(300), create_btn.click()),
+        lambda: create_btn.click(force=True),
+        lambda: create_btn.dispatch_event("click"),
+    ], start=1):
+        logger.info("생성 클릭 시도 #%d", attempt)
+        try:
+            method()
+        except Exception as e:
+            logger.warning("클릭 방법 #%d 예외: %s", attempt, e)
+            continue
+        try:
+            page.wait_for_url(lambda u: not u.rstrip("/").endswith("/posts/create"), timeout=10_000)
+            click_success = True
+            break
+        except Exception:
+            logger.warning("클릭 #%d 후 URL 변화 없음", attempt)
+            page.wait_for_timeout(1_500)
+
+    if click_success:
+        page.wait_for_load_state("networkidle", timeout=15_000)
+        page.wait_for_timeout(1_500)
     logger.info("생성 후 URL: %s", page.url)
 
     # 발행 성공 검증: URL이 /posts/create에서 벗어나야 함
