@@ -10,7 +10,8 @@ import logging
 import re
 import sys
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from typing import Optional
 
 import feedparser
@@ -114,6 +115,27 @@ def fetch_latest_episode() -> Episode:
     )
     if entry is None:
         raise RuntimeError("RSS에 [손경제] 정규 에피소드가 없습니다. (최근 항목은 모두 [플러스] 등)")
+
+    # pub_date 검증: 오늘(KST) 방송이 아니면 exception → 백업 cron 슬롯이 재시도
+    # (RSS 반영 지연으로 어제/그저께 방송을 잘못 픽하는 사고 방지)
+    _KST = timezone(timedelta(hours=9))
+    pub_str = entry.get("published", "").strip()
+    if not pub_str:
+        raise RuntimeError(f"에피소드 pub_date 없음: {entry.get('title','')[:80]}")
+    try:
+        pub_dt = parsedate_to_datetime(pub_str)
+    except Exception as e:
+        raise RuntimeError(f"pub_date 파싱 실패: {pub_str!r} ({e})")
+    pub_date_kst = pub_dt.astimezone(_KST).date()
+    today_kst = datetime.now(_KST).date()
+    if pub_date_kst != today_kst:
+        raise RuntimeError(
+            f"픽한 에피소드가 오늘 방송이 아님. "
+            f"pub_date(KST)={pub_date_kst}, today(KST)={today_kst}, "
+            f"title={entry.get('title','')[:80]!r}. "
+            f"→ RSS 반영 지연 · 백업 cron 슬롯에서 재시도됩니다."
+        )
+    logger.info("✓ pub_date 검증 통과: %s (KST 오늘)", pub_date_kst)
     logger.info("픽한 에피소드: %s", entry.get("title", "")[:80])
     description_html = entry.get("summary") or entry.get("description") or ""
     description = _dedup_description(_strip_html(description_html))
