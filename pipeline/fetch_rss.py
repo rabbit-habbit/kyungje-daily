@@ -101,6 +101,96 @@ def _audio_url(entry) -> Optional[str]:
     return None
 
 
+# MBC 손경제 유튜브 채널 (@손경제)
+YOUTUBE_CHANNEL_ID = "UCiYbaVEODktcsh09454Grow"
+
+
+def fetch_from_youtube_channel_api() -> Episode:
+    """YouTube Data API v3로 MBC 손경제 채널에서 오늘 올라온 [손경제] 영상 자동 검색.
+
+    필요: YOUTUBE_API_KEY 환경변수 (GitHub Secret).
+    무료 quota 10,000/day 안에서 매일 사용 가능 (약 105 units 소모).
+    RSS 자동 fetch 실패 시 자동 fallback으로 호출.
+    """
+    api_key = os.environ.get("YOUTUBE_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("YOUTUBE_API_KEY 환경변수 없음")
+
+    import requests
+
+    _KST = timezone(timedelta(hours=9))
+    today_kst = datetime.now(_KST)
+    published_after = today_kst.replace(hour=0, minute=0, second=0, microsecond=0).astimezone(
+        timezone.utc
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    logger.info("YouTube API 채널 검색: publishedAfter=%s", published_after)
+    # search.list: 오늘 채널에 올라온 영상 (100 units)
+    r = requests.get(
+        "https://www.googleapis.com/youtube/v3/search",
+        params={
+            "key": api_key,
+            "channelId": YOUTUBE_CHANNEL_ID,
+            "part": "snippet",
+            "type": "video",
+            "order": "date",
+            "publishedAfter": published_after,
+            "maxResults": 10,
+        },
+        timeout=15,
+    )
+    r.raise_for_status()
+    items = r.json().get("items", [])
+
+    match = next(
+        (it for it in items if it.get("snippet", {}).get("title", "").strip().startswith("[손경제]")),
+        None,
+    )
+    if not match:
+        titles = [it.get("snippet", {}).get("title", "")[:60] for it in items]
+        raise RuntimeError(
+            f"오늘({today_kst.strftime('%Y-%m-%d')}) 채널에 [손경제] 영상 없음. "
+            f"검색된 영상: {titles}"
+        )
+
+    video_id = match["id"]["videoId"]
+    logger.info("오늘 [손경제] 영상 찾음: %s", match["snippet"]["title"][:80])
+
+    # videos.list: description 전문 (search.list는 truncated) (1 unit)
+    r2 = requests.get(
+        "https://www.googleapis.com/youtube/v3/videos",
+        params={"key": api_key, "id": video_id, "part": "snippet"},
+        timeout=15,
+    )
+    r2.raise_for_status()
+    video_items = r2.json().get("items", [])
+    if not video_items:
+        raise RuntimeError(f"video_id={video_id} 상세 정보 없음")
+
+    snippet = video_items[0]["snippet"]
+    title = snippet.get("title", "").strip()
+    description = snippet.get("description", "").strip()
+    published_at = snippet.get("publishedAt", "")
+
+    pub_date_str = ""
+    try:
+        pub_dt = datetime.fromisoformat(published_at.replace("Z", "+00:00")).astimezone(_KST)
+        pub_date_str = pub_dt.strftime("%a, %d %b %Y %H:%M:%S %z")
+    except Exception:
+        pass
+
+    return Episode(
+        title=title,
+        description=_dedup_description(description),
+        description_html=description,
+        pub_date=pub_date_str,
+        audio_url=None,
+        guid=f"youtube:{video_id}",
+        source_feed=f"youtube-api:{YOUTUBE_CHANNEL_ID}",
+        fetched_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    )
+
+
 def fetch_from_youtube(url: str) -> Episode:
     """MBC 손경제 유튜브 영상에서 커리큘럼 description 추출.
 
@@ -197,11 +287,26 @@ def fetch_latest_episode() -> Episode:
     pub_date_kst = pub_dt.astimezone(_KST).date()
     today_kst = datetime.now(_KST).date()
     if pub_date_kst != today_kst:
+        # RSS 반영 지연 · YOUTUBE_API_KEY 있으면 채널 자동 검색으로 fallback
+        if os.environ.get("YOUTUBE_API_KEY", "").strip():
+            logger.warning(
+                "RSS 최신 [손경제]가 오늘 방송이 아님 (pub_date=%s, today=%s). "
+                "YouTube API로 자동 fallback 시도.",
+                pub_date_kst, today_kst,
+            )
+            try:
+                return fetch_from_youtube_channel_api()
+            except Exception as api_exc:
+                raise RuntimeError(
+                    f"RSS 지연 + YouTube API fallback도 실패: {api_exc}. "
+                    f"→ 유튜브 채널에도 오늘 [손경제] 영상이 아직 없을 수 있음."
+                )
         raise RuntimeError(
             f"픽한 에피소드가 오늘 방송이 아님. "
             f"pub_date(KST)={pub_date_kst}, today(KST)={today_kst}, "
             f"title={entry.get('title','')[:80]!r}. "
-            f"→ RSS 반영 지연 · 백업 cron 슬롯에서 재시도됩니다."
+            f"→ RSS 반영 지연 · 백업 cron 슬롯에서 재시도됩니다. "
+            f"(YOUTUBE_API_KEY 등록하면 자동 fallback 가능)"
         )
     logger.info("✓ pub_date 검증 통과: %s (KST 오늘)", pub_date_kst)
     logger.info("픽한 에피소드: %s", entry.get("title", "")[:80])
