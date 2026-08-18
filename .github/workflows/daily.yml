@@ -25,6 +25,11 @@ on:
         default: 'false'
         type: choice
         options: ['false', 'true']
+      youtube_url:
+        description: '(선택) MBC 손경제 유튜브 영상 URL - RSS 지연 시 유튜브에서 fetch'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   # run.py가 docs/를 commit + push · gh workflow run이 actions:write 필요
@@ -75,6 +80,7 @@ jobs:
         env:
           FORCE_FLAG: ${{ github.event_name == 'workflow_dispatch' && inputs.force == 'true' && '--force' || '' }}
           NOTIFY_FLAG: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_notify == 'true' && '--no-notify' || '' }}
+          YOUTUBE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.youtube_url || '' }}
         run: |
           # archive 존재 여부를 사전에 기록해서 skip 여부 판단
           DATE=$(date +%F)

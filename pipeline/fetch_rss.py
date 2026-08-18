@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 import sys
 from dataclasses import asdict, dataclass
@@ -100,8 +101,59 @@ def _audio_url(entry) -> Optional[str]:
     return None
 
 
+def fetch_from_youtube(url: str) -> Episode:
+    """MBC 손경제 유튜브 영상에서 커리큘럼 description 추출.
+
+    RSS/팟캐스트가 지연 발행되는 경우 대체 소스. yt-dlp로 metadata만 뽑음
+    (ffmpeg 불필요, 실제 영상 다운로드 없음).
+    """
+    logger.info("유튜브에서 에피소드 fetch: %s", url)
+    try:
+        from yt_dlp import YoutubeDL
+    except ImportError as e:
+        raise RuntimeError(f"yt-dlp 미설치: {e}. requirements.txt에 yt-dlp 추가 필요.")
+
+    with YoutubeDL({"quiet": True, "no_warnings": True, "skip_download": True}) as ydl:
+        info = ydl.extract_info(url, download=False)
+
+    title = (info.get("title") or "").strip()
+    description = (info.get("description") or "").strip()
+    upload_date = info.get("upload_date", "")  # YYYYMMDD
+
+    # upload_date를 RFC2822 형식으로 변환 (KST 08:30 가정)
+    pub_date_str = ""
+    if len(upload_date) == 8:
+        try:
+            _KST = timezone(timedelta(hours=9))
+            dt = datetime.strptime(upload_date, "%Y%m%d").replace(hour=8, minute=30, tzinfo=_KST)
+            pub_date_str = dt.strftime("%a, %d %b %Y %H:%M:%S %z")
+        except Exception:
+            pass
+
+    logger.info("유튜브 에피소드: %s", title[:80])
+    return Episode(
+        title=title,
+        description=_dedup_description(description),
+        description_html=description,
+        pub_date=pub_date_str,
+        audio_url=None,
+        guid=info.get("id", "") or url,
+        source_feed=f"youtube:{url}",
+        fetched_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    )
+
+
 def fetch_latest_episode() -> Episode:
-    """정규 [손경제] 편만 픽. [플러스] 대담편은 뉴스 큐레이션 소스가 아니라 스킵."""
+    """정규 [손경제] 편만 픽. [플러스] 대담편은 뉴스 큐레이션 소스가 아니라 스킵.
+
+    RSS 실패(오늘 방송 없음) 시 YOUTUBE_URL 환경변수가 있으면 유튜브에서 fetch.
+    """
+    # ── 유튜브 우선 오버라이드 (RSS 지연 시 CI에서 URL 명시 대체) ──
+    youtube_url = os.environ.get("YOUTUBE_URL", "").strip()
+    if youtube_url:
+        logger.info("YOUTUBE_URL 환경변수 감지 → RSS 대신 유튜브에서 fetch")
+        return fetch_from_youtube(youtube_url)
+
     logger.info("RSS 가져오는 중: %s", RSS_URL)
     feed = feedparser.parse(RSS_URL)
     if feed.bozo and not feed.entries:
