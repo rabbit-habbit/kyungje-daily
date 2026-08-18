@@ -148,7 +148,23 @@ def fetch_latest_episode() -> Episode:
 
     RSS 실패(오늘 방송 없음) 시 YOUTUBE_URL 환경변수가 있으면 유튜브에서 fetch.
     """
-    # ── 유튜브 우선 오버라이드 (RSS 지연 시 CI에서 URL 명시 대체) ──
+    # ── 최우선: 수동 에피소드 파일 (pipeline/manual-episodes/YYYY-MM-DD.json) ──
+    # RSS/유튜브 자동 fetch가 CI 환경 문제로 실패할 때 로컬에서 만든 파일을 커밋해 우회.
+    # 파일 형식: Episode dataclass 필드와 동일한 JSON.
+    _KST = timezone(timedelta(hours=9))
+    today_kst = datetime.now(_KST).strftime("%Y-%m-%d")
+    from pathlib import Path as _Path
+    manual_path = _Path(__file__).parent / "manual-episodes" / f"{today_kst}.json"
+    if manual_path.exists():
+        import json as _json
+        logger.info("수동 에피소드 파일 감지 → %s", manual_path.name)
+        data = _json.loads(manual_path.read_text(encoding="utf-8"))
+        # description 재정리 (RSS 형식과 동일 처리)
+        if "description" in data:
+            data["description"] = _dedup_description(data["description"])
+        return Episode(**{k: data.get(k) for k in Episode.__dataclass_fields__})
+
+    # ── 두번째: 유튜브 URL 오버라이드 (환경변수) ──
     youtube_url = os.environ.get("YOUTUBE_URL", "").strip()
     if youtube_url:
         logger.info("YOUTUBE_URL 환경변수 감지 → RSS 대신 유튜브에서 fetch")
