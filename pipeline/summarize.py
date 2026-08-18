@@ -20,11 +20,56 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
 logger = logging.getLogger(__name__)
+
+KST = ZoneInfo("Asia/Seoul")
+ARCHIVE_DIR = Path(__file__).resolve().parent.parent / "docs" / "archive"
+
+# 이 날짜 이후 공유본에 실제로 나간 explainer 주제는 엄격 회피.
+# (그 이전 이력은 대표님만 열람 - 독자 노출 없었으므로 중복 무관)
+EXPLAINER_HISTORY_SINCE = "2026-08-18"
+
+_EXPLAINER_TITLE_RE = re.compile(r'class="explainer-title">([^<]+)<')
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def recent_explainer_titles(
+    since: str = EXPLAINER_HISTORY_SINCE, exclude_date: Optional[str] = None
+) -> list[tuple[str, str]]:
+    """공유본 아카이브에서 since 이후 독자에게 실제 노출된 explainer 제목 수집.
+
+    full 모드가 아닌 *-share.html만 스캔한다 (full은 내부 열람용).
+    exclude_date는 재실행 시 오늘자 산출물이 자기 자신을 회피 목록에 넣는 것을 막는다.
+    """
+    if exclude_date is None:
+        exclude_date = datetime.now(KST).strftime("%Y-%m-%d")
+
+    found: list[tuple[str, str]] = []
+    if not ARCHIVE_DIR.is_dir():
+        logger.warning("archive 디렉터리 없음: %s - explainer 회피 목록 생략", ARCHIVE_DIR)
+        return found
+
+    for path in sorted(ARCHIVE_DIR.glob("*-share.html")):
+        date_str = path.name[:10]
+        if not _DATE_RE.fullmatch(date_str):
+            continue
+        if date_str < since or date_str == exclude_date:
+            continue
+        try:
+            m = _EXPLAINER_TITLE_RE.search(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            logger.warning("아카이브 읽기 실패 %s: %s", path.name, exc)
+            continue
+        if m:
+            found.append((date_str, m.group(1).strip()))
+    return found
 
 
 BRAND_CONTEXT = """\
@@ -107,6 +152,7 @@ why_for_workers·지표·insight)에 실제로 등장한 용어·표현 중, 재
 - 좋은 예: 지표 섹션에 "매파적 동결"이 나왔다면 → "매파와 비둘기파, 뭐가 다른 거예요?"
 - 나쁜 예: 본문에 없는 용어를 새로 끌어와 설명 (독자가 왜 읽어야 하는지 모름)
 - 후보가 여럿이면 초보가 가장 자주 마주치는 기본 용어를 우선한다.
+  단 아래 [이미 다룬 주제]에 있으면 제외하고 다음 후보로 넘어간다.
 title: 질문형 권장 ("~가 뭐예요?", "~하면 무슨 일이 생기나요?").
 body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔는지 짚어줄 것.
 대비되는 개념 둘을 다루면 HTML <table> 비교표 권장 (초보 이해도가 크게 올라감).
@@ -232,6 +278,23 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
         )
     indicators_text = "\n".join(ind_lines) or "(수집 실패)"
 
+    history = recent_explainer_titles()
+    if history:
+        history_lines = "\n".join(f"- {d}: {t}" for d, t in history)
+        history_text = f"""
+[이미 다룬 '경제 기초 다지기' 주제 - 엄격 회피]
+{history_lines}
+
+위 주제는 독자에게 이미 나갔습니다. 같은 주제를 다시 고르지 마세요.
+예외: 오늘 본문 이해에 그 개념이 반드시 필요한 경우에만 다시 다룰 수 있습니다.
+      단 반드시 '새로운 각도'여야 하며, title에서 각도 차이가 드러나야 합니다.
+      같은 질문을 표현만 바꿔 되묻는 것은 금지입니다.
+"""
+        logger.info("explainer 회피 목록 %d건 주입 (기준일 %s 이후)",
+                    len(history), EXPLAINER_HISTORY_SINCE)
+    else:
+        history_text = ""
+
     return f"""\
 [오늘 손경제 에피소드]
 방송일: {pub_date}
@@ -241,7 +304,7 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 
 [오늘 경제지표]
 {indicators_text}
-
+{history_text}
 위 정보를 바탕으로 통합 보고서 데이터를 생성하세요. web_search로 손경제 3개 토픽의
 출처 + 추가 뉴스 2개 + 기준금리 전망을 조사하세요.
 
