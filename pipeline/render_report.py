@@ -26,7 +26,7 @@
             ...  # 보통 5개
         ],
         "insight": "<strong>html</strong> 가능한 텍스트",
-        "explainer": {"title": "...", "body": "html"},   # full 모드만
+        "explainer": {"title": "...", "body": "html"},   # 전 모드
         "rabbithat_ideas": [{"label", "text"}, ...],     # full 모드만
         "generated_at": "..."
     }
@@ -60,8 +60,8 @@ def _make_env() -> Environment:
 def render(context: dict, mode: str = "full") -> str:
     """report.html.j2 → HTML 문자열.
 
-    mode='full'  : 뉴스+insight + explainer + rabbithat_ideas + episode
-    mode='share' : 뉴스+insight만
+    mode='full'  : 뉴스+explainer+insight + rabbithat_ideas + episode
+    mode='share' : 뉴스+explainer+insight
     """
     env = _make_env()
     tmpl = env.get_template("report.html.j2")

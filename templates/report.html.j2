@@ -312,7 +312,7 @@
     color: var(--text);
   }
 
-  /* Explainer Box (full 모드 - 친절한 경제) */
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
   .explainer {
     background: var(--blue-light);
     border: 1px solid rgba(37,99,235,0.15);
@@ -532,12 +532,12 @@
     {% endfor %}
   </div>
 
-  {# 친절한 경제 — full 모드에서만 #}
-  {% if mode != 'share' and explainer %}
+  {# 경제 기초 다지기 - 전 모드 노출 (share 모드에선 한줄 인사이트 바로 위) #}
+  {% if explainer %}
   <div class="section">
-    <div class="section-label">💡 친절한 경제</div>
+    <div class="section-label">{% if mode == 'share' %}📚 경제 기초 다지기{% else %}💡 친절한 경제{% endif %}</div>
     <div class="explainer">
-      <div class="explainer-badge">오늘의 경제상식</div>
+      <div class="explainer-badge">{% if mode == 'share' %}이번 편 개념 정리{% else %}오늘의 경제상식{% endif %}</div>
       <h3 class="explainer-title">{{ explainer.title }}</h3>
       <div class="explainer-body">{{ explainer.body | safe }}</div>
     </div>
