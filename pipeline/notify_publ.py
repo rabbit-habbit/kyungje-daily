@@ -11,6 +11,7 @@ Playwright 기반 브라우저 자동화 (publ은 공식 API 없음).
 CLI:
   python pipeline/notify_publ.py --message "🐰 오늘 브리핑 → https://..."
   python pipeline/notify_publ.py --today   # date 기반 자동 메시지 생성
+  python pipeline/notify_publ.py --today --dry-run   # 발송 없이 메시지만 확인
 """
 from __future__ import annotations
 
@@ -45,17 +46,64 @@ def _kst_today_str() -> str:
     return datetime.now(KST).strftime("%Y-%m-%d")
 
 
+def _load_group_note(date_iso: str) -> str:
+    """summarize가 생성해 docs/에 커밋해 둔 오늘치 그룹톡 멘트를 읽는다.
+
+    daily.yml이 `docs/archive/{date}-meta.json`에 써 두고 커밋한다.
+    파일이 없거나 비어있으면 빈 문자열 → 기존 고정 문구만 발송 (하위 호환).
+    """
+    path = Path(__file__).resolve().parent.parent / "docs" / "archive" / f"{date_iso}-meta.json"
+    if not path.is_file():
+        logger.warning("멘트 파일 없음: %s - 기본 문구만 발송", path.name)
+        return ""
+    try:
+        note = (json.loads(path.read_text(encoding="utf-8")).get("group_note") or "").strip()
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning("멘트 파일 읽기 실패 %s: %s - 기본 문구만 발송", path.name, exc)
+        return ""
+    if not note:
+        logger.warning("멘트가 비어있음 (%s) - 기본 문구만 발송", path.name)
+    return note
+
+
+# ── 서명 만료 링크 ──────────────────────────────────────────────────
+# 유료 멤버십 채팅방에 올리는 링크는 공개 Pages 주소 대신 Cloudflare Worker의
+# /brief/{app}/{date}?e=<만료>&s=<hmac> 서명 링크를 쓴다.
+# 날짜·만료를 조작하면 서명이 깨져 열리지 않고, 만료(기본 7일) 후엔 죽는다.
+# 지난 호는 publ 아티클(멤버십 인증)에서 보는 것이 정석 경로.
+WORKER_BASE = "https://molit-proxy.rabbit-habbit.workers.dev"
+
+
+def _signed_brief_url(app: str, date_iso: str) -> str:
+    import hashlib
+    import hmac
+    import time
+
+    key = os.environ.get("LINK_SIGN_KEY", "")
+    if not key:
+        raise RuntimeError("LINK_SIGN_KEY 환경변수가 필요합니다 (서명 링크 생성용).")
+    ttl_days = int(os.environ.get("LINK_TTL_DAYS", "7"))
+    exp = int(time.time()) + ttl_days * 86400
+    sig = hmac.new(key.encode(), f"{app}/{date_iso}/{exp}".encode(), hashlib.sha256).hexdigest()[:32]
+    return f"{WORKER_BASE}/brief/{app}/{date_iso}?e={exp}&s={sig}"
+
+
 def _today_message() -> str:
-    """오늘 날짜 기반 기본 메시지 (M/D · 인라인 URL 포함)."""
+    """오늘 날짜 기반 메시지 (M/D · 인라인 URL · 하루치 멘트)."""
     now = datetime.now(KST)
     date_short = f"{now.month}/{now.day}"
     date_iso = now.strftime("%Y-%m-%d")
-    url = f"{PAGES_BASE}/archive/{date_iso}-share-inline.html"
-    return (
+    url = _signed_brief_url("k", date_iso)
+    msg = (
         f"🐰 [{date_short} 데일리 경제 브리핑]\n"
         f"매일 5분, 오늘의 경제 한입!🍰\n"
         f"→ {url}"
     )
+    note = _load_group_note(date_iso)
+    if note:
+        # URL 다음에 빈 줄을 두고 멘트를 붙인다 (URL이 줄 끝이라 링크 인식에 영향 없음).
+        msg = f"{msg}\n\n{note}"
+    return msg
 
 
 def _perform_login(page, email: str, password: str) -> None:
@@ -213,6 +261,8 @@ if __name__ == "__main__":
     parser.add_argument("--room-url", help="publ 방 URL override")
     parser.add_argument("--no-session", action="store_true", help="세션 파일 무시 · 매번 재로그인")
     parser.add_argument("--headed", action="store_true", help="브라우저 창 표시 (디버깅)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="발송하지 않고 조립된 메시지만 출력 (발송 전 확인용)")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
@@ -224,6 +274,14 @@ if __name__ == "__main__":
         parser.error("--message 또는 --today 필요")
 
     logger.info("메시지:\n%s\n", message)
+
+    if args.dry_run:
+        print("-" * 46)
+        print(message)
+        print("-" * 46)
+        print("※ --dry-run: 실제 발송하지 않았습니다.")
+        raise SystemExit(0)
+
     headless = not args.headed
     if os.environ.get("PUBL_HEADLESS", "").lower() == "false":
         headless = False
