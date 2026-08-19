@@ -6,6 +6,7 @@
   - explainer: 경제 기초 다지기 (전 모드 사용)
   - rabbithat_ideas: 콘텐츠 소재 (full 모드 사용)
   - policy_outlook: 한국·미국 기준금리 짧은 전망 (50자 이내)
+  - group_note: publ 그룹톡 발송용 하루치 멘트 (2~3문장)
 
 web_search 서버 도구를 사용해 실제 기사·수치를 조사.
 """
@@ -169,9 +170,42 @@ body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔�
 좋은 예: "5/28 금통위 동결, 7월 인하 재개 검토" / "6/18 FOMC 동결, 9월 25bp 인하 (CME 65%)"
 나쁜 예: "동결 전망" (너무 일반적, 금지)
 
+### STEP 9. 그룹톡 멘트 (group_note) - publ 구독자에게 보낼 하루치 한마디
+브리핑 링크와 함께 그룹 채팅방에 나가는 멘트. **대표님이 직접 쓴 것처럼** 1인칭으로 쓴다.
+자동 발송이 아니라 사람이 오늘 자료를 만들고 한마디 붙인 느낌이어야 한다.
+
+★ 소재는 오늘 내용에 맞춰 **직접 판단해서 고른다** (고정 틀 금지):
+- 기초다지기 개념이 오늘 뉴스 전체를 이해하는 열쇠라면 → 그 개념 중심
+- 시장이 크게 움직였거나 독자 지갑에 바로 닿는 뉴스가 있으면 → 그 뉴스 중심
+- 둘 다 약한 날은 오늘 5개를 관통하는 흐름 한 줄
+
+★ 톤은 **그날 분위기를 따라간다** (이 규칙이 가장 중요):
+- 평온한 날: 친근하게. "여러분!" 시작, "저도 ~했어요" 경험 공유, "ㅎㅎ" 1회까지 허용
+- 급락·위기·손실 뉴스가 헤드라인인 날: **"ㅎㅎ"와 들뜬 이모지 금지.** 차분하고
+  담담하게. 독자가 이미 놀란 상태라는 전제로 "왜 그런지 정리해뒀다"는 안내 톤
+- 겁주거나 재촉하지 않는다. 클릭을 구걸하는 표현("꼭 보셔야 해요!!") 금지
+
+형식:
+- 2~3문장, 전체 200자 이내. 짧을수록 좋다.
+- 이모지는 0~1개. 남발 금지.
+- URL·링크는 넣지 않는다 (발송 코드가 따로 붙인다).
+- 마무리는 부드러운 안내형 ("정리해뒀어요", "하단에서 확인해보세요", "천천히 보세요").
+- 상대 날짜 금지 (아래 규칙과 동일). 긴 대시(-) 대신 하이픈.
+
+좋은 예 (평온한 날):
+"여러분! 오늘 기초다지기는 '기간프리미엄'이에요. 저도 '물가는 잡혔다는데 왜 장기금리는
+안 내리지?' 싶었던 적이 있는데, 이 개념 하나 알고 나니 오늘 뉴스가 다 연결되더라구요ㅎㅎ"
+
+좋은 예 (급락일):
+"여러분, 오늘 계좌 열어보고 놀라셨을 것 같아요. 코스피가 7.2% 빠졌는데 방아쇠는
+우리나라가 아니라 미국 30년물 국채금리였어요. 왜 그런지 차근차근 정리해뒀습니다."
+
+나쁜 예:
+"오늘도 알찬 브리핑 준비했어요! 꼭 확인해주세요!!😍🔥" (내용 없음·톤 과함·매일 똑같음)
+
 ## ★ 출처 비공개 규칙 (반드시 지킬 것)
 보고서를 받아보는 독자는 자료 원천이 어디인지 몰라야 합니다. **모든 본문(body, why_for_workers,
-insight, explainer.body, rabbithat_ideas.text)에서 다음 표현을 절대 쓰지 마세요:**
+insight, explainer.body, rabbithat_ideas.text, group_note)에서 다음 표현을 절대 쓰지 마세요:**
   - "손경제", "이진우", "MBC", "라디오", "팟캐스트", "방송에서"
   - "오늘 손경제에서 다룬", "손경제는 분석했어요" 등 출처를 암시하는 모든 표현
 대신 일반적 표현으로 바꾸세요:
@@ -256,7 +290,8 @@ OUTPUT_SCHEMA = """\
   "policy_outlook": {
     "korea": "5/28 금통위 동결, 7월 인하 검토 (50자 이내)",
     "us": "6/18 FOMC 동결, 9월 25bp 인하 (CME 65%)"
-  }
+  },
+  "group_note": "그룹톡 멘트 (2~3문장, 200자 이내, URL 없이, 그날 톤에 맞춰)"
 }
 """
 
@@ -368,13 +403,19 @@ def summarize(
             attempt, MAX_ATTEMPTS, model, use_web_search,
         )
         try:
-            response = client.messages.create(
-                model=model,
-                max_tokens=10000,
-                system=SYSTEM_PROMPT,
-                tools=tools or None,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
+            # tools는 비어있으면 파라미터 자체를 생략해야 한다.
+            # tools=[] 또는 tools=None을 넘기면 API가 400을 반환한다
+            # ("tools: Input should be a valid array"). web_search 실패 후
+            # use_web_search=False로 재시도하는 경로가 이 때문에 죽었다.
+            kwargs = {
+                "model": model,
+                "max_tokens": 10000,
+                "system": SYSTEM_PROMPT,
+                "messages": [{"role": "user", "content": user_prompt}],
+            }
+            if tools:
+                kwargs["tools"] = tools
+            response = client.messages.create(**kwargs)
         except Exception as exc:
             if use_web_search and attempt == 1:
                 logger.warning("web_search 호출 실패: %s — 도구 없이 재시도", exc)
@@ -419,6 +460,7 @@ def summarize(
     data.setdefault("news_cards", [])
     data.setdefault("insight", "")
     data.setdefault("explainer", None)
+    data.setdefault("group_note", "")
     data.setdefault("rabbithat_ideas", [])
     data.setdefault("policy_outlook", {})
 

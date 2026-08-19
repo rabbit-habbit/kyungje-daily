@@ -275,12 +275,29 @@ def run(
         "insight": summary.get("insight", ""),
         "explainer": summary.get("explainer"),
         "rabbithat_ideas": summary.get("rabbithat_ideas", []),
+        "group_note": summary.get("group_note", ""),
         "generated_at": now.strftime("%Y-%m-%d %H:%M KST"),
     }
     if save_intermediate:
         (out_dir / "report_data.json").write_text(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+
+    # 4a) 그룹톡 멘트를 docs/로 저장.
+    # publ-post.yml은 daily.yml과 별개 실행 = 별도 checkout이라, out_dir의 중간 JSON은
+    # 보이지 않는다. docs/는 git commit 대상이므로 여기 두면 다음 워크플로우가 읽는다.
+    group_note = (summary.get("group_note") or "").strip()
+    meta_path = ROOT / "docs" / "archive" / f"{date_str}-meta.json"
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path.write_text(
+        json.dumps({"date": date_str, "group_note": group_note},
+                   ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    if group_note:
+        logger.info("  ✓ [meta] 그룹톡 멘트 %d자: %s", len(group_note), meta_path.name)
+    else:
+        logger.warning("  ! group_note 비어있음 - 그룹톡은 기본 문구만 발송됨")
 
     share_html: str | None = None
     for mode in ("full", "share"):
@@ -320,8 +337,13 @@ def run(
 
     # 6) 카카오톡 알림 (best-effort) — 영구 archive URL 사용
     if notify:
-        full_url, share_url = _archive_urls(date_str)
-        logger.info("[kakao] 알림 전송 중 (영구 archive 링크): %s", full_url)
+        # 공개 Pages 폐쇄(2026-08-19) - 카톡도 서명 만료 링크로 통일
+        try:
+            from pipeline.signed_link import signed_brief_url
+        except ImportError:
+            from signed_link import signed_brief_url
+        full_url = share_url = signed_brief_url("k", date_str)
+        logger.info("[kakao] 알림 전송 중 (서명 링크): %s", full_url)
         try:
             notify_kakao.notify_from_report(
                 report_data, full_url, share_url
