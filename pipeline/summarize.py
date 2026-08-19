@@ -296,6 +296,33 @@ OUTPUT_SCHEMA = """\
 """
 
 
+NO_SEARCH_GUARD = """\
+
+## ★★ web_search 도구 사용 불가 상태입니다 (반드시 지킬 것)
+이 호출에는 web_search 도구가 제공되지 않았습니다. 따라서:
+
+1. **도구 호출을 흉내내지 마세요.** <tool_call>, <tool_response>, <function_calls> 같은
+   블록을 본문에 직접 쓰는 것은 금지입니다. 검색한 척하는 것도 금지입니다.
+2. **출처를 지어내지 마세요.** 실제로 확인하지 않은 기사 제목·매체명·URL을 만드는 것은
+   절대 금지입니다. 모든 news_cards의 `sources`는 **빈 배열 `[]`**로 두세요.
+3. **뉴스는 손경제 에피소드에 실제로 담긴 토픽만** 쓰세요. 추가 뉴스 2개를 채우려고
+   없는 사건을 만들지 마세요. news_cards가 5개보다 적어도 괜찮습니다.
+4. policy_outlook은 확인 불가하므로 각 항목을 빈 문자열 ""로 두세요.
+5. 지표 수치는 입력으로 받은 값만 쓰세요.
+
+확실하지 않으면 비워두는 것이 지어내는 것보다 항상 낫습니다.
+"""
+
+
+def _build_system_prompt(with_search: bool) -> str:
+    """web_search 가용 여부에 따라 시스템 프롬프트를 조립.
+
+    도구 없이 SYSTEM_PROMPT만 주면 모델이 '검색한 척' 하면서 가짜 기사·URL을
+    만들어낸다 (실측 확인됨). 그래서 도구가 없을 때는 날조 금지 가드를 덧붙인다.
+    """
+    return SYSTEM_PROMPT if with_search else SYSTEM_PROMPT + NO_SEARCH_GUARD
+
+
 def _build_user_prompt(episode: dict, indicators: dict) -> str:
     """기존 형식 indicators({indicators: {usd_krw: {...}}, policy_rates: {...}})를 받음."""
     title = episode.get("title", "")
@@ -410,7 +437,7 @@ def summarize(
             kwargs = {
                 "model": model,
                 "max_tokens": 10000,
-                "system": SYSTEM_PROMPT,
+                "system": _build_system_prompt(bool(tools)),
                 "messages": [{"role": "user", "content": user_prompt}],
             }
             if tools:
@@ -418,9 +445,13 @@ def summarize(
             response = client.messages.create(**kwargs)
         except Exception as exc:
             if use_web_search and attempt == 1:
-                logger.warning("web_search 호출 실패: %s — 도구 없이 재시도", exc)
-                return summarize(
-                    episode, indicators, use_web_search=False, model=model
+                # 예전엔 여기서 use_web_search=False로 자동 재시도했다. 그러나 도구
+                # 없이 생성한 보고서는 출처를 확보할 수 없어(가드로 sources=[] 강제)
+                # 구독자에게 나갈 품질이 아니다. 조용히 강등 발행하는 대신 실패시켜
+                # 백업 cron(09:20/09:50)이 재시도하게 한다. --no-search는 개발용.
+                logger.error(
+                    "web_search 호출 실패: %s - 출처 없는 보고서를 발행하지 않기 위해 "
+                    "중단합니다. 백업 cron이 재시도합니다.", exc
                 )
             raise
 
