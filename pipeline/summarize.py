@@ -445,13 +445,16 @@ def summarize(
             response = client.messages.create(**kwargs)
         except Exception as exc:
             if use_web_search and attempt == 1:
-                # 예전엔 여기서 use_web_search=False로 자동 재시도했다. 그러나 도구
-                # 없이 생성한 보고서는 출처를 확보할 수 없어(가드로 sources=[] 강제)
-                # 구독자에게 나갈 품질이 아니다. 조용히 강등 발행하는 대신 실패시켜
-                # 백업 cron(09:20/09:50)이 재시도하게 한다. --no-search는 개발용.
-                logger.error(
-                    "web_search 호출 실패: %s - 출처 없는 보고서를 발행하지 않기 위해 "
-                    "중단합니다. 백업 cron이 재시도합니다.", exc
+                # 대표님 방침(8/19): 발행 중단은 안 됨. web_search가 실패해도
+                # 손경제 내용만으로 발행을 이어간다.
+                # 가짜 출처 방어는 2단: NO_SEARCH_GUARD 프롬프트 + 파싱 후 코드로
+                # sources 전량 제거. 따라서 죽은 링크가 구독자에게 나가지 않는다.
+                logger.warning(
+                    "web_search 호출 실패: %s - 도구 없이 재시도합니다 "
+                    "(출처 없는 축약본으로 발행됨)", exc
+                )
+                return summarize(
+                    episode, indicators, use_web_search=False, model=model
                 )
             raise
 
@@ -494,6 +497,24 @@ def summarize(
     data.setdefault("group_note", "")
     data.setdefault("rabbithat_ideas", [])
     data.setdefault("policy_outlook", {})
+
+    # 도구 없이 생성된 응답은 출처를 실제로 확인할 방법이 없다. NO_SEARCH_GUARD로
+    # sources=[]를 지시하지만 모델이 어길 수 있으므로 코드로 한 번 더 비운다.
+    # 죽은 기사 URL이 구독자에게 나가는 것을 막는 마지막 방어선.
+    if not tools:
+        stripped = sum(len(c.get("sources") or []) for c in data.get("news_cards") or [])
+        for card in data.get("news_cards") or []:
+            card["sources"] = []
+        data["no_search_mode"] = True
+        if stripped:
+            logger.warning(
+                "no-search 모드: 모델이 출처 %d건을 제시했으나 검증 불가라 전량 제거",
+                stripped,
+            )
+        logger.warning(
+            "⚠️ no-search 모드로 생성됨 - 출처 없는 축약본. 내용도 미검증이므로 "
+            "발행본을 한 번 확인하세요."
+        )
 
     # 출처 비공개 — 본문에 "손경제/이진우/MBC" 등이 새어 들어왔는지 사후 점검 (경고만)
     FORBIDDEN = ("손경제", "이진우", "MBC", "손에 잡히는 경제", "팟캐스트", "라디오 방송")
