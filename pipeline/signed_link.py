@@ -1,6 +1,8 @@
 """유료 브리핑 서명 만료 링크 생성 (Cloudflare Worker /brief 게이트와 쌍).
 
-앱 코드: k = 경제 share-inline · m = 국토부 공개 인라인 · e = 국토부 이메일 전용(얼리버드 카드).
+앱 코드: k = 경제 share-inline (이 리포 전용).
+워커: economy-proxy (2026-08-20 분리. 이전에는 국토부와 공용인 molit-proxy를 썼다).
+  ※ LINK_SIGN_KEY도 이때 경제 전용으로 분리 발급함 - 국토부 키와 다르다.
 유효기간 기본 5일 (LINK_TTL_DAYS env로 조정, 점진 축소 예정 - 최종 목표 1일).
 """
 from __future__ import annotations
@@ -10,7 +12,7 @@ import hmac
 import os
 import time
 
-WORKER_BASE = "https://molit-proxy.rabbit-habbit.workers.dev"
+WORKER_BASE = "https://economy-proxy.rabbit-habbit.workers.dev"
 
 
 def signed_brief_url(app: str, date_iso: str) -> str:
