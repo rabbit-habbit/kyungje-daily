@@ -1,0 +1,32 @@
+name: Verify Link Key
+# 일회성 검증용 - LINK_SIGN_KEY가 어느 워커에서 검증되는지 확인. 확인 후 삭제.
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 서명 링크 생성 후 두 워커에 각각 요청
+        env:
+          LINK_SIGN_KEY: ${{ secrets.LINK_SIGN_KEY }}
+        run: |
+          python3 - <<'PY' > urls.txt
+          import hmac, hashlib, os, time
+          key = os.environ["LINK_SIGN_KEY"]
+          assert key, "LINK_SIGN_KEY 비어있음"
+          exp = int(time.time() + 3600)
+          date = "2026-08-20"
+          sig = hmac.new(key.encode(), f"k/{date}/{exp}".encode(), hashlib.sha256).hexdigest()[:32]
+          for host in ("economy-proxy", "molit-proxy"):
+              print(f"{host} https://{host}.rabbit-habbit.workers.dev/brief/k/{date}?e={exp}&s={sig}")
+          PY
+          echo "키 길이: ${#LINK_SIGN_KEY}자"
+          echo "----------------------------------------"
+          while read -r host url; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$url")
+            echo "$host -> HTTP $code"
+          done < urls.txt
+          echo "----------------------------------------"
+          echo "기대: economy-proxy=200 (새 키 일치) · molit-proxy=403 (옛 키라 불일치)"
