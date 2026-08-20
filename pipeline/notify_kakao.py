@@ -222,7 +222,7 @@ def _compose_message(
     # share_url이 full_url과 같으면 같은 링크를 두 번 넣지 않는다.
     # (서명 링크 전환 후 run.py가 full_url = share_url로 같은 값을 넘기고 있었고,
     #  112자짜리 URL이 두 번 들어가 200자 제한을 넘겨 뒤쪽 URL이 잘렸다.)
-    url_lines = [f"🔗 내 보고서\n{full_url}"]
+    url_lines = [f"🔗 브리핑 보기\n{full_url}"]
     if share_url and share_url != full_url:
         url_lines.append(f"🔗 공유용\n{share_url}")
 
@@ -259,8 +259,8 @@ def notify_from_report(
 ) -> dict:
     """run.py에서 호출. 본문에 URL 직접 명시 (카카오톡이 자동 링크화)."""
     msg = _compose_message(report_data, full_url, share_url)
-    # 카드 button_title은 단일 "내 보고서 보기" — 공유용은 본문 URL 클릭으로 접근
-    return send_to_me(msg, link_url=full_url, button_label="내 보고서 보기")
+    # 카드 button_title도 본문 링크와 동일한 공유본을 가리킨다.
+    return send_to_me(msg, link_url=full_url, button_label="브리핑 보기")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────

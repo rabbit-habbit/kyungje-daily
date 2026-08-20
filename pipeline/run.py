@@ -342,11 +342,14 @@ def run(
             from pipeline.signed_link import signed_brief_url
         except ImportError:
             from signed_link import signed_brief_url
-        full_url = share_url = signed_brief_url("k", date_str)
-        logger.info("[kakao] 알림 전송 중 (서명 링크): %s", full_url)
+        # 링크는 공유본(share-inline) 하나만. 예전엔 "내 보고서"·"공유용" 두 줄을
+        # 보냈지만 둘 다 같은 app 코드 k(=share-inline)라 내용이 동일했고,
+        # 112자 URL이 두 번 들어가 카톡 200자 제한을 넘겨 뒤쪽이 잘렸다 (8/20 사고).
+        share_url = signed_brief_url("k", date_str)
+        logger.info("[kakao] 알림 전송 중 (서명 링크): %s", share_url)
         try:
             notify_kakao.notify_from_report(
-                report_data, full_url, share_url
+                report_data, share_url, share_url=None
             )
             logger.info("  ✓ 카카오톡 알림 전송 완료")
         except Exception as exc:
