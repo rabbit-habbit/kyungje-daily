@@ -218,14 +218,39 @@ def _compose_message(
     date_short = _short_date(date_kr)
 
     header = f"📰 손경제 Daily Brief\n{date_short}"
-    url_lines = [f"🔗 내 보고서\n{full_url}"]
-    if share_url:
-        url_lines.append(f"🔗 공유용\n{share_url}")
-    url_block = "\n\n" + "\n\n".join(url_lines)
 
-    msg = header + url_block
+    # share_url이 full_url과 같으면 같은 링크를 두 번 넣지 않는다.
+    # (서명 링크 전환 후 run.py가 full_url = share_url로 같은 값을 넘기고 있었고,
+    #  112자짜리 URL이 두 번 들어가 200자 제한을 넘겨 뒤쪽 URL이 잘렸다.)
+    url_lines = [f"🔗 내 보고서\n{full_url}"]
+    if share_url and share_url != full_url:
+        url_lines.append(f"🔗 공유용\n{share_url}")
+
+    msg = header + "\n\n" + "\n\n".join(url_lines)
+
+    # ★ URL 중간을 자르면 서명이 깨져 워커가 403 forbidden을 준다 (8/20 사고).
+    #   길이를 넘기면 문자를 자르는 대신 링크 블록을 통째로 줄인다.
+    if len(msg) > limit and len(url_lines) > 1:
+        logger.warning(
+            "카톡 메시지 %d자 > 제한 %d자 - 공유용 링크를 생략합니다 "
+            "(URL을 자르면 서명이 깨집니다)", len(msg), limit,
+        )
+        url_lines = url_lines[:1]
+        msg = header + "\n\n" + "\n\n".join(url_lines)
+
     if len(msg) > limit:
-        msg = msg[: limit - 1] + "…"
+        # 링크 하나만으로도 초과 - 헤더를 줄여서라도 URL은 절대 보존한다.
+        essential = "\n\n".join(url_lines)
+        room = limit - len(essential) - 2
+        msg = (header[:room].rstrip() + "\n\n" + essential) if room > 0 else essential
+        logger.warning("카톡 메시지 제한 초과 - 헤더를 축약했습니다 (URL은 보존)")
+
+    if len(msg) > limit:
+        # 여기까지 왔다면 URL 자체가 제한을 넘는 비정상 상황. 자르지 않고 알린다.
+        logger.error(
+            "카톡 메시지가 URL만으로 %d자 - 제한 %d자를 넘습니다. 잘라 보내면 "
+            "링크가 깨지므로 그대로 전송합니다.", len(msg), limit,
+        )
     return msg
 
 
