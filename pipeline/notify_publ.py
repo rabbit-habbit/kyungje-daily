@@ -72,6 +72,52 @@ except ImportError:  # 스크립트 직접 실행 시 (python pipeline/notify_pu
     from signed_link import signed_brief_url
 
 
+# publ 그룹톡은 300자에서 메시지를 자른다. 이모지는 2자로 세는 JS 문자열 길이 기준.
+# 넘치면 문장 중간이 잘려 "...천천히" 처럼 끝난다 (8/21 사고).
+PUBL_LIMIT = 300
+_SENTENCE_END = ("!", "?", ".", "요", "다")
+
+
+def _js_len(text: str) -> int:
+    """publ이 세는 방식(JS UTF-16 코드유닛). 이모지 등 BMP 밖 문자는 2로 센다."""
+    return sum(2 if ord(c) > 0xFFFF else 1 for c in text)
+
+
+def _fit_note(note: str, head: str) -> str:
+    """멘트가 제한을 넘으면 문장 경계에서 줄인다. 단어 중간 절단은 하지 않는다."""
+    budget = PUBL_LIMIT - _js_len(head) - 2  # 2 = 사이 개행 두 줄
+    if budget <= 0:
+        logger.warning("링크만으로 publ 제한을 채워 멘트를 생략합니다.")
+        return ""
+    if _js_len(note) <= budget:
+        return note
+
+    # 예산 안에서 마지막 문장 종결 지점을 찾는다.
+    cut, acc = 0, 0
+    for i, ch in enumerate(note):
+        acc += 2 if ord(ch) > 0xFFFF else 1
+        if acc > budget:
+            break
+        if ch in _SENTENCE_END:
+            cut = i + 1
+    if cut:
+        trimmed = note[:cut].rstrip()
+        # 종결어미(요/다)에서 끊긴 경우 느낌표를 붙여 대표님 말투로 마무리한다.
+        # ("...훨씬 이해가 잘 될 거예요" -> "...훨씬 이해가 잘 될 거예요!")
+        if trimmed and trimmed[-1] not in "!?.":
+            trimmed = trimmed.rstrip(",·- ") + "!"
+        logger.warning(
+            "멘트 %d자가 publ 제한을 넘어 문장 단위로 줄였습니다 (%d자). "
+            "프롬프트의 120자 규칙을 확인하세요.", len(note), len(trimmed),
+        )
+        return trimmed
+
+    logger.warning(
+        "멘트 %d자가 제한을 넘는데 문장 경계를 찾지 못해 생략합니다.", len(note)
+    )
+    return ""
+
+
 def _today_message() -> str:
     """오늘 날짜 기반 메시지 (M/D · 인라인 URL · 하루치 멘트)."""
     now = datetime.now(KST)
@@ -86,7 +132,9 @@ def _today_message() -> str:
     note = _load_group_note(date_iso)
     if note:
         # URL 다음에 빈 줄을 두고 멘트를 붙인다 (URL이 줄 끝이라 링크 인식에 영향 없음).
-        msg = f"{msg}\n\n{note}"
+        note = _fit_note(note, msg)
+        if note:
+            msg = f"{msg}\n\n{note}"
     return msg
 
 
