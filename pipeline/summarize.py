@@ -41,6 +41,36 @@ _EXPLAINER_TITLE_RE = re.compile(r'class="explainer-title">([^<]+)<')
 _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
+_NEWS_TITLE_RE = re.compile(r'class="news-title">([^<]+)<')
+
+
+def recent_news_titles(days: int = 3, exclude_date: Optional[str] = None) -> list[tuple[str, list[str]]]:
+    """최근 발행본의 뉴스 헤드라인을 날짜별로 수집 (같은 사건 반복 방지용).
+
+    공유본 아카이브에서 최신 days일치. 어제 실은 뉴스를 모르면 계속 이어지는
+    이슈(유가 등)를 매일 새 소식처럼 다시 싣게 된다
+    (실측: 9/1~9/3 사흘 연속 2번 자리가 유가, 9/2와 9/3은 같은 'WTI 90달러 돌파').
+    """
+    if exclude_date is None:
+        exclude_date = datetime.now(KST).strftime("%Y-%m-%d")
+    out: list[tuple[str, list[str]]] = []
+    if not ARCHIVE_DIR.is_dir():
+        return out
+    for path in sorted(ARCHIVE_DIR.glob("*-share.html"), reverse=True):
+        date_str = path.name[:10]
+        if not _DATE_RE.fullmatch(date_str) or date_str == exclude_date:
+            continue
+        try:
+            titles = _NEWS_TITLE_RE.findall(path.read_text(encoding="utf-8"))
+        except OSError:
+            continue
+        if titles:
+            out.append((date_str, [t.strip() for t in titles[:5]]))
+        if len(out) >= days:
+            break
+    return out
+
+
 def recent_group_notes(limit: int = 10, exclude_date: Optional[str] = None) -> list[tuple[str, str]]:
     """최근 발송된 그룹톡 멘트를 수집 (표현 반복 회피용).
 
@@ -241,18 +271,18 @@ body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔�
   [말 걸기] -> [오늘 무엇이/왜 벌어졌는지 한 줄] -> [무엇을 정리해뒀는지 안내]
 표현은 **매일 새로 지어낼 것.**
 
-**★ 금지 (실제로 반복돼 문제가 된 표현):**
-- **"계좌 열어보고 놀라셨을 것 같아요" 및 모든 변형** (계좌 보고 놀라셨죠, 계좌 확인하고
-  놀라셨을 텐데 등). 하락장마다 이 도입부가 반복돼 자동 생성 티가 났다. 절대 금지.
-- "방아쇠는 ~였어요" 도 같은 이유로 자제 (반복 시 형식적으로 읽힌다).
+**★ 특정 표현을 금지어로 막지 않는다. 대신 아래 [최근 보낸 그룹톡 멘트] 목록을
+보고 겹치지 않게 쓴다.** 어떤 표현이든 최근에 안 썼으면 써도 되고, 최근에 썼으면 피한다.
+("계좌 보고 놀라셨죠" 류 도입부도 2주 넘게 안 썼다면 다시 써도 된다.)
 
 **괜찮은 것 (굳이 피하지 말 것):**
 - "여러분"으로 시작하는 것은 브랜드 말투다. 그대로 써도 된다.
 - "천천히 보세요", "정리해뒀어요" 같은 마무리도 반복돼도 괜찮다.
 
-**변화를 주어야 할 지점은 딱 하나, 하락장 도입부다.**
-매일 같은 방식으로 놀람을 언급하지 말 것. 어떤 날은 숫자부터, 어떤 날은 원인부터,
-어떤 날은 독자가 궁금해할 질문부터 들어가는 식으로 첫 문장을 다르게 연다.
+**겹치지 않아야 하는 것은 첫 문장이다.**
+특히 하락장이 며칠 이어질 때 놀람을 언급하는 방식이 매일 같으면 자동 생성 티가 난다.
+어떤 날은 숫자부터, 어떤 날은 원인부터, 어떤 날은 독자가 궁금해할 질문부터 여는 식으로
+최근 목록에 없는 방식을 고른다.
 
 나쁜 예:
 "오늘도 알찬 브리핑 준비했어요! 꼭 확인해주세요!!😍🔥" (내용 없음·톤 과함·매일 똑같음)
@@ -420,13 +450,40 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 [최근 보낸 그룹톡 멘트 - 표현·구조 반복 금지]
 {note_lines}
 
-위는 최근 독자에게 실제로 나간 멘트입니다. 오늘 멘트의 **첫 문장은 위와 달라야
-합니다.** 특히 하락장이 이어질 때 '계좌 보고 놀라셨죠' 류 도입부를 반복하면 독자가
-자동 생성이라고 바로 알아챕니다. 마무리 표현("천천히 보세요" 등)은 겹쳐도 괜찮습니다.
+위는 최근 독자에게 실제로 나간 멘트입니다. 오늘 멘트의 **첫 문장이 위 어느
+것과도 같은 방식이면 안 됩니다.** 도입 방식(놀람 언급·숫자 제시·질문 던지기 등)과
+핵심 표현이 겹치는지 확인하고, 겹치면 다른 방식을 고르세요.
+마무리 표현("천천히 보세요" 등)은 겹쳐도 괜찮습니다.
 """
         logger.info("그룹톡 멘트 회피 목록 %d편 주입", len(notes))
     else:
         notes_text = ""
+
+    prev_news = recent_news_titles()
+    if prev_news:
+        news_lines = "\n".join(
+            f"[{d}]\n" + "\n".join(f"  {i}. {t}" for i, t in enumerate(ts, 1))
+            for d, ts in prev_news
+        )
+        prev_news_text = f"""
+[최근 발행본에 이미 실은 뉴스 - 같은 사건 재탕 금지]
+{news_lines}
+
+★ 위 뉴스는 독자가 이미 읽었습니다. 다음을 지키세요:
+1. **같은 사건을 새 소식인 것처럼 다시 싣지 마세요.** (실제 사고: 'WTI 90달러 돌파'를
+   이틀 연속 2번 자리에 실었습니다. 이미 돌파한 걸 다음 날 또 돌파했다고 쓴 셈입니다.)
+2. 계속 진행 중인 이슈(유가·금리 등)를 다루는 것 자체는 괜찮습니다. 단 그때는
+   **어제 대비 무엇이 새로 달라졌는지**가 헤드라인에 드러나야 합니다.
+   판단 기준: 헤드라인만 읽었을 때 **어제 안 읽은 새 정보가 있는가?**
+   - 어제 "X 돌파"를 실었다면 오늘 또 "X 돌파"는 안 된다 (이미 돌파했다)
+   - 지속 일수, 새로 번진 영역, 새 수치, 정책 대응 등 **오늘 처음 생긴 것**을 헤드라인에
+   ※ 위 문구를 그대로 베끼지 말 것. 판단 기준만 참고하고 표현은 그날 사실로 새로 쓸 것.
+3. 같은 소재가 사흘 이상 연속 상위권에 오르면, 그날 새로 생긴 다른 뉴스에 자리를
+   내주는 것을 우선 검토하세요.
+"""
+        logger.info("뉴스 중복 회피 %d일치 주입", len(prev_news))
+    else:
+        prev_news_text = ""
 
     return f"""\
 [오늘 손경제 에피소드]
@@ -437,7 +494,7 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 
 [오늘 경제지표]
 {indicators_text}
-{history_text}{notes_text}
+{history_text}{notes_text}{prev_news_text}
 위 정보를 바탕으로 통합 보고서 데이터를 생성하세요. web_search로 손경제 3개 토픽의
 출처 + 추가 뉴스 2개 + 기준금리 전망을 조사하세요.
 
