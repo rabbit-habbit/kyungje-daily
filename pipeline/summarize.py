@@ -41,6 +41,33 @@ _EXPLAINER_TITLE_RE = re.compile(r'class="explainer-title">([^<]+)<')
 _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
+def recent_group_notes(limit: int = 10, exclude_date: Optional[str] = None) -> list[tuple[str, str]]:
+    """최근 발송된 그룹톡 멘트를 수집 (표현 반복 회피용).
+
+    docs/archive/{date}-meta.json 에 저장된 group_note를 최신순으로 limit개.
+    과거 멘트를 안 보여주면 모델이 매일 같은 문장 구조를 재생산한다
+    (실측: 11편 중 "천천히 보세요" 7회, "방아쇠는" 4회).
+    """
+    if exclude_date is None:
+        exclude_date = datetime.now(KST).strftime("%Y-%m-%d")
+    found: list[tuple[str, str]] = []
+    if not ARCHIVE_DIR.is_dir():
+        return found
+    for path in sorted(ARCHIVE_DIR.glob("*-meta.json"), reverse=True):
+        date_str = path.name[:10]
+        if not _DATE_RE.fullmatch(date_str) or date_str == exclude_date:
+            continue
+        try:
+            note = json.loads(path.read_text(encoding="utf-8")).get("group_note", "")
+        except (OSError, json.JSONDecodeError):
+            continue
+        if note:
+            found.append((date_str, note))
+        if len(found) >= limit:
+            break
+    return found
+
+
 def recent_explainer_titles(
     since: str = EXPLAINER_HISTORY_SINCE, exclude_date: Optional[str] = None
 ) -> list[tuple[str, str]]:
@@ -196,7 +223,8 @@ body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔�
   마지막 문장을 억지로 밀어넣다 잘리는 것보다 짧고 완결된 편이 낫다.
 - 이모지는 0~1개. 남발 금지.
 - URL·링크는 넣지 않는다 (발송 코드가 따로 붙인다).
-- 마무리는 부드러운 안내형 ("정리해뒀어요", "하단에서 확인해보세요", "천천히 보세요").
+- 마무리는 부드러운 안내형 ("정리해뒀어요", "천천히 보세요", "확인해보세요" 등).
+  마무리 표현은 반복돼도 괜찮다. 굳이 매번 새로 짜내지 말 것.
 - **★ 마지막 문장은 반드시 느낌표(!)로 끝냅니다.** 대표님이 직접 말을 건네는 느낌을
   살리기 위한 규칙입니다. 급락·위기일에도 예외 없이 적용합니다.
   ✅ "천천히 보세요!"  ✅ "차근차근 정리해뒀어요!"  ❌ "천천히 보세요."
@@ -204,18 +232,32 @@ body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔�
   (급락일에는 마지막 1개만 쓰는 것을 권장)
 - 상대 날짜 금지 (아래 규칙과 동일). 긴 대시(—) 대신 하이픈(-) 사용.
 
-좋은 예 (평온한 날):
-"여러분! 오늘 기초다지기는 '기간프리미엄'이에요. 저도 '물가는 잡혔다는데 왜 장기금리는
-안 내리지?' 싶었던 적이 있는데, 이 개념 하나 알고 나니 오늘 뉴스가 다 연결되더라구요ㅎㅎ"
+## ★★ 매일 같은 문장이 나오지 않게 (가장 자주 실패하는 부분)
 
-좋은 예 (급락일):
-"여러분, 오늘 계좌 열어보고 놀라셨을 것 같아요. 코스피가 7.2% 빠졌는데 방아쇠는
-우리나라가 아니라 미국 30년물 국채금리였어요. 왜 그런지 차근차근 정리해뒀으니
-천천히 보세요!"  ← 차분한 톤 + 마무리 느낌표 1개
+아래는 **구조 설명이지 베껴 쓸 문장이 아니다.** 예시 문장을 그대로 재사용하면
+매일 똑같은 멘트가 나가 "AI가 쓴 티"가 난다. 실제로 그런 사고가 있었다.
+
+구조(뼈대)는 이 정도 흐름이면 된다:
+  [말 걸기] -> [오늘 무엇이/왜 벌어졌는지 한 줄] -> [무엇을 정리해뒀는지 안내]
+표현은 **매일 새로 지어낼 것.**
+
+**★ 금지 (실제로 반복돼 문제가 된 표현):**
+- **"계좌 열어보고 놀라셨을 것 같아요" 및 모든 변형** (계좌 보고 놀라셨죠, 계좌 확인하고
+  놀라셨을 텐데 등). 하락장마다 이 도입부가 반복돼 자동 생성 티가 났다. 절대 금지.
+- "방아쇠는 ~였어요" 도 같은 이유로 자제 (반복 시 형식적으로 읽힌다).
+
+**괜찮은 것 (굳이 피하지 말 것):**
+- "여러분"으로 시작하는 것은 브랜드 말투다. 그대로 써도 된다.
+- "천천히 보세요", "정리해뒀어요" 같은 마무리도 반복돼도 괜찮다.
+
+**변화를 주어야 할 지점은 딱 하나, 하락장 도입부다.**
+매일 같은 방식으로 놀람을 언급하지 말 것. 어떤 날은 숫자부터, 어떤 날은 원인부터,
+어떤 날은 독자가 궁금해할 질문부터 들어가는 식으로 첫 문장을 다르게 연다.
 
 나쁜 예:
 "오늘도 알찬 브리핑 준비했어요! 꼭 확인해주세요!!😍🔥" (내용 없음·톤 과함·매일 똑같음)
 "...정리해뒀습니다." (마침표로 끝남 - 자동 발송처럼 건조함. 느낌표로 끝낼 것)
+어제와 첫 문장이 사실상 같은 멘트 (독자가 자동 생성이라고 바로 알아챈다)
 
 ## ★ 출처 비공개 규칙 (반드시 지킬 것)
 보고서를 받아보는 독자는 자료 원천이 어디인지 몰라야 합니다. **모든 본문(body, why_for_workers,
@@ -371,6 +413,21 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
     else:
         history_text = ""
 
+    notes = recent_group_notes()
+    if notes:
+        note_lines = "\n".join(f"- {d}: {t}" for d, t in notes)
+        notes_text = f"""
+[최근 보낸 그룹톡 멘트 - 표현·구조 반복 금지]
+{note_lines}
+
+위는 최근 독자에게 실제로 나간 멘트입니다. 오늘 멘트의 **첫 문장은 위와 달라야
+합니다.** 특히 하락장이 이어질 때 '계좌 보고 놀라셨죠' 류 도입부를 반복하면 독자가
+자동 생성이라고 바로 알아챕니다. 마무리 표현("천천히 보세요" 등)은 겹쳐도 괜찮습니다.
+"""
+        logger.info("그룹톡 멘트 회피 목록 %d편 주입", len(notes))
+    else:
+        notes_text = ""
+
     return f"""\
 [오늘 손경제 에피소드]
 방송일: {pub_date}
@@ -380,7 +437,7 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 
 [오늘 경제지표]
 {indicators_text}
-{history_text}
+{history_text}{notes_text}
 위 정보를 바탕으로 통합 보고서 데이터를 생성하세요. web_search로 손경제 3개 토픽의
 출처 + 추가 뉴스 2개 + 기준금리 전망을 조사하세요.
 
