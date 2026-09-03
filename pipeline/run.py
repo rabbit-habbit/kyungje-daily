@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import subprocess
 import sys
 from dataclasses import asdict
@@ -143,11 +144,44 @@ def _adapt_indicators_block(ind_data: dict) -> dict:
     }
 
 
+# "현 기준금리 3.00%" / "현 기준금리 3.50~3.75%" 형태에서 현재 금리를 뽑는다.
+# 범위로 적히면(미국 목표범위) 상단을 쓴다.
+_CUR_RATE_RE = re.compile(r"현\s*기준금리\s*([0-9]+(?:\.[0-9]+)?)\s*(?:~\s*([0-9]+(?:\.[0-9]+)?))?\s*%")
+
+
+def _cross_check_rate(const_val, outlook_text: str, label: str):
+    """하드코딩 기준금리를 web_search 전망 텍스트와 교차검증.
+
+    POLICY_RATES는 손으로 갱신하는 상수라 금통위 후 갱신을 잊으면 조용히 낡는다
+    (실제 사고: 8/27 인상 후 6편이 2.50%로 발행). 전망 텍스트는 매일 새로 받아오므로
+    둘이 어긋나면 전망 쪽을 믿고 보정한 뒤 경고를 남긴다.
+    """
+    if not outlook_text or not isinstance(const_val, (int, float)):
+        return const_val
+    m = _CUR_RATE_RE.search(outlook_text)
+    if not m:
+        return const_val
+    found = float(m.group(2) or m.group(1))
+    if not (0.0 <= found <= 10.0):          # 파싱 오류·환각 방어
+        logger.warning("[rate] %s 전망에서 비정상 금리 %.2f%% 파싱 - 상수 유지", label, found)
+        return const_val
+    if abs(found - const_val) < 0.005:
+        return const_val
+    logger.error(
+        "[rate] ★ %s 기준금리 불일치: 상수 %.2f%% vs 전망 %.2f%% - 전망값으로 보정합니다. "
+        "fetch_indicators.py의 POLICY_RATES를 %.2f로 갱신하세요.",
+        label, const_val, found, found,
+    )
+    return found
+
+
 def _adapt_base_rates(ind_data: dict, outlook: dict) -> dict:
     """policy_rates + summarize의 policy_outlook → base_rates."""
     pr = ind_data.get("policy_rates", {})
     kr_val = pr.get("korea", {}).get("value")
     us_val = pr.get("us", {}).get("value")
+    kr_val = _cross_check_rate(kr_val, (outlook or {}).get("korea", ""), "한국")
+    us_val = _cross_check_rate(us_val, (outlook or {}).get("us", ""), "미국")
     spread_text = ""
     if isinstance(kr_val, (int, float)) and isinstance(us_val, (int, float)):
         diff = kr_val - us_val
