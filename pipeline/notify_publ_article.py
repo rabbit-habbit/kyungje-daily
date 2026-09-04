@@ -20,8 +20,10 @@ from __future__ import annotations
 
 import argparse
 import html as html_lib
+import json
 import logging
 import os
+import re
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -145,7 +147,22 @@ def _perform_login(page, email: str, password: str) -> None:
     logger.info("로그인 성공 → %s", page.url)
 
 
-from pipeline.notify_publ import _load_group_note  # noqa: E402
+def _load_group_note(date_iso: str) -> str:
+    """docs/archive/{date}-meta.json의 group_note를 읽는다.
+
+    notify_publ.py에도 같은 함수가 있지만 임포트로 엮지 않는다.
+    이 스크립트는 `python pipeline/notify_publ_article.py`로 직접 실행돼
+    패키지 임포트가 깨진 적이 있다 (CI ModuleNotFoundError).
+    """
+    path = ROOT / "docs" / "archive" / f"{date_iso}-meta.json"
+    if not path.is_file():
+        return ""
+    try:
+        return (json.loads(path.read_text(encoding="utf-8")).get("group_note") or "").strip()
+    except (OSError, ValueError) as exc:
+        logger.warning("멘트 파일 읽기 실패 %s: %s", path.name, exc)
+        return ""
+
 
 _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
