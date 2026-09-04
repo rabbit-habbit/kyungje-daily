@@ -253,8 +253,11 @@ body: 3~5 문장. 첫 문장에서 그 용어가 오늘 본문 어디에 나왔�
   마지막 문장을 억지로 밀어넣다 잘리는 것보다 짧고 완결된 편이 낫다.
 - 이모지는 0~1개. 남발 금지.
 - URL·링크는 넣지 않는다 (발송 코드가 따로 붙인다).
-- 마무리는 부드러운 안내형 ("정리해뒀어요", "천천히 보세요", "확인해보세요" 등).
-  마무리 표현은 반복돼도 괜찮다. 굳이 매번 새로 짜내지 말 것.
+- 마무리는 부드러운 안내형. **단 아래 [최근 보낸 그룹톡 멘트]의 마무리와 겹치지 말 것.**
+  "천천히 보세요"가 11편 중 7편, "차근차근 정리해뒀으니 천천히 보세요"가 통째로 5편에
+  쓰여 형식적으로 읽힌다는 지적을 받았다.
+  매번 새 표현을 억지로 짜낼 필요는 없다. 최근 3~4편에 안 쓴 것이면 다시 써도 된다.
+  **첫 문장과 마무리 둘 다** 최근 목록과 달라야 한다.
 - **★ 마지막 문장은 반드시 느낌표(!)로 끝냅니다.** 대표님이 직접 말을 건네는 느낌을
   살리기 위한 규칙입니다. 급락·위기일에도 예외 없이 적용합니다.
   ✅ "천천히 보세요!"  ✅ "차근차근 정리해뒀어요!"  ❌ "천천히 보세요."
@@ -453,7 +456,7 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 위는 최근 독자에게 실제로 나간 멘트입니다. 오늘 멘트의 **첫 문장이 위 어느
 것과도 같은 방식이면 안 됩니다.** 도입 방식(놀람 언급·숫자 제시·질문 던지기 등)과
 핵심 표현이 겹치는지 확인하고, 겹치면 다른 방식을 고르세요.
-마무리 표현("천천히 보세요" 등)은 겹쳐도 괜찮습니다.
+마무리도 마찬가지입니다. 위 목록의 마무리 표현을 그대로 쓰지 마세요.
 """
         logger.info("그룹톡 멘트 회피 목록 %d편 주입", len(notes))
     else:
@@ -625,6 +628,24 @@ def summarize(
     data.setdefault("group_note", "")
     data.setdefault("rabbithat_ideas", [])
     data.setdefault("policy_outlook", {})
+
+    # 긴 대시(— U+2014, – U+2013) 금지는 발행물 전반 규칙인데 프롬프트만으로는
+    # 지켜지지 않았다 (지시문을 고친 뒤에도 9/4 본문에서 6회 사용).
+    # 길이 제한과 마찬가지로 기계적 규칙이라 코드가 최종 책임진다.
+    def _dedash(obj):
+        if isinstance(obj, str):
+            return obj.replace("\u2014", "-").replace("\u2013", "-")
+        if isinstance(obj, dict):
+            return {k: (v if k == "_meta" else _dedash(v)) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_dedash(v) for v in obj]
+        return obj
+
+    _before = json.dumps(data, ensure_ascii=False)
+    data = _dedash(data)
+    _n = _before.count("\u2014") + _before.count("\u2013")
+    if _n:
+        logger.info("긴 대시 %d개를 하이픈으로 치환했습니다 (발행물 규칙).", _n)
 
     # 도구 없이 생성된 응답은 출처를 실제로 확인할 방법이 없다. NO_SEARCH_GUARD로
     # sources=[]를 지시하지만 모델이 어길 수 있으므로 코드로 한 번 더 비운다.
