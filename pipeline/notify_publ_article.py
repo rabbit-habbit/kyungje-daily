@@ -19,6 +19,7 @@ CLI:
 from __future__ import annotations
 
 import argparse
+import html as html_lib
 import logging
 import os
 import sys
@@ -142,6 +143,36 @@ def _perform_login(page, email: str, password: str) -> None:
     if "login" in page.url.lower():
         raise RuntimeError(f"로그인 실패 · URL: {page.url}")
     logger.info("로그인 성공 → %s", page.url)
+
+
+from pipeline.notify_publ import _load_group_note  # noqa: E402
+
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def _prepend_note(html_body: str, date_iso: str) -> str:
+    """그룹톡 멘트를 아티클 본문 맨 앞에 <p> 한 줄로 넣는다.
+
+    대표님이 손으로 하시던 작업의 자동화 (2026-09-04):
+    Source Code 모달에서 브리핑 HTML 앞에 <p>멘트</p>를 붙이는 방식.
+    에디터가 <!DOCTYPE>·<head>를 걷어내므로 <body> 직후에 넣으면 같은 결과가 된다.
+    아카이브 파일은 건드리지 않으므로 단톡방 링크로 여는 페이지에는 영향이 없다.
+    """
+    if not _DATE_RE.fullmatch(date_iso):
+        return html_body
+    note = _load_group_note(date_iso)
+    if not note:
+        logger.info("멘트 없음 - 기존 형식 그대로 발행")
+        return html_body
+    # 긴 대시 금지 규칙 (summarize의 코드 가드는 9/5 생성분부터 적용).
+    note = note.replace("\u2014", "-").replace("\u2013", "-")
+    block = "<p>" + html_lib.escape(note) + "</p>"
+    m = re.search(r"<body[^>]*>", html_body, re.I)
+    if not m:
+        logger.warning("body 태그를 찾지 못해 멘트를 넣지 않았습니다.")
+        return html_body
+    logger.info("아티클 상단에 멘트 삽입 (%d자)", len(note))
+    return html_body[:m.end()] + block + html_body[m.end():]
 
 
 def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, dry_run: bool = False) -> None:
@@ -387,6 +418,7 @@ def post_article(
             raise RuntimeError(f"HTML 없음: {html_path}")
         html_body = html_path.read_text(encoding="utf-8")
         logger.info("HTML 로드: %s (%d bytes)", html_path.name, len(html_body))
+        html_body = _prepend_note(html_body, html_path.name[:10])
 
         # 이미지 생성
         logger.info("=== 썸네일·커버 캡처 ===")
