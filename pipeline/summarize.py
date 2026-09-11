@@ -324,6 +324,19 @@ web_search로 얻은 국내 시장 지표(KOSPI, KOSDAQ, 원·달러 환율, 국
 3. **web_search 결과의 관측 날짜와 발행일 다르면 반드시 관측일 명시**
    발행일에 관측된 것처럼 서술 절대 금지. "8/14 발표된", "8/14 기준" 등으로.
 
+3-1. **★ 국내 지표는 발행 시점에 아직 장중이다 (가장 자주 틀리는 부분)**
+   브리핑은 오전에 나가고 국내 증시는 15:30에 닫는다. 위 [오늘 경제지표]의
+   "수집 시점"이 장중이면, 코스피·환율·국고채는 **그 시각의 장중 값**이지
+   그날의 종가가 아니다.
+   - ❌ "9/11 코스피가 6,860p로 **마감**했어요" (장이 안 끝났다)
+   - ❌ "코스피 (9/11 **종가**)" (Key Numbers 라벨도 마찬가지)
+   - ❌ 그렇다고 전날 날짜를 붙이는 것도 금지. 그 숫자는 전날 종가가 아니다
+   - ✅ "9/11 오전 코스피가 6,860p까지 밀렸어요 (09:20 기준)"
+   - ✅ "9/11 장 초반 6,860p로 출발했어요"
+   - ✅ Key Numbers 라벨: "코스피 (9/11 오전 09:20 기준)"
+   미국 증시(S&P·다우)는 한국 새벽에 이미 마감했으므로 "9/10 현지 마감"처럼
+   전일 날짜 + 마감으로 쓰는 것이 맞다. 국내와 해외를 구분할 것.
+
 4. **국내와 글로벌 시장 구분**
    미국 증시(NYSE·NASDAQ)는 한국 공휴일과 무관. 다만 한국 시간 새벽 마감이므로
    "미국 8/14(현지) 종가" 또는 "8/15 새벽 마감"처럼 시점 명시.
@@ -429,6 +442,22 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
         )
     indicators_text = "\n".join(ind_lines) or "(수집 실패)"
 
+    # 지표를 언제 찍은 값인지 명시한다. 이게 없으면 모델이 장중 스냅샷을 "마감/종가"로
+    # 써버린다 (9/11 사고: 09:20에 찍은 9/11 장중 값을 "9/11 마감"으로 서술).
+    fetched_line = "(수집 시각 불명)"
+    try:
+        _ts = datetime.fromisoformat(indicators.get("fetched_at", "")).astimezone(KST)
+        _krx_open = _ts.weekday() < 5 and (
+            (_ts.hour, _ts.minute) >= (9, 0) and (_ts.hour, _ts.minute) < (15, 30)
+        )
+        fetched_line = (
+            f"{_ts:%Y-%m-%d %H:%M} KST 기준"
+            + (" · 국내 증시 **장중** (09:00~15:30, 아직 마감 전)"
+               if _krx_open else " · 국내 증시 장 시간 외")
+        )
+    except (ValueError, TypeError):
+        pass
+
     history = recent_explainer_titles()
     if history:
         history_lines = "\n".join(f"- {d}: {t}" for d, t in history)
@@ -496,6 +525,7 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
 {description}
 
 [오늘 경제지표]
+수집 시점: {fetched_line}
 {indicators_text}
 {history_text}{notes_text}{prev_news_text}
 위 정보를 바탕으로 통합 보고서 데이터를 생성하세요. web_search로 손경제 3개 토픽의
