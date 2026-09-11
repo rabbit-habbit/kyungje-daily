@@ -65,11 +65,27 @@ def _now_iso() -> str:
 
 def _fetch_yf(ticker: str, name: str, key: str, unit: str) -> Indicator:
     """Fetch last 2 trading-day closes from Yahoo Finance."""
-    hist = yf.Ticker(ticker).history(period="7d", auto_adjust=False)
+    # period는 넉넉히. 연휴가 끼면 7일 창에 거래일이 2개 미만일 수 있다.
+    hist = yf.Ticker(ticker).history(period="1mo", auto_adjust=False)
+    hist = hist[hist["Close"].notna()]
     if hist.empty or len(hist) < 2:
         raise RuntimeError(f"Yahoo Finance returned insufficient data for {ticker}")
+
+    # ★ 위치(iloc[-2])가 아니라 날짜로 직전 거래일을 고른다.
+    #   장중에 조회하면 마지막 행이 오늘의 미완성 봉인데, 그 앞 행이 항상 어제는
+    #   아니었다. 실측(2026-08-11~09-11, 코스피 23거래일): iloc[-2] 방식이
+    #   14일은 '이틀 전' 종가를 prev로 잡아 하루 변동이 이틀치로 표시됐다.
+    last_ts = hist.index[-1]
     last = float(hist["Close"].iloc[-1])
-    prev = float(hist["Close"].iloc[-2])
+    earlier = hist[hist.index.date < last_ts.date()]
+    if earlier.empty:
+        raise RuntimeError(f"{ticker}: 직전 거래일 데이터를 찾지 못했습니다")
+    prev_ts = earlier.index[-1]
+    prev = float(earlier["Close"].iloc[-1])
+    logger.info(
+        "  %s: %s %.2f ← 직전 거래일 %s %.2f",
+        key, last_ts.date(), last, prev_ts.date(), prev,
+    )
     return Indicator(
         key=key,
         name=name,
