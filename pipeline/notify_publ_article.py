@@ -457,7 +457,10 @@ def post_article(
             raise RuntimeError(f"HTML 없음: {html_path}")
         html_body = html_path.read_text(encoding="utf-8")
         logger.info("HTML 로드: %s (%d bytes)", html_path.name, len(html_body))
-        html_body = _move_styles_into_body(html_body)
+        # _move_styles_into_body()는 2026-09-21에 시도했다가 되돌렸다.
+        # <style>을 본문에 넣으면 퍼블 에디터가 글 생성을 조용히 실패시킨다
+        # (워크플로는 성공으로 끝나는데 새 글이 만들어지지 않았다).
+        # 함수는 남겨두되 호출하지 않는다.
         html_body = _prepend_note(html_body, html_path.name[:10])
 
         # 이미지 생성
