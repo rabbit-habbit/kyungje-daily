@@ -36,7 +36,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
 
   /* Header */
   header {
@@ -131,8 +131,8 @@
   }
 
   .pulse-row { display: grid; gap: 8px; }
-  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); }
-  .pulse-row-global { grid-template-columns: repeat(4, 1fr); }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
 
   .pulse-item { text-align: center; }
 
@@ -145,7 +145,8 @@
 
   .pulse-value {
     font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
+    white-space: nowrap;
     font-weight: 700;
     letter-spacing: -0.3px;
   }
@@ -424,7 +425,7 @@
     .header__title, .header-title { font-size: 21px; }
     .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
     .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .pulse-value { font-size: 14px; }
+    .pulse-value { font-size: 15px !important }
     .pulse-label { font-size: 10px; }
     .news-title { font-size: 16px; }
   }
