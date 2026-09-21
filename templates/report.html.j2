@@ -37,7 +37,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
 
   /* Header */
   header {
@@ -131,9 +134,13 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
   .pulse-row { display: grid; gap: 8px; }
-  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); }
-  .pulse-row-global { grid-template-columns: repeat(4, 1fr); }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
 
   .pulse-item { text-align: center; }
 
@@ -146,7 +153,8 @@
 
   .pulse-value {
     font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
     font-weight: 700;
     letter-spacing: -0.3px;
   }

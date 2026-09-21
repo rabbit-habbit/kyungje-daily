@@ -167,6 +167,28 @@ def _load_group_note(date_iso: str) -> str:
 _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
+def _move_styles_into_body(html_body: str) -> str:
+    """<head>의 <style>을 <body> 맨 앞으로 옮긴다.
+
+    퍼블 에디터는 붙여넣은 HTML의 <head>를 통째로 버린다. 그래서 @media 같은
+    미디어 쿼리가 아티클에서만 적용되지 않아, 모바일에서 지표 숫자가 줄바꿈됐다
+    (2026-09-21 구독자 제보, 갤럭시 S23 360px).
+    <style>을 본문 안으로 옮기면 에디터가 본문 요소로 보고 살려둘 가능성이 있다.
+    살아남으면 그룹톡 링크와 동일하게 렌더되고, 걸러지더라도 인라인 스타일만으로
+    깨지지 않도록 템플릿 기본값을 이미 좁은 폭 기준으로 맞춰 두었다.
+    """
+    styles = re.findall(r"<style[^>]*>.*?</style>", html_body, re.S | re.I)
+    if not styles:
+        return html_body
+    m = re.search(r"<body[^>]*>", html_body, re.I)
+    if not m:
+        return html_body
+    stripped = re.sub(r"<style[^>]*>.*?</style>", "", html_body, flags=re.S | re.I)
+    m2 = re.search(r"<body[^>]*>", stripped, re.I)
+    logger.info("head의 <style> %d개를 body 앞으로 이동", len(styles))
+    return stripped[:m2.end()] + "".join(styles) + stripped[m2.end():]
+
+
 def _prepend_note(html_body: str, date_iso: str) -> str:
     """그룹톡 멘트를 아티클 본문 맨 앞에 <p> 한 줄로 넣는다.
 
@@ -435,6 +457,7 @@ def post_article(
             raise RuntimeError(f"HTML 없음: {html_path}")
         html_body = html_path.read_text(encoding="utf-8")
         logger.info("HTML 로드: %s (%d bytes)", html_path.name, len(html_body))
+        html_body = _move_styles_into_body(html_body)
         html_body = _prepend_note(html_body, html_path.name[:10])
 
         # 이미지 생성
