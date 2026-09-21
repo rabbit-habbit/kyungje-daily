@@ -214,11 +214,31 @@ def _prepend_note(html_body: str, date_iso: str) -> str:
     return html_body[:m.end()] + block + html_body[m.end():]
 
 
+def _count_articles_by_title(page, title: str) -> int:
+    """아티클 목록에서 해당 제목의 글 개수를 센다.
+
+    생성 성공을 URL로만 판정하면 거짓 성공이 난다. 2026-09-21에 실제로
+    저장이 실패했는데 URL은 목록(/posts)으로 넘어가 성공으로 처리됐고,
+    이어지는 유료 연결 단계가 오전에 발행된 **기존 글**을 제목으로 찾아
+    체크하면서 워크플로 전체가 성공으로 끝났다. 새 글은 없었다.
+    """
+    page.goto(LIST_URL, wait_until="networkidle")
+    page.wait_for_timeout(1_500)
+    try:
+        return page.get_by_text(title, exact=False).count()
+    except Exception:
+        try:
+            return page.content().count(title)
+        except Exception:
+            return -1
+
+
 def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, dry_run: bool = False) -> None:
     """새 아티클 생성 → 저장까지."""
     # 목록 → 새 글
     logger.info("아티클 목록 이동")
-    page.goto(LIST_URL, wait_until="networkidle")
+    before_count = _count_articles_by_title(page, title)
+    logger.info("생성 전 동일 제목 글: %d개", before_count)
     page.wait_for_timeout(2_000)
 
     logger.info("'새 글 / Create Post' 클릭")
@@ -369,7 +389,17 @@ def _create_article(page, title: str, html_body: str, thumb: Path, cover: Path, 
             f"발행 실패 · URL이 create 페이지 그대로: {page.url} · "
             f"스크린샷/텍스트/HTML: {dbg}"
         )
-    logger.info("✓ 발행 완료")
+    # ★ URL만으로는 부족하다. 목록에서 실제로 글이 늘었는지 확인한다.
+    after_count = _count_articles_by_title(page, title)
+    logger.info("생성 후 동일 제목 글: %d개 (생성 전 %d개)", after_count, before_count)
+    if before_count >= 0 and after_count >= 0 and after_count <= before_count:
+        page.screenshot(path=str(dbg / "create_not_increased.png"), full_page=True)
+        raise RuntimeError(
+            f"발행 실패 · 목록의 '{title}' 글이 {before_count}개에서 늘지 않았습니다 "
+            f"(현재 {after_count}개). URL은 {page.url} 로 이동했으나 저장되지 않았습니다. "
+            f"스크린샷: {dbg}"
+        )
+    logger.info("✓ 발행 완료 (목록에서 확인됨)")
 
 
 def _link_to_paid_catalog(page, article_title: str) -> None:
