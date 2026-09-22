@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>오늘의 경제 뉴스 — 2026년 9월 21일 월요일</title>
+<title>오늘의 경제 뉴스 — 2026년 9월 22일 화요일</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -36,7 +36,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .container { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
 
   /* Header */
   header {
@@ -130,9 +133,13 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
   .pulse-row { display: grid; gap: 8px; }
-  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); }
-  .pulse-row-global { grid-template-columns: repeat(4, 1fr); }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
 
   .pulse-item { text-align: center; }
 
@@ -145,7 +152,8 @@
 
   .pulse-value {
     font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
     font-weight: 700;
     letter-spacing: -0.3px;
   }
@@ -436,7 +444,7 @@
   <div class="container">
     <div class="header-top">
       <div class="brand">래빗해빛 경제 브리핑</div>
-      <div class="date-badge">2026년 9월 21일 월요일</div>
+      <div class="date-badge">2026년 9월 22일 화요일</div>
     </div>
     <h1 class="header__title">오늘의 경제 뉴스</h1>
     <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
@@ -454,18 +462,18 @@
       <div class="pulse-row pulse-row-domestic">
         <div class="pulse-item">
           <div class="pulse-label">환율 (KRW/USD)</div>
-          <div class="pulse-value up">1,386.00</div>
-          <div class="pulse-change up">▲ 6.47 (+0.47%)</div>
+          <div class="pulse-value down">1,361.28</div>
+          <div class="pulse-change down">▼ 23.58 (-1.70%)</div>
         </div>
         <div class="pulse-item">
           <div class="pulse-label">코스피</div>
-          <div class="pulse-value up">6,949.90</div>
-          <div class="pulse-change up">▲ 55.67 (+0.81%)</div>
+          <div class="pulse-value up">7,161.17</div>
+          <div class="pulse-change up">▲ 266.94 (+3.87%)</div>
         </div>
         <div class="pulse-item">
           <div class="pulse-label">국고채 10년</div>
-          <div class="pulse-value up">4.47%</div>
-          <div class="pulse-change up">▲ 0.010%p</div>
+          <div class="pulse-value down">4.44%</div>
+          <div class="pulse-change down">▼ 0.020%p</div>
         </div>
       </div>
     </div>
@@ -474,31 +482,31 @@
       <div class="pulse-row pulse-row-global">
         <div class="pulse-item">
           <div class="pulse-label">S&P 500</div>
-          <div class="pulse-value up">7,650.50</div>
-          <div class="pulse-change up">▲ 12.74 (+0.17%)</div>
+          <div class="pulse-value up">7,764.70</div>
+          <div class="pulse-change up">▲ 114.20 (+1.49%)</div>
         </div>
         <div class="pulse-item">
           <div class="pulse-label">다우</div>
-          <div class="pulse-value down">51,682.64</div>
-          <div class="pulse-change down">▼ 95.40 (-0.18%)</div>
+          <div class="pulse-value up">52,048.83</div>
+          <div class="pulse-change up">▲ 366.19 (+0.71%)</div>
         </div>
         <div class="pulse-item">
           <div class="pulse-label">WTI</div>
-          <div class="pulse-value down">$94.62</div>
-          <div class="pulse-change down">▼ $5.68 (-5.66%)</div>
+          <div class="pulse-value down">$92.64</div>
+          <div class="pulse-change down">▼ $7.66 (-7.64%)</div>
         </div>
         <div class="pulse-item">
           <div class="pulse-label">금/g</div>
-          <div class="pulse-value down">196,188원</div>
-          <div class="pulse-change down">▼ 69원 (-0.04%)</div>
+          <div class="pulse-value down">192,374원</div>
+          <div class="pulse-change down">▼ 4,641원 (-2.36%)</div>
         </div>
       </div>
     </div>
     <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
       <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
       <div style="margin-top:8px; font-size:11px;">
-        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">10/22 금통위 동결 전망, 현 기준금리 3.00% (연내 추가 인상 경계감 상존)</span></div>
-        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">10/27-28 FOMC 개최, 추가 인상 vs 동결 분기점 (9월 인상 후 데이터 의존)</span></div>
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">10/22 금통위, 동결 전망 우세 (현재 기준금리 3.00%, 미 인상 후 추가 인상 압력 논의 중)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">11월 FOMC, 동결 유력 (현재 3.75~4.00%, 9/16 25bp 인상 직후 추가 인상 여부 지켜보는 중)</span></div>
       </div>
     </div>
   </div>
@@ -508,173 +516,173 @@
     <div class="section-label">📰 오늘의 경제 뉴스</div>
     <div class="news-card">
       <div class="news-num">1</div>
-      <h2 class="news-title">🇯🇵 일본 31년 만에 금리 최고치…엔화는 왜 안 올랐나요?</h2>
+      <h2 class="news-title">🏠 2030년까지 공적주택 119만호…중산층도 공공임대 입주 가능</h2>
       <div class="news-body">
-<p>9/18 일본은행(BOJ)이 기준금리를 1.00%에서 1.25%로 0.25%p 올렸어요. 1995년 이후 31년 만의 최고 수준이고, 6월 인상 이후 불과 3개월 만에 또 올린 거예요. 미국과 유럽이 물가 재상승을 막겠다며 연달아 금리를 올리는 와중에, 일본도 유가 상승과 엔화 약세가 만든 수입 물가 급등을 막으려고 이번 결정을 내렸어요.</p><p>그런데 금리를 올렸는데도 엔화는 오히려 달러당 156~157엔대로 약세를 이어갔어요. 이유는 두 가지예요. 이미 시장이 인상을 충분히 예상하고 미리 반영했고, 반대표를 던진 위원 2명이 공교롭게도 다카이치 총리가 새로 임명한 위원들이라 '추가 인상이 느릴 수 있다'는 신호로 읽혔거든요. 일본은행은 앞으로도 경제·물가 흐름을 보며 금리를 계속 올리겠다고 예고했어요.</p>      </div>
+<p>국토교통부가 9/21 '주거안정플랜'을 발표했어요. 2026년부터 2030년까지 연평균 약 24만 가구씩, 총 119만 가구의 공적주택을 공급하는 계획이에요. 전체의 77%인 92만 가구가 수도권에 집중 배치돼요.</p><p>이번 계획에서 가장 눈에 띄는 건 '보편형 공공임대' 신설이에요. 기존 공공임대는 중위소득 150% 이하만 입주할 수 있었는데, 보편형은 기준을 완화해 중산층까지 들어올 수 있어요. 역세권·도심에 넓고 고급 마감재를 쓴 형태로 2030년까지 19만 가구를 공급할 계획이에요.</p><p>공공임대 신청 절차도 대폭 간소화돼요. LH와 지방공사가 따로 운영하던 청약 시스템을 하나로 통합해, 자격 검증 한 번으로 여러 곳에 신청할 수 있고 선정 기간도 기존 150일에서 40일로 단축돼요.</p>      </div>
 
       <div class="why-box">
         <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-        <div class="why-text">일본이 금리를 올리면 엔화가 강해질 것 같지만, 시장은 '다음 인상 속도'를 더 중요하게 봐요. 이번처럼 추가 인상 신호가 약하게 읽히면 엔화 강세가 제한되고, 이는 원·달러 환율에도 영향을 줘요. 엔화가 계속 약하면 원화도 아시아 통화로 묶여 함께 약세를 보이는 경향이 있거든요. 해외여행이나 달러 예금을 고민 중이신 분이라면, 일본은행의 다음 회의 신호를 지켜봐야 해요. 특히 엔화 ETF나 일본 주식 ETF를 갖고 계신 분은 추가 인상 속도가 예상보다 빠르면 수혜가 생길 수 있으니 주목해보세요.</div>
+        <div class="why-text">지금 전세나 월세로 살고 계신 분, 특히 수도권에서 집값에 치이고 있다면 주목해볼 만한 뉴스예요. '공적주택'이란 정부·공공기관이 공급하는 임대주택과 분양주택을 합친 개념인데, 이번에 중산층까지 문을 넓힌 '보편형 공공임대'가 생기면서 내 집 마련 전 단계로 활용할 수 있는 선택지가 늘어났어요. 특히 올해 4분기부터 내년 말까지 실입주 가능한 물량이 수도권에 10만 가구 예정이니, LH·SH 청약 앱을 미리 설치하고 알림을 켜두세요. 다만 정책 규모가 크다고 집값이 바로 안정되는 건 아니니, 실제 공급이 예정대로 이뤄지는지를 분기별로 지켜보는 게 핵심이에요.</div>
       </div>
 
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
         <div class="data-row">
-          <span class="data-label">일본 기준금리</span>
-          <span class="data-value up">1.25%</span>
+          <span class="data-label">2030년까지 공적주택 공급 목표</span>
+          <span class="data-value up">119만 가구</span>
         </div>
         <div class="data-row">
-          <span class="data-label">엔·달러 환율 (9/18 발표 직후)</span>
-          <span class="data-value up">156~157엔/달러</span>
+          <span class="data-label">수도권 집중 배치 비율</span>
+          <span class="data-value up">77% (92만 가구)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">인상 간격</span>
-          <span class="data-value ">3개월 (6월→9월)</span>
+          <span class="data-label">보편형 공공임대 신설 물량</span>
+          <span class="data-value up">19만 가구</span>
         </div>
         <div class="data-row">
-          <span class="data-label">인상 찬반</span>
-          <span class="data-value ">찬성 7 대 반대 2</span>
+          <span class="data-label">청약 선정 기간 단축</span>
+          <span class="data-value down">150일 → 40일</span>
         </div>
       </div>
 
       <div class="source-link">출처:
-<a href="https://www.g-enews.com/article/Global-Biz/2026/09/202609181258003931e7e8286d56_1" target="_blank">글로벌이코노믹</a> · <a href="https://www.news1.kr/world/international-economy/6295213" target="_blank">뉴스1</a> · <a href="https://m.news.nate.com/view/20260918n16551" target="_blank">네이트뉴스(뉴스1)</a>      </div>
+<a href="https://www.fnnews.com/news/202609211038467646" target="_blank">파이낸셜뉴스</a> · <a href="https://view.asiae.co.kr/article/2026092115473299678" target="_blank">아시아경제</a> · <a href="https://supple.kr/news/cmuawfxwy00tcei71ot2iafv7" target="_blank">한겨레(서플)</a>      </div>
     </div>
     <div class="news-card">
       <div class="news-num">2</div>
-      <h2 class="news-title">💱 추석 앞 원·달러 1,386원…엔화 강세에 하락 압력</h2>
+      <h2 class="news-title">📈 코스피 9/22 장중 +3.87%…환율도 1,361원으로 급락</h2>
       <div class="news-body">
-<p>9/21 오전 10:00 기준 원·달러 환율은 1,386원으로 전일보다 6.47원 오른 장중 수치예요. 다만 시장 전문가들은 엔화 강세에 동조화가 이어지는 데다 추석 연휴를 앞두고 수출업체들이 보유 달러를 미리 내놓는 '네고 물량'이 나올 가능성이 높아 환율이 장 후반으로 갈수록 하락 압력을 받을 수 있다고 분석했어요.</p><p>일본 금리 인상 이후 엔화가 추가 강세를 보이면 원화도 따라 오를 여지가 있어요. 한미 금리 차가 1.0%p 수준으로 벌어져 있는 상황에서, 수출 호조로 달러 매도 물량이 늘어나는 점은 원화 강세 요인이고, 외국인 국내 주식 순매도 강도 완화도 하방을 지지해줄 재료예요.</p>      </div>
+<p>9/22 오전 10시 기준 코스피가 7,161포인트로 전 거래일 대비 266포인트(+3.87%) 급등하고 있어요. 원·달러 환율도 1,361원으로 약 23.6원(-1.70%) 하락하며 원화가 강세를 보이고 있어요.</p><p>미국 증시도 힘을 보탰어요. 9/21(현지) S&P 500이 7,764포인트로 +1.49%, 다우존스는 52,048포인트로 +0.71% 마감했어요. AI 에이전트 기대감과 글로벌 유동성 개선 기대가 맞물리며 위험자산 선호 심리가 되살아나는 흐름이에요.</p><p>WTI 원유는 9/22 오전 기준 92.64달러로 전일 대비 7.64% 추가 급락했어요. 사우디 아라비아 공급 복구 기대가 이어지며 원자재 가격 하락이 물가 우려를 줄이고 주식시장에는 긍정적 신호로 작용하고 있어요.</p>      </div>
 
       <div class="why-box">
         <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-        <div class="why-text">환율이 오르면 수입 물가가 올라 장바구니 부담이 커지고, 반대로 내리면 해외직구·여행 비용이 줄어요. 추석 연휴(9/23~9/27) 직전이라 환전 타이밍을 재는 분이라면, 오늘처럼 장 후반에 하락 압력이 나오는 날을 노리는 게 유리할 수 있어요. 달러 예금이나 달러 ETF를 보유 중이신 분은 엔화 강세와 네고 물량이 맞물려 단기 환율 하방이 열릴 수 있다는 점을 체크해두세요. 이런 분이라면: 해외여행·직구 계획이 있는 분, 달러 자산 비중 조절을 고민 중인 분에게 오늘 흐름이 중요한 참고점이 돼요.</div>
+        <div class="why-text">국내 증시와 환율이 동시에 움직이는 날은 투자 포트폴리오 전반에 영향을 줘요. 코스피가 오르면 국내 주식·ETF(예: KODEX 200, TIGER 코스피) 계좌가 회복되고, 환율이 내리면 해외 주식·달러 예금의 원화 환산 가치는 줄어드는 방향이에요. 해외 ETF(예: S&P 500 ETF)를 환노출형으로 보유 중이신 분이라면, 환율이 내릴수록 수익률에 부정적으로 작용하니 환헤지 여부를 한번 확인해보세요. 유가 하락은 수입 물가를 낮춰 장기적으로 물가 안정에 도움이 돼요. 장중 수치이므로 오후 마감값과 차이가 있을 수 있으니 오늘 종가를 꼭 확인하세요.</div>
       </div>
 
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
         <div class="data-row">
-          <span class="data-label">원·달러 환율 (9/21 오전 10:00 장중)</span>
-          <span class="data-value up">1,386.0원</span>
+          <span class="data-label">코스피 (9/22 오전 10:00 장중)</span>
+          <span class="data-value up">7,161p (+3.87%)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">장중 예상 범위</span>
-          <span class="data-value ">1,380~1,391원</span>
+          <span class="data-label">원·달러 환율 (9/22 오전 10:00 장중)</span>
+          <span class="data-value down">1,361.28원 (-1.70%)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">한미 금리차</span>
-          <span class="data-value up">약 1.0%p</span>
+          <span class="data-label">S&P 500 (9/21 현지 마감)</span>
+          <span class="data-value up">7,764.70p (+1.49%)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">코스피 (9/21 오전 10:00 장중)</span>
-          <span class="data-value up">6,949.9p (+0.81%)</span>
+          <span class="data-label">WTI 원유 (9/22 오전 기준)</span>
+          <span class="data-value down">92.64달러 (-7.64%)</span>
         </div>
       </div>
 
       <div class="source-link">출처:
-<a href="https://www.etoday.co.kr/news/view/2627731" target="_blank">이투데이</a>      </div>
+<a href="https://www.mt.co.kr/world/2026/09/22/2026092206524457676" target="_blank">머니투데이</a> · <a href="https://www.newspim.com/news/view/20260922000021" target="_blank">뉴스핌</a>      </div>
     </div>
     <div class="news-card">
       <div class="news-num">3</div>
-      <h2 class="news-title">🛢️ 비축유가 빠르게 소진되고 있다…안전판이 얇아졌어요</h2>
+      <h2 class="news-title">🤖 메타 AI 에이전트 '뮤즈', 2주 만에 챗GPT 제치고 앱 1위</h2>
       <div class="news-body">
-<p>국제 사회의 유가 급등 완충 장치였던 전략비축유(SPR)가 빠르게 줄어들고 있어요. 미국의 전략비축유는 최근 2억8,540만 배럴로 줄어 1982년 11월 이후 44년 만의 최저 수준을 기록했어요. 중동 전쟁으로 하루 약 1,000만 배럴의 원유 공급이 사라진 상황에서 미국이 비축유를 계속 방출해왔는데, 이 '완충 여력'이 바닥을 드러내고 있는 거예요.</p><p>설상가상으로 세계 최대 원유 수출국인 사우디아라비아마저 호르무즈 해협과 홍해 수출길이 동시에 막히면서 추가 공급 충격을 흡수할 여력이 크게 줄었어요. 셰브런 CEO 등 에너지 업계는 '충격 흡수 장치가 꾸준히 고갈되고 있어 시장의 대응 능력이 전쟁 초기 대비 급격히 축소됐다'고 경고했어요. 다만 9/21 기준 WTI는 94.62달러로, 사우디가 파이프라인 절반 복구를 예상한다는 소식에 하루 5.66% 급락하기도 했어요.</p>      </div>
+<p>메타가 9/8(현지) 출시한 개인용 AI 에이전트 '뮤즈(Muse)'가 약 2주 만에 미국 애플 앱스토어 무료 앱 1위에 올랐어요. 시장조사업체 센서타워에 따르면 출시 2주 누적 다운로드에서 챗GPT·클로드·그록을 모두 앞질렀어요.</p><p>뮤즈는 기존 AI 챗봇과 달리 사용자를 '대신해서' 실제 일을 처리해요. 이메일 발송, 여행·식당 예약, 쇼핑·결제, 일정 관리 등을 AI가 직접 수행하는 구조예요. 기본 무료로 시작하고, 사용량이 늘면 월 20달러(Power) 또는 월 100달러(Maximum) 요금제로 전환해요.</p><p>메타는 뮤즈 출시 직후 맥(Mac) 버전도 공개하며 PC 내 파일·캘린더·메모까지 연동했어요. AI 에이전트 흥행에 메타 주가도 11% 급등했고, AMD·인텔 등 반도체주도 동반 상승하며 AI 인프라 수요 기대감을 높이고 있어요.</p>      </div>
 
       <div class="why-box">
         <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-        <div class="why-text">비축유는 '유가 급등의 충격 흡수제'예요. 전쟁이나 재해로 공급이 끊겼을 때 각국이 창고에 쌓아뒀던 석유를 시장에 풀어서 가격을 눌러왔거든요. 그런데 이 창고가 44년 만에 가장 비어있다는 건, 앞으로 유가 상승 충격을 막을 여력이 많이 줄었다는 뜻이에요. 기름값은 교통비·식품 물류비로 이어져 직장인 장바구니에 직접 닿아요. 국제 유가가 오르면 한국 주유소 기름값도 2~4주 뒤 반영돼요. 에너지 관련 ETF(예: TIGER 원유선물Enhanced, KODEX WTI원유선물)를 조금씩 나눠서 담아보는 것(=분할 매수)도 하나의 방법이에요. 단, 원유 ETF는 변동성이 크니 소액으로 관망하며 지켜보시길 권해요.</div>
+        <div class="why-text">AI 에이전트는 '질문에 답하는' 챗봇이 아니라 '실제로 대신 일을 해주는' 도구예요. 지금 국내에서 바로 쓸 수 있진 않지만, 이 트렌드가 투자에 어떻게 연결되는지가 중요해요. AI 에이전트가 뜨면 이를 구동하는 반도체(GPU·HBM) 수요도 커지기 때문에, 반도체 ETF(예: KODEX 반도체, TIGER AI반도체)를 담고 계신 분이라면 긍정적인 흐름이에요. 다만 메타 뮤즈가 개인 이메일·결제 정보에 접근하는 구조라 개인정보 보안 리스크도 함께 커진다는 점, 실제 사용 시 꼭 인지해두세요. 글로벌 AI 에이전트 경쟁이 본격화하면 한국 앱·플랫폼 시장에도 영향을 줄 수 있어 중장기 동향으로 계속 주시할 만해요.</div>
       </div>
 
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
         <div class="data-row">
-          <span class="data-label">미국 전략비축유(SPR)</span>
-          <span class="data-value down">2억8,540만 배럴 (44년 최저)</span>
+          <span class="data-label">출시 후 앱스토어 1위 도달 기간</span>
+          <span class="data-value up">약 2주</span>
         </div>
         <div class="data-row">
-          <span class="data-label">WTI 원유 (9/21 기준)</span>
-          <span class="data-value down">94.62달러/배럴</span>
+          <span class="data-label">누적 다운로드 (출시 초기)</span>
+          <span class="data-value up">73만건 이상</span>
         </div>
         <div class="data-row">
-          <span class="data-label">WTI 하루 변동</span>
-          <span class="data-value down">-5.68달러 (-5.66%)</span>
+          <span class="data-label">유료 요금제 (Power)</span>
+          <span class="data-value ">월 20달러 (~2.7만원)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">중동 전쟁 공급 차질</span>
-          <span class="data-value down">하루 약 1,000만 배럴</span>
+          <span class="data-label">메타 주가 반응</span>
+          <span class="data-value up">+11% 급등</span>
         </div>
       </div>
 
       <div class="source-link">출처:
-<a href="https://biz.heraldcorp.com/article/10869043" target="_blank">헤럴드경제</a> · <a href="https://www.mt.co.kr/world/2026/05/29/2026052915313854684" target="_blank">머니투데이</a>      </div>
+<a href="https://www.mt.co.kr/world/2026/09/22/2026092206524457676" target="_blank">머니투데이</a> · <a href="https://www.aitimes.com/news/articleView.html?idxno=215478" target="_blank">AI타임스</a> · <a href="https://www.mstoday.co.kr/news/articleView.html?idxno=102670" target="_blank">MS TODAY</a>      </div>
     </div>
     <div class="news-card">
       <div class="news-num">4</div>
-      <h2 class="news-title">📉 유가 하루 5.7% 급락…사우디 복구 소식에 숨 돌린 시장</h2>
+      <h2 class="news-title">⚖️ "AI 속도조절은 담합"…앤트로픽·오픈AI 등 4개사 반독점 피소</h2>
       <div class="news-body">
-<p>9/21 장중 WTI 원유가 배럴당 94.62달러로 하루 만에 5.66% 급락했어요. 직전까지 100달러를 넘어섰던 국제 유가가 크게 꺾인 건, 사우디아라비아의 동서 파이프라인 복구 소식 덕분이에요. 아람코가 파이프라인 일일 흐름의 절반을 복구할 것이라는 보도와, 위성 이미지상 사우디가 호르무즈 해협을 통해 하루 280만 배럴을 이동시키고 있다는 사실이 확인되면서 공급 우려가 일부 완화됐어요.</p><p>그렇다고 안심하기는 이르러요. 파이프라인 수리 일정은 여전히 불확실하고, 사우디는 유럽 정유 고객 일부에게 다음 달 원유 공급을 못 하겠다고 이미 통보한 상태예요. 사우디와 이란-후티 세력 간 국경 충돌도 계속되고 있어 언제든 공급 차질이 재확대될 수 있어요.</p>      </div>
+<p>9/18(현지) 미국 캘리포니아 북부 연방법원에 이례적인 소송이 접수됐어요. 앤트로픽·오픈AI·스페이스X AI·구글, 이렇게 4개 AI 기업이 반독점법(셔먼법 제1조) 위반으로 집단소송을 당했어요. 소송명은 '뷰이스트 대 앤트로픽(Buist v. Anthropic PBC)'이에요.</p><p>혐의가 독특해요. AI를 너무 빨리 발전시켰다는 게 아니라, '일부러 함께 천천히 발전시키기로 담합했다'는 거예요. 앤트로픽 CEO 다리오 아모데이가 AI 속도조절 필요성을 공개적으로 주장한 뒤, 샘 올트먼(오픈AI), 일론 머스크(스페이스X AI), 구글 딥마인드가 동조 의사를 밝혔는데 이 과정을 담합으로 본 거예요.</p><p>원고 측은 클로드·챗GPT·그록·제미나이 유료 구독자들이에요. "같은 구독료를 내고 더디게 개선되는 제품을 쓰게 됐다"며 소비자 피해를 주장했어요. 3배 손해배상과 행위 금지 명령을 요구했고, 집단소송으로 확대 추진 중이에요.</p>      </div>
 
       <div class="why-box">
         <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-        <div class="why-text">유가가 하루 6% 가까이 떨어진 건 좋은 소식처럼 들리지만, 이건 '완전한 해소'가 아니라 '잠깐 숨 돌림'에 가까워요. 공급 불확실성이 그대로 남아 있어서 언제든 다시 치고 올라올 수 있거든요. 운전하시는 분은 주유 시점을 일주일 단위로 체크하는 게 도움이 돼요. 원유 ETF나 정유·항공 ETF를 담고 계신 분이라면, 이번 낙폭이 저점인지 아닌지 판단하기 어렵기 때문에 한 번에 큰 비중을 넣기보다 여러 번 나눠 매수(분할 매수)하시는 게 안전해요. 중동 지정학 리스크가 완전히 해소되기 전까지는 변동성이 클 것으로 예상돼요.</div>
+        <div class="why-text">AI 서비스를 구독 중이신 분이라면 직접 이해당사자가 될 수 있는 소송이에요. 원고 측 논리대로라면, AI 기업들이 안전을 이유로 속도를 늦추기로 합의한 것 자체가 소비자에게 손해라는 건데요. 아직 법원이 인정한 사실이 아니고 소장 단계라 결론이 나오려면 수년이 걸릴 수 있어요. 다만 이 소송의 결과가 AI 기업들의 개발 경쟁 방식·비용 구조에 영향을 줄 수 있어 AI 관련 ETF(예: TIGER 글로벌AI, ACE 글로벌AI반도체)를 보유 중이신 분이라면 관련 판례 흐름을 가끔 체크해두시면 좋아요. 소송이 진행되면 '안전 논의도 담합이 되나?'라는 AI 규제 전반의 논쟁으로 번질 수 있어 업계 지형에 변화를 줄 수 있거든요.</div>
       </div>
 
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
         <div class="data-row">
-          <span class="data-label">WTI (9/21 기준)</span>
-          <span class="data-value down">94.62달러/배럴</span>
+          <span class="data-label">피소 기업 수</span>
+          <span class="data-value ">4개사 (앤트로픽·오픈AI·스페이스X AI·구글)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">하루 낙폭</span>
-          <span class="data-value down">-5.68달러 (-5.66%)</span>
+          <span class="data-label">소장 접수일 (현지 기준)</span>
+          <span class="data-value ">2026년 9월 18일</span>
         </div>
         <div class="data-row">
-          <span class="data-label">사우디 호르무즈 운송량 (최근)</span>
-          <span class="data-value up">280만 배럴/일 (8월比 4배↑)</span>
+          <span class="data-label">청구 손해배상 배수</span>
+          <span class="data-value ">3배 배상</span>
         </div>
         <div class="data-row">
-          <span class="data-label">금 (9/21 기준, 한화 1g)</span>
-          <span class="data-value down">196,188원 (-0.04%)</span>
+          <span class="data-label">소송 근거</span>
+          <span class="data-value ">셔먼법 제1조 (수평적 담합)</span>
         </div>
       </div>
 
       <div class="source-link">출처:
-<a href="https://ko.tradingeconomics.com/commodity/crude-oil" target="_blank">TradingEconomics(원유)</a> · <a href="https://biz.heraldcorp.com/article/10869043" target="_blank">헤럴드경제</a>      </div>
+<a href="https://www.digitalfocus.news/news/articleView.html?idxno=23848" target="_blank">디지털포커스</a> · <a href="https://wowtale.net/2026/09/21/265104/" target="_blank">와우테일</a> · <a href="https://www.etnews.com/20260920000077" target="_blank">전자신문</a>      </div>
     </div>
     <div class="news-card">
       <div class="news-num">5</div>
-      <h2 class="news-title">🍈 중국 두리안 시장서 태국 95%→49%…베트남이 뒤집었다</h2>
+      <h2 class="news-title">📊 세금·복지 재분배 효과, 한국은 OECD 29개국 중 28위</h2>
       <div class="news-body">
-<p>중국 두리안 수입 시장에서 태국의 점유율이 2022년 약 95%에서 지난해 49.3%로 반토막 났어요. 같은 기간 베트남은 약 5%에서 50.4%로 뒤집었죠. 이유는 하나예요. 중국이 2022년부터 베트남산 두리안 수입을 허용하면서 공급이 폭발적으로 늘었거든요. 지난해 중국의 두리안 수입량은 187만 톤으로, 2022년의 두 배 수준이에요.</p><p>공급이 넘치면서 가격도 곤두박질쳤어요. 태국의 두리안 산지가격은 2024년 kg당 122밧(약 5,089원)에서 지난해 89밧으로 27%나 떨어졌어요. 태국 농가들은 두리안에 '올인'했다가 후폭풍을 맞은 셈이에요. 태국 정부는 미국·EU로 판로를 넓히려 하지만, 두리안 특유의 강한 냄새 탓에 서방 시장 개척이 쉽지 않은 상황이에요.</p>      </div>
+<p>9/20 공개된 OECD 소득분배통계에서 한국의 소득재분배 효과가 최하위권으로 확인됐어요. 2023년 기준 한국의 '지니계수 개선율'은 17.6%로 비교 가능한 OECD 29개국 중 28위예요. OECD 평균(34.4%)의 절반 수준이고, 한국보다 낮은 나라는 코스타리카(12.1%)뿐이에요.</p><p>지니계수 개선율이란, 세금을 내기 전 소득과 복지 혜택을 받은 후 실제 쓸 수 있는 소득 사이의 격차가 얼마나 줄었는지를 나타내는 수치예요. 수치가 높을수록 세금·복지 제도가 소득 격차를 잘 좁혀주는 거예요.</p><p>연령별로 봐도 상황은 비슷해요. 66세 이상 고령층의 지니계수 개선율은 29.6%로 29개국 중 28위예요. 노후 소득 불평등이 특히 심각한 셈이에요. 2011년 이후 한국의 순위는 꾸준히 최하위권을 맴돌고 있어요.</p>      </div>
 
       <div class="why-box">
         <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
-        <div class="why-text">이 뉴스가 재테크랑 무슨 관계냐고요? 한 나라가 특정 품목 수출에 지나치게 의존했다가 경쟁자가 치고 들어오면 순식간에 시장을 잃는 구조는, 우리나라 수출 산업이나 개별 종목 투자에서도 똑같이 일어나요. 태국의 두리안처럼 반도체·배터리·자동차 등 한국 주요 수출 품목도 중국·베트남 업체의 추격을 받고 있거든요. 신흥국 특정 산업 투자를 고민하신다면 '경쟁자가 언제, 어떻게 들어오는지'를 꼭 체크하세요. 베트남 ETF(예: TIGER 베트남VN30(합성))를 담고 계신 분이라면 농업·식품 분야 성장 모멘텀이 하나 더 확인됐다고 볼 수 있어요.</div>
+        <div class="why-text">이 지표가 내 월급과 무슨 관계냐고 느껴질 수 있는데, 꽤 직접적이에요. 재분배 효과가 낮다는 건 세금을 내고 복지를 받아도 내 소득 수준이 크게 개선되지 않는다는 뜻이에요. 특히 중위소득 언저리에 있는 직장인들은 세금 부담은 지는데 혜택은 체감이 안 되는 구조죠. 이런 구조에서는 국가 복지에만 의존하기보다 개인 노후 준비가 더 중요해져요. 퇴직연금(IRP)이나 연금저축 펀드를 활용하면 세액공제(최대 연 900만원 한도)와 노후 준비를 동시에 챙길 수 있어요. 이런 분이라면 지금 당장 IRP 계좌를 개설해두는 것만으로도 연말정산에서 차이가 나요.</div>
       </div>
 
       <div class="data-box">
         <div class="data-box-title">📊 Key Numbers</div>
         <div class="data-row">
-          <span class="data-label">중국 두리안시장 태국 점유율</span>
-          <span class="data-value down">95%(2022)→49%(2025)</span>
+          <span class="data-label">한국 지니계수 개선율 (2023년)</span>
+          <span class="data-value down">17.6% (OECD 29국 중 28위)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">중국 두리안시장 베트남 점유율</span>
-          <span class="data-value up">5%(2022)→50.4%(2025)</span>
+          <span class="data-label">OECD 평균 개선율</span>
+          <span class="data-value ">34.4%</span>
         </div>
         <div class="data-row">
-          <span class="data-label">태국 두리안 산지가격 변동</span>
-          <span class="data-value down">122밧→89밧 (-27%)</span>
+          <span class="data-label">66세 이상 개선율 순위</span>
+          <span class="data-value down">29.6% (28위)</span>
         </div>
         <div class="data-row">
-          <span class="data-label">중국 두리안 수입량(2025년)</span>
-          <span class="data-value up">187만 톤 (2022년比 2배)</span>
+          <span class="data-label">한국 현재 가처분소득 지니계수 (2024)</span>
+          <span class="data-value up">0.325</span>
         </div>
       </div>
 
       <div class="source-link">출처:
-<a href="https://www.hankyung.com/article/2026092063871" target="_blank">한국경제</a> · <a href="https://m.news.nate.com/view/20260920n15633" target="_blank">네이트뉴스(한경)</a>      </div>
+<a href="https://www.ebn.co.kr/news/articleView.html?idxno=1724989" target="_blank">EBN뉴스센터</a> · <a href="https://www.fnnews.com/news/202609201015236365" target="_blank">파이낸셜뉴스</a> · <a href="https://www.khan.co.kr/article/202609202210005" target="_blank">경향신문</a>      </div>
     </div>
   </div>
 
@@ -682,8 +690,8 @@
     <div class="section-label">💡 친절한 경제</div>
     <div class="explainer">
       <div class="explainer-badge">오늘의 경제상식</div>
-      <h3 class="explainer-title">전략비축유(SPR)가 뭐예요? 왜 줄면 유가가 위험해지나요?</h3>
-      <div class="explainer-body">오늘 비축유 뉴스에서 자주 나온 SPR(Strategic Petroleum Reserve)은 '국가 비상 원유 창고'예요. 전쟁·재해처럼 원유 공급이 갑자기 끊겼을 때 시장에 석유를 풀어 가격이 폭등하지 않도록 막는 역할을 하죠. 마치 우리 집 냉장고에 비상식량을 쌓아두는 것처럼요. 문제는 이 창고가 비어가면, 다음에 공급 충격이 오더라도 '완충재'가 없어서 유가가 더 빠르고 더 높이 뛰게 된다는 거예요. 미국의 SPR이 44년 만에 최저라는 건, 그만큼 다음 충격에 대한 시장의 방어막이 얇아졌다는 신호예요. 우리 소비자 입장에서는 기름값·물류비·전기요금이 연쇄적으로 올라올 수 있는 구조가 만들어진 거라, 에너지 관련 지출 계획을 보수적으로 잡아두는 게 좋아요.<br><br><table style='border-collapse:collapse;width:100%;font-size:0.95em'><thead><tr style='background:#f3f3f3'><th style='border:1px solid #ccc;padding:6px 10px;text-align:left'>구분</th><th style='border:1px solid #ccc;padding:6px 10px;text-align:left'>전략비축유(SPR) 충분할 때</th><th style='border:1px solid #ccc;padding:6px 10px;text-align:left'>전략비축유 바닥날 때</th></tr></thead><tbody><tr><td style='border:1px solid #ccc;padding:6px 10px'>공급 충격 발생 시</td><td style='border:1px solid #ccc;padding:6px 10px'>창고 풀어 유가 방어 가능</td><td style='border:1px solid #ccc;padding:6px 10px'>대응 수단 없어 유가 폭등</td></tr><tr style='background:#fafafa'><td style='border:1px solid #ccc;padding:6px 10px'>소비자 영향</td><td style='border:1px solid #ccc;padding:6px 10px'>주유·물가 충격 완화됨</td><td style='border:1px solid #ccc;padding:6px 10px'>기름값·물가 직격탄</td></tr><tr><td style='border:1px solid #ccc;padding:6px 10px'>현재 상태</td><td style='border:1px solid #ccc;padding:6px 10px'>-</td><td style='border:1px solid #ccc;padding:6px 10px'>2억8,540만배럴 (44년 최저)</td></tr></tbody></table></div>
+      <h3 class="explainer-title">지니계수가 뭐예요? 숫자 하나로 빈부격차를 어떻게 재요?</h3>
+      <div class="explainer-body">오늘 소득재분배 뉴스카드에서 '지니계수 개선율 17.6%'라는 표현이 나왔는데, 처음 보시는 분들에게 조금 낯설 수 있어요. 지니계수(Gini coefficient)란 소득 불평등 정도를 0~1 사이 숫자로 나타낸 지표예요. 0에 가까울수록 모두가 똑같이 버는 완전 평등, 1에 가까울수록 한 사람이 모든 걸 독차지하는 완전 불평등이에요. 오늘 뉴스에서 중요한 건 지니계수 자체보다 '개선율'인데요, 세금·복지를 받기 전(시장소득)과 받은 후(가처분소득) 지니계수가 얼마나 줄었느냐를 보는 거예요. 한국은 이 개선율이 17.6%로, OECD 평균 34.4%의 절반 수준이라는 뜻이에요.<br><br><table style="border-collapse:collapse;width:100%;font-size:0.95em"><thead><tr style="background:#f4f4f4"><th style="border:1px solid #ddd;padding:6px 10px">구분</th><th style="border:1px solid #ddd;padding:6px 10px">의미</th><th style="border:1px solid #ddd;padding:6px 10px">한국 현황 (2023)</th></tr></thead><tbody><tr><td style="border:1px solid #ddd;padding:6px 10px">시장소득 지니계수</td><td style="border:1px solid #ddd;padding:6px 10px">세금·복지 전 소득 격차</td><td style="border:1px solid #ddd;padding:6px 10px">OECD 상위권 (비교적 평등)</td></tr><tr><td style="border:1px solid #ddd;padding:6px 10px">가처분소득 지니계수</td><td style="border:1px solid #ddd;padding:6px 10px">세금·복지 후 실제 격차</td><td style="border:1px solid #ddd;padding:6px 10px">OECD 22위 (중하위)</td></tr><tr><td style="border:1px solid #ddd;padding:6px 10px">개선율 (격차 완화 효과)</td><td style="border:1px solid #ddd;padding:6px 10px">복지·세금이 격차를 얼마나 줄였나</td><td style="border:1px solid #ddd;padding:6px 10px">17.6% → 29국 중 28위</td></tr></tbody></table><br>즉, 한국은 세금 내기 전엔 소득이 비교적 고른 편인데, 복지와 세제를 거치고 나면 격차 완화 효과가 다른 나라보다 훨씬 약하다는 뜻이에요. 국가 시스템이 격차를 좁혀주는 힘이 약할수록, 개인이 스스로 자산을 쌓는 게 더 중요해진다는 시사점이기도 해요.</div>
     </div>
   </div>
 
@@ -697,21 +705,21 @@
       </div>
       <div class="rabbit-idea">
         <div class="rabbit-idea-label">유튜브 본편 10분</div>
-        <div class="rabbit-idea-text">"금리 올렸는데 엔화는 왜 떨어졌어요?" 일본발 금리·환율·유가의 연결고리 한 번에 정리 🎯 타깃: 환율·해외 ETF 입문자, 일본 투자 궁금한 직장인 · 도입: '금리 올리면 통화 강세'라는 공식이 왜 깨졌나 · 전개: BOJ 1.25% 인상 배경→엔화 약세 이유(선반영+반대표)→원화 동조화 구조→비축유 소진과 유가 연결 · CTA: 추석 연휴 전 포트폴리오 체크리스트 3가지</div>
+        <div class="rabbit-idea-text">"국가가 해줄 수 없다고요? 지금 내가 직접 챙겨야 할 3가지" 🎯 타깃: 30대 직장인, 재테크 시작하고 싶은데 어디서 시작할지 모르는 분 · 도입: 공적주택 119만호 발표를 보고 '나도 혜택 받을 수 있을까' 기대했다가 현실을 마주한 경험 공유 · 전개 ①: 소득재분배 OECD 최하위 - "국가 복지가 내 격차를 좁혀주는 힘이 이렇게 약하다" ② 공적주택 계획의 기회와 현실 - 신청할 수 있는 유형·조건 정리 ③ 내가 직접 챙겨야 할 것 - IRP·연금저축 세액공제, 보편형 공공임대 청약 준비 · CTA: "공적 지원을 기다리는 동안, 내 계좌에서 할 수 있는 것부터 시작해요"</div>
       </div>
       <div class="rabbit-idea">
         <div class="rabbit-idea-label">인스타 릴스 60초</div>
-        <div class="rabbit-idea-text">"두리안으로 보는 투자의 진리" 태국 vs 베트남 역전극 🎯 타깃: 신흥국 ETF·베트남 투자 관심 직장인 · 도입: 2022년 95% 점유율→2025년 49%로 반토막 된 숫자 충격 제시 · 전개: 한 시장 의존의 위험성→분산투자 원칙으로 연결 · CTA: '베트남 ETF도 한번 들여다보세요' 마무리</div>
+        <div class="rabbit-idea-text">"메타 AI가 내 이메일·예약을 대신 해준다고?" 🎯 타깃: AI 서비스 구독 중이거나 관심 있는 25~35세 · 도입(5초): 뮤즈 앱스토어 1위 장면 캡처 보여주기 · 전개(40초): AI 챗봇 vs AI 에이전트 차이 1문장 설명 → 뮤즈가 하는 일 3가지(예약·결제·이메일) → 개인정보 주의사항 한 줄 → 반도체 ETF 연결 힌트 · CTA(15초): "AI가 내 일을 대신하는 시대, 이걸 투자로 연결하는 법 본편에서 정리해뒀어요"</div>
       </div>
       <div class="rabbit-idea">
         <div class="rabbit-idea-label">블로그 글</div>
-        <div class="rabbit-idea-text">"전략비축유가 44년 만에 최저라는 게 내 지갑에 왜 중요한가요?" 🎯 타깃: 유가·물가·에너지 이슈 처음 접하는 재테크 입문자 · 핵심 흐름: SPR 개념 쉽게 설명→현재 수치와 역대 비교→소비자 영향(주유·식품·전기) 단계적 설명→원유 ETF 접근법(분할 매수 원칙) 안내</div>
+        <div class="rabbit-idea-text">"지니계수 17.6%가 내 지갑에 미치는 영향 - 한국 복지가 격차를 못 좁히는 이유" 🎯 타깃: 세금은 내는데 혜택을 못 느끼는 30~40대 직장인 · 핵심 흐름: ① 지니계수·개선율 쉬운 설명 (표 포함) ② 한국이 최하위권인 구체적 이유 (세수 구조·복지 지출 비중) ③ 개인이 할 수 있는 대응 - IRP·연금저축·보편형 공공임대 청약 준비 체크리스트 · SEO 키워드: 지니계수 뜻, 소득재분배, OECD 순위, IRP 세액공제</div>
       </div>
     </div>
   </div>
 
   <div class="footer-note">
-    생성 시각: 2026-09-21 10:00 KST · Claude로 자동 생성됨<br>
+    생성 시각: 2026-09-22 10:00 KST · Claude로 자동 생성됨<br>
     본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
   </div>
 
