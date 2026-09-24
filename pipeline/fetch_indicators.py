@@ -49,6 +49,10 @@ class Indicator:
     unit: str
     source: str
     fetched_at: str
+    # 값이 실제로 어느 날짜의 것인지. 휴장·데이터 지연 때문에 발행일과 다를 수 있다.
+    # 이걸 프롬프트에 넘기지 않아 9/24(추석 연휴 휴장) 브리핑이 9/21자 코스피를
+    # "9/24 오전 장중"으로 서술했다. 기본값은 하위 호환용.
+    as_of: str = ""
 
     @property
     def direction(self) -> str:
@@ -96,6 +100,7 @@ def _fetch_yf(ticker: str, name: str, key: str, unit: str) -> Indicator:
         unit=unit,
         source=f"Yahoo Finance ({ticker})",
         fetched_at=_now_iso(),
+        as_of=str(last_ts.date()),
     )
 
 

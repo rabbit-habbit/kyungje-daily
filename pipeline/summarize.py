@@ -197,6 +197,9 @@ T를 앞쪽에서 원본 순서대로 배치하고, 사이/뒤에 W를 끼워 �
      (예: "반도체 ETF 담고 계신 분이라면", "부동산에 조금이라도 투자해보고 싶은 분에게").
    - 겁주지 말 것. 무엇을 지켜보면 되는지 행동 힌트로 끝맺기.
 5. sources: [{{name, url}}] 1~3개 (web_search 실제 URL만).
+   **★ 언론사 기사만 쓴다.** 위키(나무위키·위키백과)·블로그·커뮤니티·지식인은 금지.
+   2026-09-24 발행분에 나무위키가 출처로 나가 신뢰도를 떨어뜨렸다.
+   적절한 출처를 못 찾으면 sources를 빈 배열로 두는 편이 낫다.
 
 ### STEP 5. 오늘의 한줄 인사이트 (insight)
 5개 뉴스를 관통하는 핵심 메시지를 2~3 문장으로 정리.
@@ -324,7 +327,15 @@ web_search로 얻은 국내 시장 지표(KOSPI, KOSDAQ, 원·달러 환율, 국
 3. **web_search 결과의 관측 날짜와 발행일 다르면 반드시 관측일 명시**
    발행일에 관측된 것처럼 서술 절대 금지. "8/14 발표된", "8/14 기준" 등으로.
 
-3-1. **★ 국내 지표는 발행 시점에 아직 장중이다 (가장 자주 틀리는 부분)**
+3-1. **★ 지표는 [오늘 경제지표]에 적힌 "기준일"로만 서술한다 (가장 자주 틀리는 부분)**
+   각 지표 줄 끝의 `· 기준일 YYYY-MM-DD`가 그 숫자가 실제로 어느 날짜의 것인지다.
+   - 기준일이 발행일과 **다르면** 반드시 그 날짜로 쓴다.
+     ❌ "9/24 오전 장중 코스피가 7,007p" (실제 값은 9/21자)
+     ✅ "9/21 종가 기준 코스피 7,007p (9/24는 추석 연휴로 휴장)"
+   - 공휴일·연휴에는 국내 증시와 외환시장이 쉰다. 기준일이 밀려 있으면 휴장을
+     의심하고, 명절을 언급할 땐 web_search로 **발행일과 명절의 선후관계를 확인**한다.
+     ❌ 발행일이 연휴 첫날인데 "추석 지나자마자" 라고 쓰는 것 (2026-09-24 사고)
+   - 기준일이 발행일과 같더라도 국내 증시 마감(15:30) 전이면 "마감/종가"로 쓰지 않는다:
    브리핑은 오전에 나가고 국내 증시는 15:30에 닫는다. 위 [오늘 경제지표]의
    "수집 시점"이 장중이면, 코스피·환율·국고채는 **그 시각의 장중 값**이지
    그날의 종가가 아니다.
@@ -436,25 +447,35 @@ def _build_user_prompt(episode: dict, indicators: dict) -> str:
     for key, ind in ind_map.items():
         unit = ind.get("unit", "")
         arrow = "▲" if ind["direction"] == "up" else "▼" if ind["direction"] == "down" else "―"
+        as_of = ind.get("as_of") or ""
         ind_lines.append(
             f"- {ind['name']}: {ind['value']}{unit} "
             f"({arrow}{ind['change']:+}, {ind['change_pct']:+.2f}%)"
+            + (f" · 기준일 {as_of}" if as_of else "")
         )
     indicators_text = "\n".join(ind_lines) or "(수집 실패)"
 
     # 지표를 언제 찍은 값인지 명시한다. 이게 없으면 모델이 장중 스냅샷을 "마감/종가"로
     # 써버린다 (9/11 사고: 09:20에 찍은 9/11 장중 값을 "9/11 마감"으로 서술).
+    # 시장이 열렸는지를 요일·시각으로 추측하면 공휴일을 놓친다. 실제로 2026-09-24
+    # (추석 연휴 휴장)에 "장중"이라고 판정해 9/21자 코스피를 "9/24 오전 장중"으로
+    # 서술하는 사고가 났다. 달력을 하드코딩하면 기준금리 상수처럼 낡으므로,
+    # 데이터 자체의 기준일(as_of)로 판단한다.
     fetched_line = "(수집 시각 불명)"
     try:
         _ts = datetime.fromisoformat(indicators.get("fetched_at", "")).astimezone(KST)
-        _krx_open = _ts.weekday() < 5 and (
-            (_ts.hour, _ts.minute) >= (9, 0) and (_ts.hour, _ts.minute) < (15, 30)
-        )
-        fetched_line = (
-            f"{_ts:%Y-%m-%d %H:%M} KST 기준"
-            + (" · 국내 증시 **장중** (09:00~15:30, 아직 마감 전)"
-               if _krx_open else " · 국내 증시 장 시간 외")
-        )
+        _today = _ts.strftime("%Y-%m-%d")
+        _stale = sorted({
+            v.get("as_of") for v in ind_map.values()
+            if v.get("as_of") and v.get("as_of") != _today
+        })
+        fetched_line = f"{_ts:%Y-%m-%d %H:%M} KST 수집"
+        if _stale:
+            fetched_line += (
+                f" · ⚠️ 일부 지표의 기준일이 발행일({_today})과 다릅니다"
+                f" ({', '.join(_stale)}). 휴장이거나 데이터가 아직 갱신되지 않은 것이니"
+                f" 각 지표를 서술할 때 **그 지표의 기준일**을 쓰세요."
+            )
     except (ValueError, TypeError):
         pass
 
