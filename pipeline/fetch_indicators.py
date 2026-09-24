@@ -104,12 +104,68 @@ def _fetch_yf(ticker: str, name: str, key: str, unit: str) -> Indicator:
     )
 
 
+NAVER_FX_URL = (
+    "https://m.stock.naver.com/front-api/marketIndex/prices"
+    "?category=exchange&reutersCode=FX_USDKRW&page=1"
+)
+
+
+def _fetch_usd_krw_naver() -> Indicator:
+    """네이버 금융(하나은행 고시 매매기준율)에서 원·달러를 가져온다.
+
+    야후 KRW=X는 역외 시세라 국내에서 통용되는 값과 벌어진다
+    (2026-09-23 기준 야후 1,350.36 vs 네이버 1,366.70). 또 야후는 국내 지수처럼
+    거래일이 빠지는 경우가 있다. 네이버는 거래일별 종가를 날짜와 함께 준다.
+    """
+    r = requests.get(
+        NAVER_FX_URL,
+        headers={"User-Agent": UA, "Referer": "https://m.stock.naver.com/"},
+        timeout=10,
+    )
+    r.raise_for_status()
+    rows = (r.json() or {}).get("result") or []
+    if len(rows) < 2:
+        raise RuntimeError(f"네이버 환율 응답이 부족합니다 (rows={len(rows)})")
+
+    def _num(v) -> float:
+        return float(str(v).replace(",", ""))
+
+    last = _num(rows[0]["closePrice"])
+    prev = _num(rows[1]["closePrice"])
+    as_of = str(rows[0].get("localTradedAt", ""))[:10]
+    if not as_of:
+        raise RuntimeError("네이버 환율 응답에 localTradedAt 없음")
+
+    diff = last - prev
+    logger.info(
+        "  usd_krw(naver): %s %.2f ← 직전 거래일 %s %.2f",
+        as_of, last, str(rows[1].get("localTradedAt", ""))[:10], prev,
+    )
+    return Indicator(
+        key="usd_krw",
+        name="원/달러 환율",
+        value=round(last, 2),
+        prev=round(prev, 2),
+        change=round(diff, 2),
+        change_pct=round(diff / prev * 100, 2),
+        unit="원",
+        source="네이버 금융 (하나은행 고시 매매기준율)",
+        fetched_at=_now_iso(),
+        as_of=as_of,
+    )
+
+
 def fetch_usd_krw() -> Indicator:
-    ind = _fetch_yf("KRW=X", "원/달러 환율", "usd_krw", "원")
-    ind.value = round(ind.value, 2)
-    ind.prev = round(ind.prev, 2)
-    ind.change = round(ind.change, 2)
-    return ind
+    """원·달러: 네이버 우선, 실패 시 야후 백업."""
+    try:
+        return _fetch_usd_krw_naver()
+    except Exception as exc:
+        logger.warning("네이버 환율 실패(%s) - 야후로 백업합니다", exc)
+        ind = _fetch_yf("KRW=X", "원/달러 환율", "usd_krw", "원")
+        ind.value = round(ind.value, 2)
+        ind.prev = round(ind.prev, 2)
+        ind.change = round(ind.change, 2)
+        return ind
 
 
 NAVER_KOSPI_URL = "https://m.stock.naver.com/api/index/KOSPI/basic"
