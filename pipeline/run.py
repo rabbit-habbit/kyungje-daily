@@ -256,7 +256,14 @@ def run(
 
     # 1) RSS
     logger.info("[1/4] MBC 손경제 RSS 가져오는 중...")
-    episode = fetch_rss.fetch_latest_episode()
+    try:
+        episode = fetch_rss.fetch_latest_episode()
+    except fetch_rss.NoRegularEpisode as exc:
+        # 연휴 등으로 정규 방송이 없는 날은 주말과 똑같이 발행하지 않는다.
+        # 오류가 아니므로 정상 종료한다 (대표님 방침 2026-09-24).
+        logger.info("=== %s 정규 방송분 없음 - 발행하지 않습니다 ===", date_str)
+        logger.info("    사유: %s", exc)
+        return None
     logger.info("  ✓ %s", episode.title)
     episode_dict = asdict(episode)
     if save_intermediate:

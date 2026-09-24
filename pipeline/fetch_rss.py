@@ -105,6 +105,24 @@ def _audio_url(entry) -> Optional[str]:
 YOUTUBE_CHANNEL_ID = "UCiYbaVEODktcsh09454Grow"
 
 
+class NoRegularEpisode(RuntimeError):
+    """오늘 정규 방송분이 없음 (연휴 등). 오류가 아니라 '발행하지 않음' 신호."""
+
+
+def is_regular_episode(title: str, day) -> bool:
+    """정규 방송분인지 제목으로 판별.
+
+    정규 편성은 제목에 방송일이 들어간다. 두 형식이 관측됐다:
+      "[손경제] 9/18(금) 석유 최고가격 | 토허제 실거주 | ..."
+      "[손경제] 일본 금리 인상 | 비축유 | 20260921(월)"
+    반면 인터뷰·코너 클립은 날짜가 없다:
+      "[손경제] 메모리 반도체 전망, CEO들도 엇갈립니다 - 이형수 대표"
+    2026-09-24(추석 연휴)에 이 클립을 정규 방송으로 오인해 브리핑이 생성됐다.
+    """
+    t = (title or "").replace(" ", "")
+    return any(tok in t for tok in (f"{day.month}/{day.day}(", f"{day:%Y%m%d}("))
+
+
 def fetch_from_youtube_channel_api() -> Episode:
     """YouTube Data API v3로 MBC 손경제 채널에서 오늘 올라온 [손경제] 영상 자동 검색.
 
@@ -143,13 +161,17 @@ def fetch_from_youtube_channel_api() -> Episode:
     items = r.json().get("items", [])
 
     match = next(
-        (it for it in items if it.get("snippet", {}).get("title", "").strip().startswith("[손경제]")),
+        (
+            it for it in items
+            if it.get("snippet", {}).get("title", "").strip().startswith("[손경제]")
+            and is_regular_episode(it.get("snippet", {}).get("title", ""), today_kst.date())
+        ),
         None,
     )
     if not match:
         titles = [it.get("snippet", {}).get("title", "")[:60] for it in items]
-        raise RuntimeError(
-            f"오늘({today_kst.strftime('%Y-%m-%d')}) 채널에 [손경제] 영상 없음. "
+        raise NoRegularEpisode(
+            f"오늘({today_kst.strftime('%Y-%m-%d')}) 채널에 정규 [손경제] 방송분 없음. "
             f"검색된 영상: {titles}"
         )
 

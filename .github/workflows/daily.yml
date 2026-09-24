@@ -92,8 +92,17 @@ jobs:
 
           python pipeline/run.py --push $FORCE_FLAG $NOTIFY_FLAG
 
-          # 재생성 여부: 기존에 없었거나 force면 새로 만든 것
-          if [ "$EXISTED" = "false" ] || [ "$FORCE_FLAG" = "--force" ]; then
+          # 재생성 여부 판정.
+          # ★ 실행 후 archive가 실제로 있는지도 본다. 연휴처럼 정규 방송이 없어
+          #   발행을 건너뛴 날은 archive가 안 생기는데, 예전 로직은 EXISTED=false만
+          #   보고 did_regenerate=true로 판단해 후속 카톡/publ을 발송할 뻔했다.
+          AFTER=false
+          [ -f "$ARCHIVE" ] && AFTER=true
+
+          if [ "$AFTER" = "false" ]; then
+            echo "did_regenerate=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️  보고서가 생성되지 않음 (정규 방송 없음 등) · 후속 발송 안 함"
+          elif [ "$EXISTED" = "false" ] || [ "$FORCE_FLAG" = "--force" ]; then
             echo "did_regenerate=true" >> "$GITHUB_OUTPUT"
           else
             echo "did_regenerate=false" >> "$GITHUB_OUTPUT"
