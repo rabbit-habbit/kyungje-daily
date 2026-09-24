@@ -112,8 +112,62 @@ def fetch_usd_krw() -> Indicator:
     return ind
 
 
+NAVER_KOSPI_URL = "https://m.stock.naver.com/api/index/KOSPI/basic"
+
+
+def _fetch_kospi_naver() -> Indicator:
+    """네이버 금융에서 코스피 당일 값을 가져온다.
+
+    야후(^KS11)는 국내 지수 데이터가 늦고 빠진다. 실측(2026-09-24 10:01):
+    9/22 봉이 아예 없고 9/23 봉은 아직 올라오지 않아 9/21이 최신이었다.
+    그 결과 사흘 지난 값이 당일 값처럼 브리핑에 실렸다.
+    네이버는 localTradedAt으로 거래일을 명시해 주므로 기준일도 정확해진다.
+    """
+    r = requests.get(
+        NAVER_KOSPI_URL,
+        headers={"User-Agent": UA, "Referer": "https://m.stock.naver.com/"},
+        timeout=10,
+    )
+    r.raise_for_status()
+    d = r.json()
+
+    last = float(str(d["closePrice"]).replace(",", ""))
+    diff = abs(float(str(d["compareToPreviousClosePrice"]).replace(",", "")))
+    ratio = float(str(d.get("fluctuationsRatio", "0")).replace(",", ""))
+    if ratio < 0:
+        diff = -diff
+    elif ratio == 0:
+        diff = 0.0
+    prev = last - diff
+    as_of = str(d.get("localTradedAt", ""))[:10]
+    if not as_of:
+        raise RuntimeError("네이버 응답에 localTradedAt 없음")
+
+    logger.info(
+        "  kospi(naver): %s %.2f ← 직전 거래일 %.2f (%s)",
+        as_of, last, prev, d.get("marketStatus", "?"),
+    )
+    return Indicator(
+        key="kospi",
+        name="코스피",
+        value=round(last, 4),
+        prev=round(prev, 4),
+        change=round(diff, 4),
+        change_pct=round(ratio, 2),
+        unit="p",
+        source="네이버 금융 (KOSPI)",
+        fetched_at=_now_iso(),
+        as_of=as_of,
+    )
+
+
 def fetch_kospi() -> Indicator:
-    return _fetch_yf("^KS11", "코스피", "kospi", "p")
+    """코스피: 네이버 우선, 실패 시 야후 백업."""
+    try:
+        return _fetch_kospi_naver()
+    except Exception as exc:
+        logger.warning("네이버 코스피 실패(%s) - 야후로 백업합니다", exc)
+        return _fetch_yf("^KS11", "코스피", "kospi", "p")
 
 
 def fetch_sp500() -> Indicator:
