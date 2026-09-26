@@ -189,28 +189,50 @@ def _move_styles_into_body(html_body: str) -> str:
     return stripped[:m2.end()] + "".join(styles) + stripped[m2.end():]
 
 
-def _prepend_note(html_body: str, date_iso: str) -> str:
-    """그룹톡 멘트를 아티클 본문 맨 앞에 <p> 한 줄로 넣는다.
+# 아티클 맨 위 고정 안내 (2026-09-26 대표님 지시).
+# 그룹톡 참여를 놓친 분들을 [필독] 안내글로 유도한다. 모바일은 그룹톡 링크로
+# 보는 쪽이 가독성이 좋다는 점도 함께 안내한다.
+GUIDE_POST_URL = (
+    "https://www.xn--hj2bz1kma567u.com/channels/L2NoYW5uZWxzLzIzMDY0/B00001/"
+    "posts/멤버십-필독-데일리-브리핑-이용-안내-753414"
+)
+INTRO_NOTICE_HTML = (
+    "<p>안녕하세요, 햇님이! 🌞<br>"
+    "혹시 아직 매일 아침 브리핑 링크를 못 받고 계시다면, 그룹톡 참여를 놓치신 것일 수 있어요.<br>"
+    "아래 [필독] 글을 참고해서, 두 단계만 세팅해두시면 내일 아침부터 바로 받아보실 수 있습니다. 🐰<br>"
+    "특히, 휴대폰으로 보시는 분들은 그룹톡 링크 통해서 들어가시는게 가독성이 훨씬 좋을거예요! 👇<br>"
+    f'<a title="[필독] 데일리 브리핑 안내" href="{GUIDE_POST_URL}" target="_blank" rel="noopener">'
+    '<span style="background-color: rgb(251, 238, 184);">[필독] 데일리 브리핑 안내</span>'
+    "</a></p>"
+    "<p>"
+    "---------------------------------------------------------"
+    "</p>"
+)
 
-    대표님이 손으로 하시던 작업의 자동화 (2026-09-04):
-    Source Code 모달에서 브리핑 HTML 앞에 <p>멘트</p>를 붙이는 방식.
-    에디터가 <!DOCTYPE>·<head>를 걷어내므로 <body> 직후에 넣으면 같은 결과가 된다.
+
+def _prepend_note(html_body: str, date_iso: str) -> str:
+    """아티클 본문 맨 앞에 고정 안내 + 그날의 그룹톡 멘트를 넣는다.
+
+    순서: [필독] 안내 → 구분선 → 그룹톡 멘트 → 브리핑 본문
+    에디터가 <!DOCTYPE>·<head>를 걷어내므로 <body> 직후에 넣으면
+    손으로 Source Code에 붙여넣은 것과 같은 결과가 된다.
     아카이브 파일은 건드리지 않으므로 단톡방 링크로 여는 페이지에는 영향이 없다.
     """
-    if not _DATE_RE.fullmatch(date_iso):
-        return html_body
-    note = _load_group_note(date_iso)
-    if not note:
-        logger.info("멘트 없음 - 기존 형식 그대로 발행")
-        return html_body
-    # 긴 대시 금지 규칙 (summarize의 코드 가드는 9/5 생성분부터 적용).
-    note = note.replace("\u2014", "-").replace("\u2013", "-")
-    block = "<p>" + html_lib.escape(note) + "</p>"
+    note = _load_group_note(date_iso) if _DATE_RE.fullmatch(date_iso) else ""
+    if note:
+        # 긴 대시 금지 규칙 (summarize의 코드 가드는 9/5 생성분부터 적용).
+        note = note.replace("\u2014", "-").replace("\u2013", "-")
+
+    block = INTRO_NOTICE_HTML + ("<p>" + html_lib.escape(note) + "</p>" if note else "")
+
     m = re.search(r"<body[^>]*>", html_body, re.I)
     if not m:
-        logger.warning("body 태그를 찾지 못해 멘트를 넣지 않았습니다.")
+        logger.warning("body 태그를 찾지 못해 상단 블록을 넣지 않았습니다.")
         return html_body
-    logger.info("아티클 상단에 멘트 삽입 (%d자)", len(note))
+    logger.info(
+        "아티클 상단 삽입: [필독] 안내 + 멘트 %s",
+        f"{len(note)}자" if note else "없음",
+    )
     return html_body[:m.end()] + block + html_body[m.end():]
 
 
