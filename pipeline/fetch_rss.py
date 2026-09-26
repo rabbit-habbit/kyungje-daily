@@ -109,18 +109,29 @@ class NoRegularEpisode(RuntimeError):
     """오늘 정규 방송분이 없음 (연휴 등). 오류가 아니라 '발행하지 않음' 신호."""
 
 
-def is_regular_episode(title: str, day) -> bool:
-    """정규 방송분인지 제목으로 판별.
+def is_regular_episode(title: str, day) -> tuple[bool, str]:
+    """정규 방송분인지 제목으로 판별. (정규 여부, 사유) 반환.
 
-    정규 편성은 제목에 방송일이 들어간다. 두 형식이 관측됐다:
-      "[손경제] 9/18(금) 석유 최고가격 | 토허제 실거주 | ..."
-      "[손경제] 일본 금리 인상 | 비축유 | 20260921(월)"
-    반면 인터뷰·코너 클립은 날짜가 없다:
-      "[손경제] 메모리 반도체 전망, CEO들도 엇갈립니다 - 이형수 대표"
-    2026-09-24(추석 연휴)에 이 클립을 정규 방송으로 오인해 브리핑이 생성됐다.
+    실측 제목 11건으로 검증한 두 가지 조건:
+
+    1) 당일 날짜가 있어야 한다. 두 형식이 관측됐다.
+         "[손경제] 9/18(금) 석유 최고가격 | 토허제 실거주 | ..."
+         "[손경제] 일본 금리 인상 | 비축유 | 20260921(월)"
+       날짜 없는 코너 클립을 당일 방송으로 오인한 사고가 있었다 (2026-09-24).
+
+    2) 토픽 나열(|)이 없으면서 " - 게스트명" 형태면 특집·인터뷰다.
+         "[손경제] 9/25(금) 추석 호구 탈출을 위한 최소한의 생존 지식 - 김나영 작가"
+       추석 당일 이 특집이 정규분으로 통과해 브리핑이 나갔다 (2026-09-25).
+       단 "|"만으로 판별하면 안 된다. "[손경제] 9/7(월)"처럼 토픽 없는
+       정규분이 실제로 존재한다.
     """
-    t = (title or "").replace(" ", "")
-    return any(tok in t for tok in (f"{day.month}/{day.day}(", f"{day:%Y%m%d}("))
+    t = (title or "")
+    squashed = t.replace(" ", "")
+    if not any(tok in squashed for tok in (f"{day.month}/{day.day}(", f"{day:%Y%m%d}(")):
+        return False, "제목에 당일 날짜가 없음"
+    if "|" not in t and " - " in t:
+        return False, "단일 주제 + 게스트 표기 (특집·인터뷰로 판단)"
+    return True, "정규"
 
 
 def fetch_from_youtube_channel_api() -> Episode:
@@ -164,7 +175,7 @@ def fetch_from_youtube_channel_api() -> Episode:
         (
             it for it in items
             if it.get("snippet", {}).get("title", "").strip().startswith("[손경제]")
-            and is_regular_episode(it.get("snippet", {}).get("title", ""), today_kst.date())
+            and is_regular_episode(it.get("snippet", {}).get("title", ""), today_kst.date())[0]
         ),
         None,
     )
@@ -332,6 +343,16 @@ def fetch_latest_episode() -> Episode:
         )
     logger.info("✓ pub_date 검증 통과: %s (KST 오늘)", pub_date_kst)
     logger.info("픽한 에피소드: %s", entry.get("title", "")[:80])
+
+    # ★ 날짜만 맞으면 통과시키면 안 된다. 2026-09-25(추석 당일)에 RSS가
+    #   "[손경제] 9/25(금) 추석 호구 탈출... - 김나영 작가" 특집을 내려줬고,
+    #   pub_date 검증만 있던 탓에 그대로 브리핑이 생성됐다.
+    ok, why = is_regular_episode(entry.get("title", ""), today_kst)
+    if not ok:
+        raise NoRegularEpisode(
+            f"오늘({today_kst}) 정규 방송분이 아닙니다 - {why}. "
+            f"title={entry.get('title','')[:80]!r}"
+        )
     description_html = entry.get("summary") or entry.get("description") or ""
     description = _dedup_description(_strip_html(description_html))
 
