@@ -36,6 +36,19 @@ INSIGHT_STYLE = (
     "border:1px solid #FFD97A!important;border-radius:16px!important;"
     "padding:20px!important;margin:20px 0!important;"
 )
+# 기사에 이어 붙는 트리거 블록.
+# CARD_STYLE이 모든 news-card에 border-radius와 margin-bottom을 !important로
+# 덧씌우기 때문에, 이어붙임은 그 뒤에 한 번 더 밀어넣어야 살아남는다.
+# 순서가 곧 우선순위다.
+ATTACH_JOIN_STYLE = (
+    "margin-bottom:0!important;"
+    "border-bottom-left-radius:0!important;border-bottom-right-radius:0!important;"
+)
+ATTACH_STYLE = (
+    "background:#FBF7EE!important;border:1px solid #EFE8D6!important;border-top:0!important;"
+    "border-radius:0 0 14px 14px!important;padding:14px 16px!important;"
+    "margin:-12px 0 12px!important;"
+)
 PULSE_STYLE = (
     "background:#ffffff!important;border:1px solid #EFE8D6!important;"
     "border-radius:14px!important;padding:20px!important;margin-bottom:16px!important;"
@@ -105,6 +118,12 @@ def build_inline(html: str, base_url: str | None = None) -> str:
     inlined = _add_style(inlined, "why-box", BOX_STYLE)
     inlined = _add_style(inlined, "insight-box", INSIGHT_STYLE)
     inlined = _add_style(inlined, "market-pulse", PULSE_STYLE)
+    # news-card 뒤에 와야 CARD_STYLE의 border-radius를 덮는다.
+    # 클래스 이름이 겹치면 안 된다. \battach\b 는 has-attach 안의 attach도
+    # 잡아서 뉴스 카드가 트리거 블록 스타일을 뒤집어쓴다. 겹치지 않는
+    # 이름(trigbox / trigjoin)을 쓴다.
+    inlined = _add_style(inlined, "trigbox", ATTACH_STYLE)
+    inlined = _add_style(inlined, "trigjoin", ATTACH_JOIN_STYLE)
 
     return inlined
 

@@ -195,3 +195,73 @@ def test_풀_깊이가_하한을_넘는다():
     상품마다 시작점이 어긋나 있어 실제 재등장 주기는 풀 크기와 같다."""
     for p in products.LADDER:
         assert len(p["desc"]) >= 7, f"{p['code']}: 문구 {len(p['desc'])}종은 얕다"
+
+
+# ── 퍼블 아티클용 인라인 변환 뒤에도 살아남는가 ──────────────────────
+#
+# 퍼블 에디터는 <head>를 버린다. 스타일이 요소에 박혀 있지 않으면 죽는다.
+# 그리고 build_inline이 뉴스 카드에 !important를 덧씌우기 때문에, 나중에
+# 붙는 선언이 앞의 것을 이긴다. 눈으로 봐서는 스타일이 다 들어가 있어
+# 멀쩡해 보이므로 값을 직접 확인해야 한다.
+
+def _inlined():
+    import re
+    from pipeline import build_inline, render_report
+    d = {
+        "date_display": "10/8", "generated_at": "x",
+        "base_rates": {"kr": "3.00%", "us": "4.25%", "spread": "1.25%p"},
+        "indicators": {"domestic": [
+            {"name": "코스피", "value": "2,598", "change": -1.0,
+             "change_pct": -0.1, "unit": ""}], "global": []},
+        "news_cards": [{"title": "반도체 수출"},
+                       {"title": "실질임금 제자리", "body": ["월급"],
+                        "why_for_workers": "월급"}],
+        "explainer": {"title": "x", "body": "y"}, "insight": "z",
+    }
+    d["ladder"] = products.ladder_items("2026-10-08")
+    d["trigger"] = products.pick_trigger(d["news_cards"], "2026-10-08")
+    assert d["trigger"], "시험 준비: 트리거가 붙어야 한다"
+    return re, build_inline.build_inline(render_report.render(d, mode="share"))
+
+
+def _last(style, prop):
+    """인라인 style에 같은 속성이 여러 번 나오면 마지막 것이 이긴다."""
+    import re
+    hits = re.findall(rf'(?:^|;)\s*{re.escape(prop)}\s*:\s*([^;"]+)', style)
+    return hits[-1].strip() if hits else None
+
+
+def test_인라인_변환_뒤에도_블록이_남는다():
+    re, html = _inlined()
+    assert len(re.findall(r'<a class="ladder-row"', html)) == 3
+    assert len(re.findall(r'<div class="trigbox"', html)) == 1
+    assert len(re.findall(r'<img src="https://economy-proxy[^"]*/img/', html)) == 3
+    assert len(re.findall(r'href="https://economy-proxy[^"]*/r\?', html)) == 4
+
+
+def test_줄바꿈이_살아남는다():
+    """트리거 문구는 두 줄이다. pre-line이 죽으면 한 줄로 붙는다."""
+    re, html = _inlined()
+    m = re.search(r'<div class="trigbox-text"([^>]*)>(.*?)</div>', html, re.S)
+    assert "pre-line" in m.group(1), "white-space:pre-line이 인라인되지 않았다"
+    assert "\n" in m.group(2), "본문에서 줄바꿈이 사라졌다"
+
+
+def test_트리거가_기사에_붙어_보인다():
+    """build_inline이 카드에 border-radius를 !important로 덧씌우므로,
+    이어붙임 선언이 그 뒤에 와야 이긴다. 순서가 곧 우선순위다."""
+    re, html = _inlined()
+    card = re.search(r'<div class="news-card trigjoin"[^>]*style="([^"]*)"', html).group(1)
+    assert _last(card, "margin-bottom") == "0!important"
+    assert _last(card, "border-bottom-left-radius") == "0!important"
+    assert _last(card, "border-bottom-right-radius") == "0!important"
+
+
+def test_클래스_이름이_서로_안_먹는다():
+    """\\battach\\b 는 has-attach 안의 attach까지 잡는다. 그러면 뉴스 카드가
+    트리거 블록 배경을 뒤집어쓴다. 실제로 한 번 당한 자리다."""
+    re, html = _inlined()
+    card = re.search(r'<div class="news-card trigjoin"[^>]*style="([^"]*)"', html).group(1)
+    assert _last(card, "background") == "#ffffff!important", "카드가 트리거 배경을 먹었다"
+    plain = re.search(r'<div class="news-card"[^>]*style="([^"]*)"', html).group(1)
+    assert _last(plain, "margin-bottom") == "12px!important", "보통 카드가 영향받았다"

@@ -326,7 +326,7 @@
   .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
 
   /* 상품 블록 - 기사에 이어 붙는 트리거 */
-  .attach {
+  .trigbox {
     margin: -12px 0 12px;
     padding: 14px 16px;
     background: #FBF7EE;
@@ -334,12 +334,12 @@
     border-top: 0;
     border-radius: 0 0 12px 12px;
   }
-  .attach-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
-  .attach-cta {
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-cta {
     display: inline-block; margin-top: 6px;
     font-size: 12.5px; font-weight: 600; color: var(--blue); text-decoration: none;
   }
-  .news-card.has-attach {
+  .news-card.trigjoin {
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -550,7 +550,7 @@
     <div class="section-label">📰 {% if mode == 'share' %}오늘의 주요 경제뉴스{% else %}오늘의 경제 뉴스{% endif %}</div>
     {% for news in news_cards %}
     {% set has_attach = (mode == 'share' and trigger and trigger.news_index == loop.index0) %}
-    <div class="news-card{% if has_attach %} has-attach{% endif %}">
+    <div class="news-card{% if has_attach %} trigjoin{% endif %}">
       <div class="news-num">{{ loop.index }}</div>
       <h2 class="news-title">{{ news.title }}</h2>
       <div class="news-body">
@@ -590,9 +590,9 @@
       {% endif %}
     </div>
     {% if has_attach %}
-    <div class="attach">
-      <div class="attach-text">{{ trigger.text }}</div>
-      <a class="attach-cta" href="{{ trigger.url }}" target="_blank" rel="noopener">{{ trigger.cta }} →</a>
+    <div class="trigbox">
+      <div class="trigbox-text">{{ trigger.text }}</div>
+      <a class="trigbox-cta" href="{{ trigger.url }}" target="_blank" rel="noopener">{{ trigger.cta }} →</a>
     </div>
     {% endif %}
     {% endfor %}
