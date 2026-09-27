@@ -317,6 +317,9 @@
     border-radius: 8px; overflow: hidden; background: #EFE9DC;
   }
   .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
   .ladder-text { min-width: 0; }
   .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
   .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
@@ -612,7 +615,7 @@
   <div class="ladder">
     {% for it in ladder %}
     <a class="ladder-row" href="{{ it.url }}" target="_blank" rel="noopener">
-      <div class="ladder-thumb"><img src="{{ it.img }}" alt=""></div>
+      <div class="ladder-thumb{% if it.code == 'book' %} is-book{% endif %}"><img src="{{ it.img }}" alt=""></div>
       <div class="ladder-text">
         <div class="ladder-title">{{ it.title }}</div>
         <div class="ladder-desc">{{ it.desc }}</div>
