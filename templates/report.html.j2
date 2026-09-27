@@ -294,6 +294,54 @@
   }
   .source-link a:hover { text-decoration: underline; }
 
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .attach {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .attach-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .attach-cta {
+    display: inline-block; margin-top: 6px;
+    font-size: 12.5px; font-weight: 600; color: var(--blue); text-decoration: none;
+  }
+  .news-card.has-attach {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
   .insight-box {
     background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
@@ -498,7 +546,8 @@
   <div class="section">
     <div class="section-label">📰 {% if mode == 'share' %}오늘의 주요 경제뉴스{% else %}오늘의 경제 뉴스{% endif %}</div>
     {% for news in news_cards %}
-    <div class="news-card">
+    {% set has_attach = (mode == 'share' and trigger and trigger.news_index == loop.index0) %}
+    <div class="news-card{% if has_attach %} has-attach{% endif %}">
       <div class="news-num">{{ loop.index }}</div>
       <h2 class="news-title">{{ news.title }}</h2>
       <div class="news-body">
@@ -537,6 +586,12 @@
       {% endfor %}
       {% endif %}
     </div>
+    {% if has_attach %}
+    <div class="attach">
+      <div class="attach-text">{{ trigger.text }}</div>
+      <a class="attach-cta" href="{{ trigger.url }}" target="_blank" rel="noopener">{{ trigger.cta }} →</a>
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
 
@@ -549,6 +604,22 @@
       <h3 class="explainer-title">{{ explainer.title }}</h3>
       <div class="explainer-body">{{ explainer.body | safe }}</div>
     </div>
+  </div>
+  {% endif %}
+
+  {# 상품 사다리 — share 모드에서만. 한줄 인사이트를 보려면 반드시 지나가는 자리 #}
+  {% if mode == 'share' and ladder %}
+  <div class="ladder">
+    {% for it in ladder %}
+    <a class="ladder-row" href="{{ it.url }}" target="_blank" rel="noopener">
+      <div class="ladder-thumb"><img src="{{ it.img }}" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">{{ it.title }}</div>
+        <div class="ladder-desc">{{ it.desc }}</div>
+        <span class="ladder-cta">{{ it.cta }} →</span>
+      </div>
+    </a>
+    {% endfor %}
   </div>
   {% endif %}
 

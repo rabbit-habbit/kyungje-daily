@@ -26,7 +26,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from pipeline import build_inline, fetch_indicators, fetch_rss, notify_kakao, render_report  # noqa: E402
+from pipeline import build_inline, fetch_indicators, fetch_rss, notify_kakao, products, render_report  # noqa: E402
 from pipeline import summarize as sm  # noqa: E402
 
 load_dotenv(override=True)
@@ -319,6 +319,12 @@ def run(
         "group_note": summary.get("group_note", ""),
         "generated_at": now.strftime("%Y-%m-%d %H:%M KST"),
     }
+
+    # 4-0) 상품 블록. 사다리는 매일, 기사 트리거는 조건이 맞는 날만.
+    report_data["ladder"] = products.ladder_items(date_str)
+    report_data["trigger"] = products.pick_trigger(
+        report_data.get("news_cards") or [], date_str
+    )
     if save_intermediate:
         (out_dir / "report_data.json").write_text(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -330,9 +336,15 @@ def run(
     group_note = (summary.get("group_note") or "").strip()
     meta_path = ROOT / "docs" / "archive" / f"{date_str}-meta.json"
     meta_path.parent.mkdir(parents=True, exist_ok=True)
+    _trig = report_data.get("trigger")
     meta_path.write_text(
-        json.dumps({"date": date_str, "group_note": group_note},
-                   ensure_ascii=False, indent=2),
+        json.dumps({
+            "date": date_str,
+            "group_note": group_note,
+            # 다음 발행이 주간 상한을 세려면 이 기록이 있어야 한다.
+            "trigger": ({"p": _trig["code"], "news_index": _trig["news_index"]}
+                        if _trig else None),
+        }, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
     if group_note:
