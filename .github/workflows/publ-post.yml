@@ -7,6 +7,11 @@ on:
   # daily.yml이 실제로 재생성한 경우에만 gh workflow run으로 트리거함 (중복 방지).
   # 수동 실행도 지원.
   workflow_dispatch:
+    inputs:
+      force:
+        description: '보류(.grouptalk-hold)를 무시하고 그룹톡 발송'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -55,11 +60,28 @@ jobs:
             echo "세션 secret 없음 · 로그인으로 fallback"
           fi
 
+      - name: 그룹톡 보류 여부 확인
+        id: hold
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            echo "held=false" >> "$GITHUB_OUTPUT"
+            echo "force=true - 보류를 무시하고 발송합니다"
+          elif [ -f .grouptalk-hold ] && grep -qx 'next' .grouptalk-hold; then
+            echo "held=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::.grouptalk-hold 때문에 그룹톡을 보내지 않았습니다. 확인 후 force=true로 다시 실행하세요."
+          else
+            echo "held=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Post today's brief to publ group chat
         # publ 관리자 콘솔 세션이 24시간 미만이라 매일 fresh 로그인이 더 안정적
+        if: steps.hold.outputs.held != 'true'
         run: python pipeline/notify_publ.py --today --no-session
 
       - name: Trigger publ-article workflow
+        # 보류 중에도 아티클은 나간다. 그룹톡만 멈추는 게 목적이고,
+        # force 재실행 때 또 만들면 같은 날 아티클이 두 개가 된다.
+        if: inputs.force != true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
