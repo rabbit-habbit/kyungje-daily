@@ -214,7 +214,7 @@ def _inlined():
             {"name": "코스피", "value": "2,598", "change": -1.0,
              "change_pct": -0.1, "unit": ""}], "global": []},
         "news_cards": [{"title": "반도체 수출"},
-                       {"title": "실질임금 제자리", "body": ["월급"],
+                       {"title": "실질임금 2년째 제자리", "body": ["월급"],
                         "why_for_workers": "월급"}],
         "explainer": {"title": "x", "body": "y"}, "insight": "z",
     }
@@ -235,7 +235,8 @@ def test_인라인_변환_뒤에도_블록이_남는다():
     re, html = _inlined()
     assert len(re.findall(r'<a class="ladder-row"', html)) == 3
     assert len(re.findall(r'<div class="trigbox"', html)) == 1
-    assert len(re.findall(r'<img src="https://economy-proxy[^"]*/img/', html)) == 3
+    # 사다리 3장 + 트리거 블록 1장
+    assert len(re.findall(r'<img src="https://economy-proxy[^"]*/img/', html)) == 4
     assert len(re.findall(r'href="https://economy-proxy[^"]*/r\?', html)) == 4
 
 
@@ -265,3 +266,35 @@ def test_클래스_이름이_서로_안_먹는다():
     assert _last(card, "background") == "#ffffff!important", "카드가 트리거 배경을 먹었다"
     plain = re.search(r'<div class="news-card"[^>]*style="([^"]*)"', html).group(1)
     assert _last(plain, "margin-bottom") == "12px!important", "보통 카드가 영향받았다"
+
+
+def test_제목에_안_걸리면_안_붙는다(monkeypatch, tmp_path):
+    """거시 기사는 본문 어딘가에서 소비·물가를 한 번씩 스친다. 그걸로 붙이면
+    유가 기사 밑에 절약 챌린지가 붙는다. 9/28에 실제로 그랬다.
+
+    기사가 그 주제를 다루는지는 제목이 말해준다."""
+    monkeypatch.setattr(products, "published_dates", lambda: [])
+    monkeypatch.setattr(products, "ARCHIVE", tmp_path)
+
+    스침 = [{"title": "WTI 93달러대 유지, 유가 고공행진 언제까지?",
+            "body": ["유가가 유지되면 소비자물가 압력도 지속돼요. 마트 장바구니 가격에도 반영되죠."],
+            "why_for_workers": "물류비 상승이 식품 가격을 밀어올려요."}]
+    assert products.pick_trigger(스침, "2026-11-02") is None
+
+    주제 = [{"title": "퇴직연금 안전자산 30%룰, 나한테 득일까 독일까?",
+            "body": ["연금과 채권 비중 이야기예요."], "why_for_workers": "IRP 계좌"}]
+    t = products.pick_trigger(주제, "2026-11-02")
+    assert t and t["code"] == "taling"
+
+
+def test_트리거_블록에_소개와_사진이_있다(monkeypatch, tmp_path):
+    """상품명만 던지면 처음 보는 사람은 왜 눌러야 하는지 모른다."""
+    monkeypatch.setattr(products, "published_dates", lambda: [])
+    monkeypatch.setattr(products, "ARCHIVE", tmp_path)
+    t = products.pick_trigger(
+        [{"title": "퇴직연금 30%룰", "body": ["연금"], "why_for_workers": "IRP"}],
+        "2026-11-02")
+    for k in ("title", "intro", "facts", "img"):
+        assert t.get(k), f"{k}가 비어 있다"
+    assert len(t["facts"]) >= 2
+    assert t["img"].startswith(products.WORKER + "/img/")

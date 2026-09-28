@@ -114,6 +114,11 @@ TRIGGERS = [
     {
         "code": "taling",
         "angle": "link",
+        "title": "탈잉 60일 월급테크 챌린지",
+        # 처음 보는 사람도 뭔지 알게. 상품명만 던지면 왜 눌러야 하는지 모른다.
+        "intro": "통장 세팅부터 주식·부동산까지, 60일 동안 직접 해보며 배우는 챌린지예요.",
+        "facts": ["60일 온라인", "수강생 6000명+", "미션 수행 시 재테크 지원금"],
+        "image": "taling.jpg",
         "cta": "60일 월급테크 챌린지 보러 가기",
         "rules": [
             {
@@ -141,6 +146,10 @@ TRIGGERS = [
     {
         "code": "mf_kakao",
         "angle": "ask",
+        "title": "머니프리랩 4주 챌린지",
+        "intro": "래빗해빛 x 채린의쓰임이 함께 만든 4주 자본주의 경제 스터디예요. 1기를 준비하고 있어요.",
+        "facts": ["11월 4주", "카카오톡 진행", "미션 수행 시 보증금 전액 환급"],
+        "image": "moneyfreelab-1.jpg",
         "cta": "머니프리랩 오픈 알림 먼저 받기",
         "rules": [
             {
@@ -238,9 +247,18 @@ def recent_trigger_count(date_str: str) -> int:
     return n
 
 
-def _match(text: str, kws: list[str]) -> int:
-    t = text.lower()
-    return sum(1 for k in kws if k.lower() in t)
+def _match(title: str, body: str, kws: list[str]) -> tuple[int, int]:
+    """(제목 일치 수, 본문 일치 수).
+
+    제목과 본문을 나눠 세는 이유가 있다. 거시 기사는 본문 어딘가에서
+    소비·물가를 한 번씩 스치고 지나간다. 그걸 "이 기사는 소비 이야기"로
+    읽으면 유가 기사 밑에 절약 챌린지가 붙는다. 실제로 9/28에 그랬다.
+
+    기사가 그 주제를 **다루는지**는 제목이 말해준다.
+    """
+    tl, bl = title.lower(), body.lower()
+    return (sum(1 for k in kws if k.lower() in tl),
+            sum(1 for k in kws if k.lower() in bl))
 
 
 def pick_trigger(news_cards: list[dict], date_str: str) -> dict | None:
@@ -257,19 +275,27 @@ def pick_trigger(news_cards: list[dict], date_str: str) -> dict | None:
 
     best = None
     for idx, news in enumerate(news_cards):
-        blob = " ".join([
-            news.get("title") or "",
+        title = news.get("title") or ""
+        body = " ".join([
             " ".join(news.get("body") or []),
             news.get("why_for_workers") or "",
         ])
         for prod in TRIGGERS:
             for rule in prod["rules"]:
-                score = _match(blob, rule["kw"])
-                if score and (best is None or score > best["score"]):
+                t_hit, b_hit = _match(title, body, rule["kw"])
+                # 제목에 안 걸리면 그 기사의 주제가 아니다. 붙이지 않는다.
+                if not t_hit:
+                    continue
+                score = t_hit * 3 + b_hit
+                if best is None or score > best["score"]:
                     best = {
                         "score": score,
                         "news_index": idx,
                         "code": prod["code"],
+                        "title": prod["title"],
+                        "intro": prod["intro"],
+                        "facts": prod["facts"],
+                        "img": image(prod["image"]),
                         "text": rule["text"],
                         "cta": prod["cta"],
                         "angle": prod["angle"],
@@ -279,6 +305,6 @@ def pick_trigger(news_cards: list[dict], date_str: str) -> dict | None:
         return None
 
     best["url"] = link(best["code"], "article_n", 0, best["angle"])
-    logger.info("  ✓ 트리거: %d번 기사 → %s (일치 %d개)",
+    logger.info("  ✓ 트리거: %d번 기사 → %s (%d점, 제목 일치 있음)",
                 best["news_index"] + 1, best["code"], best["score"])
     return best

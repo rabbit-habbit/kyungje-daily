@@ -123,6 +123,9 @@ def build_inline(html: str, base_url: str | None = None) -> str:
     # 잡아서 뉴스 카드가 트리거 블록 스타일을 뒤집어쓴다. 겹치지 않는
     # 이름(trigbox / trigjoin)을 쓴다.
     inlined = _add_style(inlined, "trigbox", ATTACH_STYLE)
+    inlined = _add_style(inlined, "trigbox-thumb",
+                         "width:60px!important;height:60px!important;border-radius:8px!important;"
+                         "overflow:hidden!important;display:block!important;")
     inlined = _add_style(inlined, "trigjoin", ATTACH_JOIN_STYLE)
 
     return inlined

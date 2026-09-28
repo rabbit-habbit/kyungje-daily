@@ -334,10 +334,22 @@
     border-top: 0;
     border-radius: 0 0 12px 12px;
   }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
   .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
   .trigbox-cta {
-    display: inline-block; margin-top: 6px;
-    font-size: 12.5px; font-weight: 600; color: var(--blue); text-decoration: none;
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
   }
   .news-card.trigjoin {
     margin-bottom: 0;
@@ -591,7 +603,17 @@
     </div>
     {% if has_attach %}
     <div class="trigbox">
+      <div class="trigbox-head">
+        <div class="trigbox-thumb"><img src="{{ trigger.img }}" alt=""></div>
+        <div>
+          <div class="trigbox-name">{{ trigger.title }}</div>
+          <div class="trigbox-intro">{{ trigger.intro }}</div>
+        </div>
+      </div>
       <div class="trigbox-text">{{ trigger.text }}</div>
+      {% if trigger.facts %}
+      <div class="trigbox-facts">{% for f in trigger.facts %}{{ f }}{% if not loop.last %} · {% endif %}{% endfor %}</div>
+      {% endif %}
       <a class="trigbox-cta" href="{{ trigger.url }}" target="_blank" rel="noopener">{{ trigger.cta }} →</a>
     </div>
     {% endif %}
