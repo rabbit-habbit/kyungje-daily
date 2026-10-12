@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 10월 12일 월요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 10월 12일 월요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,335.00</div>
+          <div class="pulse-change down">▼ 9.00 (-0.67%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value down">6,471.08</div>
+          <div class="pulse-change down">▼ 154.85 (-2.34%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">4.35%</div>
+          <div class="pulse-change down">▼ 0.040%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value up">7,811.54</div>
+          <div class="pulse-change up">▲ 46.18 (+0.59%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value up">51,654.95</div>
+          <div class="pulse-change up">▲ 423.31 (+0.83%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$90.55</div>
+          <div class="pulse-change down">▼ $1.30 (-1.42%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value down">181,626원</div>
+          <div class="pulse-change down">▼ 563원 (-0.31%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">10/22 금통위 동결 유력 (현행 3.00%), 11월 추가 인상 가능성 잔존</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">10/27~28 FOMC 동결 82.8% (CME 페드워치), 12월 인상 확률 70%</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">🤖 오픈AI 매출 '500조→700억달러'… 숫자 혼선에 반도체주 급락</h2>
+      <div class="news-body">
+<p>10/8 파이낸셜타임스(FT)가 오픈AI의 9월 말 기준 연환산 매출이 약 500억달러(약 67조원)라고 보도하면서 시장이 발칵 뒤집혔어요. 시장에 이미 퍼져 있던 '700억달러(약 94조원)' 기대치보다 200억달러가 낮은 수치가 갑자기 튀어나온 거예요.</p><p>다음 날 블룸버그가 '오픈AI는 연말까지 연환산 매출 700억달러를 달성할 것'이라고 후속 보도하며 분위기가 반전됐어요. 알고 보니 두 수치는 매출 집계 방식 차이 때문이었어요. 오픈AI는 파트너사(MS 등)에 떼어준 뫼는 빼고 자기 몫만 계산하는 방식을 써서, 앤트로픽 방식으로 계산한 700억달러와 직접 비교하기 어렵다는 거예요.</p><p>이 혼선이 퍼지는 동안 엔비디아·마이크론 등 AI 반도체주가 동반 급락했어요. AI 기업 매출 집계 방식이 통일되지 않은 상태에서 투자 심리가 얼마나 쉽게 흔들리는지 보여주는 사례였죠.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">AI 기업의 매출 숫자가 뉴스마다 다르게 나오면 '어느 걸 믿어야 하나?' 싶으실 텐데요. '연환산 매출(ARR)'은 특정 기간 성적을 1년치로 환산한 추정치라 실제 연간 매출과 달라요. 또 기업마다 파트너 수수료를 매출에 포함하느냐 제외하느냐도 달라요. 반도체 ETF(예: TIGER 반도체, SOL 반도체TOP10)를 보유하신 분이라면 AI 수요 기대감이 흔들릴 때마다 단기 출렁임이 크다는 걸 체감하셨을 거예요. 오픈AI의 진짜 체력은 '연환산' 수치보다 실제 확정 매출과 흑자 전환 여부를 함께 지켜봐야 해요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">오픈AI 9월말 연환산 매출 (FT 보도)</span>
+          <span class="data-value down">약 500억달러(~67조원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">오픈AI 연말 연환산 매출 목표 (블룸버그)</span>
+          <span class="data-value up">700억달러(~94조원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">두 수치 격차</span>
+          <span class="data-value ">약 200억달러(~27조원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">오픈AI 실제 2026년 매출 전망 (블룸버그)</span>
+          <span class="data-value ">약 350억달러(~47조원)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/202610093047i" target="_blank">한국경제</a> · <a href="https://news.jkn.co.kr/post/1014020" target="_blank">재경일보</a> · <a href="https://www.tokenpost.kr/news/ai/420997" target="_blank">토큰포스트</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">📉 연휴 뒤 코스피 2.34% 급락… 외국인 1800억 순매도</h2>
+      <div class="news-body">
+<p>연휴를 끝내고 돌아온 코스피가 10/12 장중 6,471p까지 밀렸어요(10:01 기준, 전거래일 대비 -2.34%). 외국인이 오전에만 1,756억원 이상 순매도에 나섰고, 삼성전자·SK하이닉스 등 반도체 대형주가 동반 약세를 보였어요.</p><p>국내 증시 휴장 기간(10/10~11) 미국에서 AI 반도체주가 크게 흔들린 게 오늘 장에 그대로 전이됐어요. 오픈AI 매출 논란으로 엔비디아·마이크론 등이 급락하며 AI 공급망 전반에 투자심리가 차가워진 탓이에요. SK하이닉스도 2%대 하락으로 출발했어요.</p><p>원·달러 환율은 반대로 10/12 기준 1,335원으로 전거래일보다 9원 내렸어요(달러 약세). 증시는 흔들리는데 환율은 안정되는 엇갈린 흐름이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">국내 증시가 연휴 사이 해외에서 벌어진 일을 한꺼번에 반영해 열리는 '갭 하락' 패턴이에요. 이런 날엔 아침 개장 직후 가장 많이 빠지고, 오후에 일부 회복하는 경우가 많아요. 반도체 ETF를 갖고 계신 분이라면 오늘처럼 외국인이 대거 빠져나가는 날엔 추가 매수보다는 상황을 지켜보는 편이 안전해요. 여러 번 나눠서 거래(=분할 매수)하시는 전략이 단기 변동성을 버티는 데 도움이 돼요. 10/22 금통위, 10/27~28 FOMC까지 큰 이벤트가 남아 있으니 그때 방향성을 확인하고 움직여도 늦지 않아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">코스피 (10/12 오전 10:01 기준)</span>
+          <span class="data-value down">6,471.08p (-2.34%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">원·달러 환율 (10/12 기준)</span>
+          <span class="data-value down">1,335.0원 (-9.0원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">외국인 순매도 (오전 기준)</span>
+          <span class="data-value down">약 1,756억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">S&P 500 (10/9 현지 마감)</span>
+          <span class="data-value up">7,811.54p (+0.59%)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.newspim.com/news/view/20261012000025" target="_blank">뉴스핌</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🏭 마이크론 대만 노조, 성과급 15% 요구 파업 99% 가결</h2>
+      <div class="news-body">
+<p>마이크론의 대만 타오위안 공장 노조가 파업 찬반투표에서 조합원 1,994명 중 99%의 찬성으로 파업을 결의했어요. 마이크론이 대만에만 약 1만 5,000명을 고용하는데, 이 공장이 마이크론 전체 생산량의 약 60%를 담당하고 있어요.</p><p>노조의 요구는 '삼전닉스(삼성·하이닉스) 수준의 성과급'이에요. 구체적으로 영업이익의 15%를 직원 성과급으로 정례화하는 제도를 요구했어요. 마이크론의 올해 3분기 영업이익이 전년 대비 15배 넘게 오른 약 44조원에 달했으니, 회사가 크게 벌었는데 직원 몫은 일회성에 그친다는 불만이 폭발한 거예요.</p><p>사측은 운영직 기준 최대 68개월치 보상안을 제시했지만 노조는 이를 거부했어요. 파업이 현실화하면 HBM(고대역폭메모리) 등 AI용 반도체 공급에 차질이 생길 수 있어 글로벌 반도체 시장이 촉각을 곤두세우고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">마이크론 파업이 왜 내 투자랑 상관있냐고요? 마이크론은 SK하이닉스·삼성전자와 D램·HBM을 놓고 경쟁하는 회사예요. 마이크론 생산이 멈추면 전 세계 메모리 반도체 공급이 줄어 단기적으로 삼성·하이닉스 제품 가격이 오를 수 있어요. 반도체 관련 ETF를 보유하신 분이라면, 파업 결과에 따라 국내 반도체주가 단기 반사이익을 볼 가능성도 있어요. 다만 글로벌 AI 수요 위축 우려와 맞물리면 효과가 상쇄될 수 있으니, 상황이 어떻게 해결되는지 10~11월 협상 추이를 지켜보세요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">파업 찬성률</span>
+          <span class="data-value up">99%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">노조 요구 성과급 비율</span>
+          <span class="data-value up">영업이익의 15%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">마이크론 대만 고용 인원</span>
+          <span class="data-value ">약 1만 5,000명</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">마이크론 3Q 영업이익 (전년 대비)</span>
+          <span class="data-value up">+15.4배 (~44조원)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankookilbo.com/news/article/A2026100810420000937" target="_blank">한국일보</a> · <a href="https://newsroom.stockplus.com/breaking-news/38126" target="_blank">스탁플러스</a> · <a href="https://www.g-enews.com/article/Global-Biz/2026/09/202609300723239484fbbec65dfb_1" target="_blank">글로벌이코노믹</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">💸 가계대출 10명 중 6명은 변동금리… 금리 인상기에 이자 폭탄 주의</h2>
+      <div class="news-body">
+<p>10/11 한국은행이 공개한 자료에 따르면 8월 말 기준 은행 가계대출 잔액에서 변동금리 비중이 57.3%로 1년 전(53.0%)보다 4.3%p 더 높아졌어요. 10명 중 6명이 금리가 오르면 이자도 같이 오르는 변동형을 쓰고 있는 거예요.</p><p>문제는 지금이 금리 인상 국면이라는 점이에요. 가계대출 금리는 8월 기준 4.76%로 4개월 연속 상승 중이고, 주담대(주택담보대출) 금리는 4.66%로 3년 9개월 만의 최고치예요. 2억원 대출 기준으로 연이자가 4월보다 약 66만원(월 5만 5,000원) 더 나오는 수준이에요.</p><p>5대 은행의 10/7 기준 가계대출 잔액은 782조원을 넘어선 상태예요. 대출 총량 목표 여력이 약 1조 1,649억원밖에 안 남았어요. 금리도 오르고, 대출 한도도 빠듯해지는 두 가지 압박이 동시에 오고 있는 상황이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">변동금리 대출이 있으신 분이라면, 10/22 금통위 전에 내 대출 조건을 확인해보는 게 좋아요. 현재 기준금리 3.00%에서 추가 인상 가능성이 남아 있거든요. 변동금리는 보통 6개월 단위로 금리가 재산정되는데, 기준금리가 0.25%p 오를 때마다 2억 대출 기준 연이자가 약 50만원 더 늘어요. 은행 앱이나 금융결제원의 '대출금리 비교 서비스'에서 내 대출을 고정금리로 갈아탈 수 있는지, 중도상환수수료는 얼마인지 먼저 따져보세요. 이런 분이라면 더 급해요 - 3억 이상 주담대를 변동형으로 갖고 계신 분, 지금이 점검 타이밍이에요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">변동금리 대출 비중 (8월 말)</span>
+          <span class="data-value up">57.3% (+4.3%p YoY)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">가계대출 금리 (8월 신규)</span>
+          <span class="data-value up">연 4.76% (4개월 연속 ↑)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">주담대 금리 (8월)</span>
+          <span class="data-value up">연 4.66% (3년9개월 최고)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">5대 은행 가계대출 잔액 (10/7)</span>
+          <span class="data-value up">782조 3,967억원</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.dailian.co.kr/news/view/1699976/%EA%B0%80%EA%B3%84%EB%8C%80%EC%B6%9C-10%EB%AA%85-%EC%A4%91-6%EB%AA%85-%EB%B3%80%EB%8F%99%EA%B8%88%EB%A6%AC1%EB%85%84-2026" target="_blank">데일리안</a> · <a href="https://www.seoul.co.kr/news/economy/finance/2026/10/01/20261001029001" target="_blank">서울신문</a> · <a href="https://www.fnnews.com/news/202610110500193805" target="_blank">파이낸셜뉴스</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">🧟 470조 ETF 시장의 그늘… 5개 중 1개는 '좀비' 신세</h2>
+      <div class="news-body">
+<p>국내 ETF 시장이 466조원 규모로 커졌지만 그 안에서 양극화가 심해지고 있어요. 전체 상장 ETF 1,200개 가운데 하루 거래대금이 1억원에도 못 미치는 상품이 239개, 전체의 약 20%나 돼요. 5개 중 1개는 사실상 아무도 안 사는 '좀비' 상태인 거예요.</p><p>좀비 ETF가 생기는 이유는 운용사들의 '점유율 경쟁' 때문이에요. 코인, 메타버스, 2차전지, AI… 인기 테마가 뜰 때마다 비슷한 상품이 우후죽순 나오고, 열기가 식으면 거래가 뚝 끊기는 패턴이에요. 자본시장법상 상장 1년이 넘은 ETF 중 순자산이 50억원 미만이면 관리종목으로 지정되고, 그 다음 반기까지도 50억원을 못 채우면 상장폐지 수순을 밟아요.</p><p>다행히 ETF가 상장폐지돼도 투자자가 원금 손실을 보는 건 아니에요. 운용사가 ETF에 편입된 주식을 팔아 현금으로 돌려주거든요. 다만 세금 처리·재투자 번거로움이 있고, 중간에 팔려면 거래량이 거의 없어 제값 받기 어렵다는 게 문제예요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">ETF는 주식 한 종목보다 분산이 돼서 안전하다고 생각하기 쉬운데, 상품 자체의 거래량이 너무 낮으면 '내가 팔고 싶을 때 못 파는' 상황이 생겨요. 증권사 앱에서 ETF를 살 때 '일평균 거래대금'을 꼭 확인하세요 - 하루 10억원 이상은 돼야 안심하고 사고팔 수 있어요. 요즘 AI 테마 ETF가 많이 나오고 있는데, 상품명만 보지 말고 '운용 규모(순자산)'와 '거래량'을 함께 체크하는 습관을 들이세요. 이런 분이 특히 주의하세요 - 최근 인기 테마라는 이유만으로 소규모 신생 ETF를 급하게 사신 분!</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">국내 ETF 시가총액</span>
+          <span class="data-value up">약 466조원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">상장 ETF 총 종목 수</span>
+          <span class="data-value up">약 1,200개</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">하루 거래대금 1억 미만 '좀비' ETF</span>
+          <span class="data-value up">239개 (전체의 약 20%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">관리종목 지정 기준 순자산</span>
+          <span class="data-value ">50억원 미만</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.msn.com/ko-kr/news/other/470%EC%A1%B0-etf%EC%9D%98-%EA%B7%B8%EB%8A%98-20-%EA%B0%80-%EC%A2%80%EB%B9%84%EC%83%81%ED%92%88/ar-AA2dJDKJ" target="_blank">MSN/이투데이</a> · <a href="https://supple.kr/news/cmt7p1xph0000zbq8wphifn5b" target="_blank">서플(이투데이)</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">연환산 매출(ARR)이 뭐예요? 왜 숫자가 회사마다 다른 거예요?</h3>
+      <div class="explainer-body">오늘 오픈AI 뉴스에서 '연환산 매출(ARR·Annual Run Rate)'이란 말이 핵심이었어요. ARR은 최근 한 달치 매출에 12를 곱해서 '1년 내내 이 속도로 벌면 얼마'를 보여주는 추정치예요. 실제 1년 확정 매출이 아니라는 점이 중요해요. 오픈AI 매출이 뉴스마다 달라 보인 건 FT가 인용한 '파트너 수수료를 뺀 500억달러'와 이전에 알려진 '파트너 매출 포함 700억달러'의 집계 기준이 달랐기 때문이에요. 두 수치 모두 거짓이 아닌데, 어떤 범위를 포함하느냐에 따라 200억달러 차이가 나는 거예요. 그래서 AI 스타트업 투자 뉴스를 읽을 때는 '연환산(ARR)인지, 실제 매출인지, 파트너 포함 여부가 어떻게 되는지'를 꼭 짚어봐야 속지 않아요.<br><br><table><tr><th>구분</th><th>연환산 매출(ARR)</th><th>실제 연간 매출</th></tr><tr><td>정의</td><td>최근 월매출 × 12</td><td>해당 연도에 실제로 벌어들인 총액</td></tr><tr><td>특징</td><td>성장세 빠른 기업 홍보에 자주 사용</td><td>감사 보고서 기준 확정 수치</td></tr><tr><td>오픈AI 사례</td><td>연말 목표 700억달러</td><td>2026년 실제 예상 약 350억달러</td></tr><tr><td>투자 시 주의점</td><td>집계 기준·포함 범위 확인 필수</td><td>비상장사는 공개 안 되는 경우 많음</td></tr></table></div>
+    </div>
+  </div>
+
+
+
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"AI 매출 500조? 700조? 같은 회사인데 왜 숫자가 달라요" 🎯 AI 투자에 관심 있는 직장인 재테크 입문~중급자 · 도입: 오픈AI 뉴스 보고 계좌 들여다본 분들 공감 유도 · 전개①: ARR vs 실제 매출 개념 차이 쉽게 설명 · 전개②: 집계 방식 차이로 200억달러가 사라진 이유 · 전개③: 이런 혼선이 내 반도체 ETF에 미치는 영향과 대응법 · CTA: 'AI 기업 매출 뉴스 읽는 법' 3단계 체크리스트 제공</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"ETF 샀는데 거래가 0이에요" - 좀비 ETF 피하는 3가지 기준 🎯 ETF 초보 직장인 · 훅: '나도 이거 갖고 있는데?' 불안 유발 · 본론: 일평균 거래대금·순자산·운용사 규모 3가지 확인법 30초 · 마무리: 증권사 앱에서 직접 클릭하는 방법 시연 10초</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"금리가 또 올랐다면 변동금리 대출자가 지금 해야 할 것들" 🎯 주담대·신용대출 보유 직장인 · 8월 가계대출 금리 4.76% 실태 정리 · 변동금리 → 고정금리 전환 시 체크리스트(중도상환수수료·잔여기간·예상 이자 비교표 포함) · 10/22 금통위 결과 따라 어떻게 행동할지 2가지 시나리오 제시</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-10-12 10:01 KST · Claude로 자동 생성됨<br>
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
+  </div>
+
+</div>
+
+</body>
+</html>
