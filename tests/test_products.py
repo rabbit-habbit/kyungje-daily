@@ -356,3 +356,20 @@ def test_쿠폰은_머니프리랩에만_붙는다(monkeypatch):
             assert it["coupon_short"] and "rabbit_family" in it["coupon_short"]
         else:
             assert not it.get("coupon_short"), f"{it['code']}에 쿠폰이 붙었다"
+
+
+def test_사람_이름을_쓰지_않는다():
+    """수강생 닉네임이든 공동 진행자 이름이든, 사람 이름은 문구에 넣지 않는다.
+
+    탈잉에 후기를 남긴 분이 그 글이 다른 채널 유료 뉴스레터에 실릴 걸
+    동의한 게 아니다. 지어내지 않는 것과 가져다 쓰는 것은 다른 문제다.
+    """
+    names = ["채린", "시샘달", "Sofia", "서연 님", "현수 님", "님 후기"]
+    found = []
+    for p in products.LADDER:
+        found += [(n, d) for d in p["desc"] for n in names if n in d]
+        found += [(n, p.get("intro", "")) for n in names if n in (p.get("intro") or "")]
+    for pr in products.TRIGGERS:
+        found += [(n, pr["intro"]) for n in names if n in pr["intro"]]
+        found += [(n, r["text"]) for r in pr["rules"] for n in names if n in r["text"]]
+    assert not found, found
