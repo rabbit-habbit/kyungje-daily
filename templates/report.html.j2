@@ -324,6 +324,22 @@
   .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
   .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
   .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
 
   /* 상품 블록 - 기사에 이어 붙는 트리거 */
   .trigbox {
@@ -614,6 +630,13 @@
       {% if trigger.facts %}
       <div class="trigbox-facts">{% for f in trigger.facts %}{{ f }}{% if not loop.last %} · {% endif %}{% endfor %}</div>
       {% endif %}
+      {% if trigger.coupon %}
+      <div class="coupon-box">
+        <span class="coupon-head">🎁 {{ trigger.coupon.headline }}</span>
+        <span class="coupon-code">{{ trigger.coupon.code }}</span>
+        <div class="coupon-note">{{ trigger.coupon.note }}</div>
+      </div>
+      {% endif %}
       <a class="trigbox-cta" href="{{ trigger.url }}" target="_blank" rel="noopener">{{ trigger.cta }} →</a>
     </div>
     {% endif %}
@@ -642,6 +665,7 @@
         <div class="ladder-title">{{ it.title }}</div>
         <div class="ladder-desc">{{ it.desc }}</div>
         <span class="ladder-cta">{{ it.cta }} →</span>
+        {% if it.coupon_short %}<br><span class="coupon-line">🎁 {{ it.coupon_short }}</span>{% endif %}
       </div>
     </a>
     {% endfor %}

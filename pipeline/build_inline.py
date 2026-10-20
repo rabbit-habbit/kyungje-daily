@@ -138,6 +138,17 @@ def build_inline(html: str, base_url: str | None = None) -> str:
                          "width:60px!important;height:60px!important;border-radius:8px!important;"
                          "overflow:hidden!important;display:block!important;")
     inlined = _add_style(inlined, "trigjoin", ATTACH_JOIN_STYLE)
+    # 쿠폰은 눈에 띄어야 하는 자리다. 퍼블 에디터가 head를 버려도 살아남게.
+    inlined = _add_style(inlined, "coupon-box",
+                         "background:#FFF9E0!important;border:1px dashed #E8C84A!important;"
+                         "border-radius:9px!important;padding:10px 12px!important;margin-top:10px!important;")
+    inlined = _add_style(inlined, "coupon-code",
+                         "background:#ffffff!important;border:1px solid #E8C84A!important;"
+                         "border-radius:5px!important;padding:2px 9px!important;margin-left:6px!important;"
+                         "font-weight:700!important;display:inline-block!important;")
+    inlined = _add_style(inlined, "coupon-line",
+                         "background:#FFF1B8!important;border-radius:20px!important;"
+                         "padding:3px 9px!important;display:inline-block!important;")
 
     return inlined
 

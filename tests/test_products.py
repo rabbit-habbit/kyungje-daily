@@ -19,7 +19,7 @@ from pipeline import products  # noqa: E402
 
 def test_설명이_발행마다_바뀐다(monkeypatch):
     """대표님이 걱정하신 지점. 순번이 올라가면 문장이 실제로 달라져야 한다."""
-    dates = [f"2026-11-{d:02d}" for d in range(1, 31)]
+    dates = [f"2026-10-{d:02d}" for d in range(1, 31)]
     monkeypatch.setattr(products, "published_dates", lambda: dates)
 
     seen = {p["code"]: [] for p in products.LADDER}
@@ -33,7 +33,7 @@ def test_설명이_발행마다_바뀐다(monkeypatch):
 
 def test_같은_문장이_2주_안에_다시_안_나온다(monkeypatch):
     """풀이 얕아지면 여기서 먼저 걸린다."""
-    dates = [f"2026-11-{d:02d}" for d in range(1, 31)]
+    dates = [f"2026-10-{d:02d}" for d in range(1, 31)]
     monkeypatch.setattr(products, "published_dates", lambda: dates)
 
     last_at = {}
@@ -51,19 +51,20 @@ def test_같은_문장이_2주_안에_다시_안_나온다(monkeypatch):
 
 def test_세_상품이_동시에_안_넘어간다(monkeypatch):
     """셋이 같이 넘어가면 블록 전체가 한 덩어리로 바뀐 것처럼 보인다."""
-    dates = [f"2026-11-{d:02d}" for d in range(1, 15)]
+    dates = [f"2026-10-{d:02d}" for d in range(1, 15)]
     monkeypatch.setattr(products, "published_dates", lambda: dates)
-    idx = [tuple(products.LADDER[i]["desc"].index(it["desc"])
-                 for i, it in enumerate(products.ladder_items(d)))
+    by_code = {p["code"]: p for p in products.LADDER}
+    idx = [tuple(by_code[it["code"]]["desc"].index(it["desc"])
+                 for it in products.ladder_items(d))
            for d in dates]
     assert len(set(idx)) == len(idx), "세 상품의 순번 조합이 반복된다"
 
 
 def test_사진도_같이_돈다(monkeypatch):
-    dates = [f"2026-11-{d:02d}" for d in range(1, 15)]
+    dates = [f"2026-10-{d:02d}" for d in range(1, 15)]
     monkeypatch.setattr(products, "published_dates", lambda: dates)
     imgs = [it["img"] for d in dates
-            for it in products.ladder_items(d) if it["code"] == "mf_kakao"]
+            for it in products.ladder_items(d) if it["code"] == "mf_sale"]
     assert len(set(imgs)) == 3, "머니프리랩 사진 3종이 다 안 돈다"
 
 
@@ -171,8 +172,13 @@ def test_긴_대시와_상대_날짜가_없다():
 
 
 def test_금지_표현이_없다():
-    """희소성·긴급성은 만들지 않는다. 정원이 없으므로 자리 수 언급도 금지."""
-    banned = ["마감", "서두르", "놓치지", "얼마 안 남", "선착순", "남은 자리", "지금 바로"]
+    """희소성·긴급성은 **만들지** 않는다. 실재하는 것을 적는 건 다른 일이다.
+
+    1기 모집은 10/31에 실제로 끝나고 1기 가격 이점도 실재하므로
+    "1기 놓치지 마세요"는 사실 기술이다. 반면 정원이 없는데 "선착순",
+    없는 시한을 만드는 "얼마 안 남았" 같은 건 계속 금지다.
+    """
+    banned = ["서두르", "얼마 안 남", "선착순", "남은 자리", "지금 바로", "마감 임박"]
     found = [(w, d) for p in products.LADDER for d in p["desc"]
              for w in banned if w in d]
     found += [(w, r["text"]) for p in products.TRIGGERS for r in p["rules"]
@@ -330,3 +336,23 @@ def test_사다리에_후기_인용이_없다():
     for p in products.LADDER:
         for d in p["desc"]:
             assert "후기예요" not in d, f"{p['code']}: 사다리에 후기 인용이 남아 있다 - {d}"
+
+
+def test_모집이_끝나면_블록에서_빠진다(monkeypatch):
+    """모집에는 끝이 있다. 지난 뒤에도 계속 권하면 닫힌 문을 가리키는 꼴이다."""
+    monkeypatch.setattr(products, "published_dates",
+                        lambda: ["2026-10-30", "2026-10-31", "2026-11-02"])
+    during = [i["code"] for i in products.ladder_items("2026-10-31")]
+    after = [i["code"] for i in products.ladder_items("2026-11-02")]
+    assert "mf_sale" in during, "모집 마지막 날인데 빠졌다"
+    assert "mf_sale" not in after, "모집이 끝났는데 아직 나간다"
+    assert "book" in after and "taling" in after, "나머지까지 사라지면 안 된다"
+
+
+def test_쿠폰은_머니프리랩에만_붙는다(monkeypatch):
+    monkeypatch.setattr(products, "published_dates", lambda: ["2026-10-21"])
+    for it in products.ladder_items("2026-10-21"):
+        if it["code"] == "mf_sale":
+            assert it["coupon_short"] and "rabbit_family" in it["coupon_short"]
+        else:
+            assert not it.get("coupon_short"), f"{it['code']}에 쿠폰이 붙었다"
