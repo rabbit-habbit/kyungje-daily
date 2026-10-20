@@ -72,21 +72,32 @@ def _resolve_css_vars(html: str) -> str:
 
 
 def _add_style(html: str, class_name: str, extra: str) -> str:
-    """class 매칭 요소의 style 속성 끝에 extra 추가. style 없으면 새로 생성."""
-    def _repl(m: re.Match) -> str:
-        existing = m.group(2) or ""
+    """class 목록에 class_name이 **낱말 그대로** 있는 요소에만 style을 덧붙인다.
+
+    \b를 쓰면 안 된다. 하이픈이 단어 경계라서 "trigbox"가 "trigbox-head"·
+    "trigbox-text"까지 잡고, 그러면 블록 하나에 줄 배경이 자식마다 씌워져
+    네모가 여러 개로 쪼개진다. 실제로 두 번 당했다 (attach/has-attach,
+    trigbox/trigbox-*). CSS 클래스는 공백으로 나뉘는 토큰이므로 그렇게 센다.
+    """
+    def _tokens_match(cls: str) -> bool:
+        return class_name in cls.split()
+
+    def _repl_with_style(m: re.Match) -> str:
+        cls, existing = m.group(1), m.group(2) or ""
+        if not _tokens_match(cls):
+            return m.group(0)
         if existing.strip() and not existing.strip().endswith(";"):
             existing += ";"
-        return f'class="{m.group(1)}" style="{existing}{extra}"'
+        return f'class="{cls}" style="{existing}{extra}"'
 
-    p1 = re.compile(
-        rf'class="([^"]*\b{re.escape(class_name)}\b[^"]*)"\s*style="([^"]*)"'
-    )
-    html = p1.sub(_repl, html)
-    p2 = re.compile(
-        rf'class="([^"]*\b{re.escape(class_name)}\b[^"]*)"(?!\s*style)'
-    )
-    html = p2.sub(lambda m: f'class="{m.group(1)}" style="{extra}"', html)
+    def _repl_no_style(m: re.Match) -> str:
+        cls = m.group(1)
+        if not _tokens_match(cls):
+            return m.group(0)
+        return f'class="{cls}" style="{extra}"'
+
+    html = re.sub(r'class="([^"]*)"\s*style="([^"]*)"', _repl_with_style, html)
+    html = re.sub(r'class="([^"]*)"(?!\s*style)', _repl_no_style, html)
     return html
 
 

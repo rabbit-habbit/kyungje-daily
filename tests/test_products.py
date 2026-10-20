@@ -298,3 +298,35 @@ def test_트리거_블록에_소개와_사진이_있다(monkeypatch, tmp_path):
         assert t.get(k), f"{k}가 비어 있다"
     assert len(t["facts"]) >= 2
     assert t["img"].startswith(products.WORKER + "/img/")
+
+
+def test_블록_자식에_박스가_안_씌워진다():
+    """build_inline이 클래스를 접두사로 매칭하면 trigbox가 trigbox-head·
+    trigbox-text까지 잡아 자식마다 배경·테두리가 생긴다. 블록 하나가
+    네모 여러 개로 쪼개져 보인다. 두 번 당한 자리다.
+
+    (attach / has-attach, 그리고 trigbox / trigbox-*)
+    """
+    import re
+    _, html = _inlined()
+    for child in ("trigbox-head", "trigbox-name", "trigbox-intro",
+                  "trigbox-text", "trigbox-facts", "trigbox-cta",
+                  "data-box-title"):
+        m = re.search(r'class="(?:[^"]*\s)?' + child + r'(?:\s[^"]*)?"([^>]*)>', html)
+        if not m:
+            continue
+        st = m.group(1)
+        assert not ("background" in st and "border" in st), \
+            f"{child}에 박스가 씌워졌다 - 부모 스타일이 자식까지 먹었다"
+
+    # 바깥 블록에는 박스가 있어야 한다
+    m = re.search(r'<div class="trigbox"([^>]*)>', html)
+    assert "background" in m.group(1), "trigbox 자체에는 배경이 있어야 한다"
+
+
+def test_사다리에_후기_인용이_없다():
+    """한 줄짜리 자리에는 따옴표가 길어 뭉개지고 '~님 후기예요'로 끝나
+    상품 설명이 흐려진다. 후기는 기사 밑 넓은 블록에서만 쓴다."""
+    for p in products.LADDER:
+        for d in p["desc"]:
+            assert "후기예요" not in d, f"{p['code']}: 사다리에 후기 인용이 남아 있다 - {d}"
