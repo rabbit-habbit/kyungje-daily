@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 import subprocess
 import sys
@@ -199,6 +200,27 @@ def _adapt_base_rates(ind_data: dict, outlook: dict) -> dict:
 
 
 # ── git ─────────────────────────────────────────────────────────────
+
+
+def _flag_kakao_failure(exc: Exception) -> None:
+    """카톡 실패를 Actions 밖에서도 보이게 만든다.
+
+    카톡은 best-effort라 실패해도 브리핑·그룹톡은 정상 발송된다. 그래서 예전엔
+    성공한 실행 로그 속 warning 한 줄로 끝났고, 아무도 안 봤다. 2026-10-20
+    토큰 교체로 10/21·10/22 이틀이 조용히 묵음이 됐는데 로그에는 매일
+    "⚠️ 카카오톡 알림 실패"가 찍혀 있었다.
+
+    annotation은 눈에 띄게 해주고, kakao_failed 출력은 워크플로가 **publ
+    발송을 모두 마친 뒤에** job을 실패시켜 알림 메일을 띄우는 데 쓴다.
+    구독자 발송을 막지 않으면서 사람에게 닿는 유일한 경로다.
+    """
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return
+    print(f"::error title=카카오톡 알림 실패::{exc}", flush=True)
+    out = os.environ.get("GITHUB_OUTPUT")
+    if out:
+        with open(out, "a", encoding="utf-8") as fh:
+            fh.write("kakao_failed=true\n")
 
 
 def _git(args: list[str], cwd: Path) -> subprocess.CompletedProcess:
@@ -407,6 +429,7 @@ def run(
             logger.info("  ✓ 카카오톡 알림 전송 완료")
         except Exception as exc:
             logger.warning("  ⚠️  카카오톡 알림 실패 (보고서 자체는 정상): %s", exc)
+            _flag_kakao_failure(exc)
 
     logger.info("=== 완료 ===")
     return report_data

@@ -22,6 +22,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import sys
 import urllib.parse
 from pathlib import Path
@@ -109,6 +110,52 @@ def _save_tokens(tokens: dict) -> None:
     )
 
 
+def _mask(secret: str) -> None:
+    """Actions 로그에서 이 값을 ***로 가린다.
+
+    Secret으로 넣은 값은 Actions가 알아서 가리지만, **실행 중에 새로 받은**
+    토큰은 모르는 값이라 그냥 찍힌다. 저장소가 공개라 Actions 로그도 공개다.
+    2026-10-20 실행 로그에 새 refresh_token이 평문으로 남아 폐기해야 했다.
+    """
+    if secret and os.environ.get("GITHUB_ACTIONS") == "true":
+        print(f"::add-mask::{secret}", flush=True)
+
+
+def _persist_refresh_token(token: str) -> bool:
+    """교체된 refresh_token을 GitHub Secret에 다시 심는다.
+
+    카카오는 refresh_token의 남은 수명이 1개월 미만이면 갱신 응답에 새 토큰을
+    끼워주고 **옛 토큰을 버린다**. 러너의 .kakao_tokens.json에만 저장하면 그
+    파일은 실행이 끝나며 사라지고 Secret은 옛 토큰 그대로 남아, 바로 다음
+    실행부터 KOE322로 죽는다. 교체일 하루만 성공하고 조용히 끊기는 모양이라
+    알아채기까지 이틀이 걸렸다 (10/20 교체 → 10/21~22 묵음).
+
+    GITHUB_TOKEN으로는 Secret을 쓸 수 없어 별도 PAT이 필요하다. 없으면
+    False를 돌려주고 호출부가 사람에게 알린다 (토큰 값은 절대 찍지 않는다).
+    """
+    pat = os.environ.get("SECRETS_PAT")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    if not pat or not repo:
+        return False
+    try:
+        # 값은 stdin으로 넘긴다. --body로 주면 프로세스 인자에 토큰이 남는다.
+        proc = subprocess.run(
+            ["gh", "secret", "set", "KAKAO_REFRESH_TOKEN", "--repo", repo],
+            input=token,
+            text=True,
+            capture_output=True,
+            timeout=60,
+            env={**os.environ, "GH_TOKEN": pat},
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.warning("  Secret 갱신 호출 실패: %s", exc)
+        return False
+    if proc.returncode != 0:
+        logger.warning("  Secret 갱신 실패 (rc=%s): %s", proc.returncode, proc.stderr.strip())
+        return False
+    return True
+
+
 def _resolve_refresh_token() -> str:
     # 1) 환경변수 우선 (Actions)
     env_token = os.environ.get("KAKAO_REFRESH_TOKEN")
@@ -143,12 +190,26 @@ def refresh_access_token() -> dict:
     stored["access_token"] = new["access_token"]
     stored["expires_in"] = new.get("expires_in")
     if "refresh_token" in new:
-        # 카카오는 refresh_token이 1개월 미만 남으면 자동 갱신해줌
-        logger.warning(
-            "⚠️  새 refresh_token 발급됨. GitHub Secret 갱신 권장:\n   gh secret set KAKAO_REFRESH_TOKEN --body '%s'",
-            new["refresh_token"],
-        )
-        stored["refresh_token"] = new["refresh_token"]
+        # 카카오는 refresh_token이 1개월 미만 남으면 자동 갱신해준다.
+        # ★ 토큰 값은 어디에도 찍지 않는다. 공개 저장소의 Actions 로그가 남는다.
+        rotated = new["refresh_token"]
+        _mask(rotated)
+        if _persist_refresh_token(rotated):
+            logger.info("  ✓ refresh_token 교체됨 · GitHub Secret 자동 갱신 완료")
+        else:
+            logger.warning(
+                "⚠️  refresh_token이 교체됐는데 Secret을 갱신하지 못했습니다. "
+                "지금 조치하지 않으면 다음 실행부터 카톡이 끊깁니다."
+            )
+            if os.environ.get("GITHUB_ACTIONS") == "true":
+                print(
+                    "::error title=카카오 refresh_token 교체됨::"
+                    "SECRETS_PAT이 없어 Secret을 자동 갱신하지 못했습니다. "
+                    "notify_kakao.py authorize-url로 재발급해 "
+                    "KAKAO_REFRESH_TOKEN을 교체하세요.",
+                    flush=True,
+                )
+        stored["refresh_token"] = rotated
         stored["refresh_token_expires_in"] = new.get("refresh_token_expires_in")
     _save_tokens(stored)
     return new

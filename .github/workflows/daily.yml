@@ -53,6 +53,10 @@ jobs:
       KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
       KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
       KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+      # 카카오가 refresh_token을 교체했을 때 Secret을 자기 손으로 갱신하는 데
+      # 쓴다. GITHUB_TOKEN으로는 Secret을 못 쓴다. 없으면 교체 때 annotation만
+      # 띄우고 넘어간다 (그 경우 사람이 재발급해야 한다).
+      SECRETS_PAT: ${{ secrets.SECRETS_PAT }}
       LINK_SIGN_KEY: ${{ secrets.LINK_SIGN_KEY }}
       YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
     steps:
@@ -119,8 +123,21 @@ jobs:
           gh workflow run publ-post.yml --repo ${{ github.repository }}
           echo "✓ publ-post 트리거 (publ-article은 publ-post 완료 시 자동 체이닝)"
 
+      - name: 카톡 알림 실패 시 job 실패 처리
+        # ★ 반드시 publ 트리거 **뒤에** 둔다. 카톡이 안 가도 브리핑·그룹톡은
+        #   정상 발송돼야 하므로, 여기서 실패시켜도 구독자 발송은 이미 끝난
+        #   상태다. job을 실패시키는 건 GitHub가 실패 알림 메일을 보내주는
+        #   유일한 수단이다. 조용한 실패를 이틀 모르고 지나간 뒤에 넣었다.
+        if: steps.pipeline.outputs.kakao_failed == 'true'
+        run: |
+          echo "카카오톡 '나에게 보내기' 알림이 실패했습니다."
+          echo "브리핑 생성·그룹톡·아티클은 정상 발송됐습니다. 위 annotation의 사유를 확인하세요."
+          echo "KOE322(expired_or_invalid_refresh_token)이면 KAKAO_REFRESH_TOKEN 재발급이 필요합니다."
+          exit 1
+
       - name: Upload intermediate JSONs as artifact (on failure)
-        if: failure()
+        # 파이프라인 자체가 깨진 경우만. 카톡 실패로 job이 빨개진 경우는 제외.
+        if: failure() && steps.pipeline.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: pipeline-debug-${{ github.run_id }}
