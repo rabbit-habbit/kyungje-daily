@@ -64,7 +64,7 @@ def test_사진도_같이_돈다(monkeypatch):
     dates = [f"2026-10-{d:02d}" for d in range(1, 15)]
     monkeypatch.setattr(products, "published_dates", lambda: dates)
     imgs = [it["img"] for d in dates
-            for it in products.ladder_items(d) if it["code"] == "mf_sale"]
+            for it in products.ladder_items(d) if it["code"] == "mf_wait2"]
     assert len(set(imgs)) == 3, "머니프리랩 사진 3종이 다 안 돈다"
 
 
@@ -339,23 +339,68 @@ def test_사다리에_후기_인용이_없다():
 
 
 def test_모집이_끝나면_블록에서_빠진다(monkeypatch):
-    """모집에는 끝이 있다. 지난 뒤에도 계속 권하면 닫힌 문을 가리키는 꼴이다."""
+    """모집에는 끝이 있다. 지난 뒤에도 계속 권하면 닫힌 문을 가리키는 꼴이다.
+
+    합성 상품으로 규칙을 지킨다. 실제 상품에 매어두면 그 상품의 모집이
+    끝날 때 가드도 같이 사라진다. 2026-10-31 머니프리랩 1기가 끝나면서
+    until을 쓰는 상품이 하나도 안 남았다.
+    """
+    fake = {"code": "zz_test", "title": "테스트", "angle": "role", "cta": "보기",
+            "until": "2026-10-31", "images": ["book.jpg"], "desc": ["한 줄"]}
+    monkeypatch.setattr(products, "LADDER", products.LADDER + [fake])
     monkeypatch.setattr(products, "published_dates",
                         lambda: ["2026-10-30", "2026-10-31", "2026-11-02"])
     during = [i["code"] for i in products.ladder_items("2026-10-31")]
     after = [i["code"] for i in products.ladder_items("2026-11-02")]
-    assert "mf_sale" in during, "모집 마지막 날인데 빠졌다"
-    assert "mf_sale" not in after, "모집이 끝났는데 아직 나간다"
+    assert "zz_test" in during, "모집 마지막 날인데 빠졌다"
+    assert "zz_test" not in after, "모집이 끝났는데 아직 나간다"
     assert "book" in after and "taling" in after, "나머지까지 사라지면 안 된다"
 
 
-def test_쿠폰은_머니프리랩에만_붙는다(monkeypatch):
-    monkeypatch.setattr(products, "published_dates", lambda: ["2026-10-21"])
-    for it in products.ladder_items("2026-10-21"):
-        if it["code"] == "mf_sale":
-            assert it["coupon_short"] and "rabbit_family" in it["coupon_short"]
-        else:
-            assert not it.get("coupon_short"), f"{it['code']}에 쿠폰이 붙었다"
+def test_쿠폰은_어디에도_노출되지_않는다(monkeypatch):
+    """햇님이 쿠폰은 1기(2026-10-31 마감)와 함께 끝났다.
+
+    상수를 지웠는지가 아니라 **발행물에 안 나가는지**를 본다. 상수만 지우고
+    문구에 쿠폰 코드가 박혀 있으면 아무 소용이 없다.
+    """
+    monkeypatch.setattr(products, "published_dates", lambda: ["2026-11-02"])
+    for it in products.ladder_items("2026-11-02"):
+        assert not it.get("coupon_short"), f"{it['code']}에 쿠폰이 붙었다"
+    blob = " ".join(d for p in products.LADDER for d in p["desc"])
+    blob += " " + " ".join(
+        r["text"] for t in products.TRIGGERS for r in t["rules"])
+    blob += " " + " ".join(
+        f"{t.get('intro','')} {t.get('cta','')} {' '.join(t.get('facts', []))}"
+        for t in products.TRIGGERS)
+    for banned in ("rabbit_family", "쿠폰", "할인"):
+        assert banned not in blob, f"문구에 '{banned}'이 남아 있다"
+
+
+def test_사다리_순서는_책_탈잉_머프랩(monkeypatch):
+    """2026-11-02 배치. 1기 마감으로 머니프리랩이 유료 신청에서 무료
+    대기로 내려가면서 탈잉이 두 번째 칸으로 올라왔다.
+
+    가격 오름차순이 아니라 "지금 실제로 살 수 있는 것"이 위로 온다.
+    대기 신청을 가운데 두면 사다리 가운데가 막힌 칸이 된다.
+    """
+    monkeypatch.setattr(products, "published_dates", lambda: ["2026-11-02"])
+    codes = [i["code"] for i in products.ladder_items("2026-11-02")]
+    assert codes == ["book", "taling", "mf_wait2"], codes
+
+
+def test_2기_일정과_조건을_지어내지_않는다():
+    """1기 조건을 2기 문구로 옮기면 그 자리에서 날조가 된다.
+
+    1기는 "11월 4주"·"보증금 환급"·"평생 열람"이었고 2기는 아직 아무것도
+    정해지지 않았다. 확정된 것만 쓴다.
+    """
+    mf = next(t for t in products.TRIGGERS if t["code"] == "mf_wait2")
+    text = f"{mf['intro']} {' '.join(mf['facts'])} {mf['cta']} "
+    text += " ".join(r["text"] for r in mf["rules"])
+    text += " " + " ".join(
+        next(p for p in products.LADDER if p["code"] == "mf_wait2")["desc"])
+    for banned in ("평생 열람", "보증금", "11월", "1기 모집 중", "1기 신청", "원"):
+        assert banned not in text, f"2기 문구에 확정되지 않은 '{banned}'이 들어갔다"
 
 
 def test_사람_이름을_쓰지_않는다():
@@ -373,3 +418,18 @@ def test_사람_이름을_쓰지_않는다():
         found += [(n, pr["intro"]) for n in names if n in pr["intro"]]
         found += [(n, r["text"]) for r in pr["rules"] for n in names if n in r["text"]]
     assert not found, found
+
+
+def test_문구_풀_길이가_서로_다르다():
+    """길이가 같으면 세 줄이 한 덩어리로 돈다.
+
+    줄마다 시작점만 어긋나게 둬도, 길이가 같으면 세 줄이 매번 같이 넘어가고
+    사다리 조합이 풀 길이만큼마다 그대로 되돌아온다. 2026-11-02 교체 때
+    세 풀이 모두 10개가 되면서 조합이 발행 10회(평일 2주)마다 똑같아졌다.
+    길이를 어긋나게 두면 겹치기까지 최소공배수만큼 걸린다.
+    """
+    import math
+    lens = [len(p["desc"]) for p in products.LADDER]
+    assert len(set(lens)) == len(lens), f"풀 길이가 겹친다: {lens}"
+    # 평일 발행 기준 1년(약 250회)은 넘어야 "같은 화면"이 안 돌아온다.
+    assert math.lcm(*lens) >= 250, f"조합이 {math.lcm(*lens)}회마다 반복된다"
