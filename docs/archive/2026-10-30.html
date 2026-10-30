@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 10월 30일 금요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 10월 30일 금요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,338.90</div>
+          <div class="pulse-change down">▼ 1.60 (-0.12%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value down">5,691.35</div>
+          <div class="pulse-change down">▼ 246.31 (-4.15%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">4.03%</div>
+          <div class="pulse-change down">▼ 0.060%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">7,720.39</div>
+          <div class="pulse-change down">▼ 23.59 (-0.30%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value down">52,342.56</div>
+          <div class="pulse-change down">▼ 132.54 (-0.25%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$102.65</div>
+          <div class="pulse-change down">▼ $0.13 (-0.13%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value down">173,289원</div>
+          <div class="pulse-change down">▼ 1,328원 (-0.76%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위, 시장 컨센서스 25bp 인상 유력 (현 3.00%)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/9 FOMC, 25bp 인상 전망 (CME 페드워치 78.4%, 현 3.75~4.00%)</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">📉 삼성전자 영업익 107조인데 주가는 -4%…왜?</h2>
+      <div class="news-body">
+<p>10/29 삼성전자가 3분기 영업이익 107조 4,405억원을 공시했어요. 전년 동기 대비 783% 급증이고, 국내 기업 중 분기 영업이익이 100조를 넘긴 건 처음이에요. 매출도 195조원으로 역대 최대였죠.</p><p>그런데 주가는 장 초반 24만 9천원까지 올랐다가 4.13% 하락한 23만 2천원으로 마감했어요. 함께 발표한 30조원 규모 추가 주주환원 계획도 구체적인 자사주 소각·배당 일정이 공개되지 않아 '말뿐인 환원'이라는 평가가 나왔고, 전날 9% 급등의 차익실현 매물까지 쏟아지면서 분위기가 급반전됐거든요.</p><p>결국 10/30 오전 코스피는 삼성전자 충격이 이어지며 전일 대비 4.15% 빠진 5,691p까지 밀리고 있어요(10:01 기준). 대장주가 흔들리면 지수 전체가 흔들리는 구조가 다시 확인됐죠.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">삼성전자 주식이나 삼성전자 비중이 높은 국내 주식형 펀드·ETF를 갖고 계신 분이라면 직접 영향을 받는 뉴스예요. 핵심은 '실적이 좋아도, 시장이 기대한 것보다 못하면 주가가 빠진다'는 점이에요. 이걸 '어닝 쇼크'라고 하는데, 오늘은 실적 자체보다 주주환원 구체성이 없었던 게 문제였죠. 지금 삼성전자 주식을 갖고 계신 분은 30조 환원 계획의 세부 내용이 나오는 시점(연내 공시 예상)을 지켜보는 게 포인트예요. 단기 충격에 무너지지 말고, 구체적 계획 발표 후 방향을 판단하는 게 좋아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">삼성전자 3Q 영업이익</span>
+          <span class="data-value up">107조 4,405억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">삼성전자 주가 (10/29 종가)</span>
+          <span class="data-value down">232,000원 (-4.13%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">추가 주주환원 계획</span>
+          <span class="data-value ">30조원 (세부 미공개)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">코스피 (10/30 오전 10:01)</span>
+          <span class="data-value down">5,691p (-4.15%)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.specialtimes.co.kr/news/articleView.html?idxno=479860" target="_blank">스페셜타임스</a> · <a href="https://www.fnnews.com/news/202610291142211190" target="_blank">파이낸셜뉴스</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">🏦 12월 FOMC 인상 확률 78%…한국도 11/26 긴장</h2>
+      <div class="news-body">
+<p>10/28(현지) 미국 연준이 기준금리를 3.75~4.00%로 동결했어요. 그런데 시장 반응이 흥미로워요. CME 페드워치 기준, 다음 FOMC(12/9)에서 0.25%p 추가 인상할 확률을 78.4%로 보고 있거든요. 동결했지만 '12월엔 올린다'는 신호로 시장이 읽은 거예요.</p><p>연준 내부에서도 이사 2명이 이번 회의에서 '지금 당장 올려야 한다'며 반대표를 던졌어요. 유가는 WTI 기준 102달러대(10/29), 물가는 여전히 목표치 위, 미국 경제는 탄탄한 성장세라 추가 긴축 명분이 충분하다는 판단이에요.</p><p>한국도 11/26 금통위가 예정돼 있는데, 시장에서는 25bp 인상 가능성에 무게를 두고 있어요. 미국과 한국이 같은 달 연속으로 금리를 올리면 대출 부담은 다시 커질 수 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">변동금리로 주택담보대출·신용대출을 쓰고 계신 분에게는 이게 가장 중요한 뉴스예요. 미국이 12월에 0.25%p 올리고, 한국도 11월에 0.25%p 올리면 연내 두 나라 모두 추가 긴축이 현실이 되는 거예요. 한국 기준금리가 3.00%에서 3.25%로 오르면, 코픽스(은행 자금 조달 금리, 대출금리의 기준)가 따라 올라가면서 변동금리 대출 이자가 올해 안에 한 번 더 오를 수 있어요. 3억 대출 기준 0.25%p 인상이면 연간 이자 부담이 약 75만원 더 늘어요. 11/26 금통위 전에 고정금리 전환 여부를 꼭 한번 시뮬레이션해보세요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">현재 미국 기준금리</span>
+          <span class="data-value ">3.75~4.00% (10/28 동결)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">12월 FOMC 인상 확률 (CME)</span>
+          <span class="data-value up">78.4%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">미국 2년물 국채금리 (10/28)</span>
+          <span class="data-value up">4.76%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">한국 다음 금통위</span>
+          <span class="data-value up">11월 26일 (인상 가능성)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.fnnews.com/news/202610291842093177" target="_blank">파이낸셜뉴스</a> · <a href="https://view.asiae.co.kr/article/2026102903444300763" target="_blank">아시아경제</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">⚡ 27조 체코 원전 '팀코리아' 내분…시공사 다시 뽑는다</h2>
+      <div class="news-body">
+<p>한수원이 약 27조원 규모 체코 두코바니 원전 건설사업에서 대우건설·두산에너빌리티 컨소시엄과의 시공계약 협상을 10/29 공식 종료했어요. 15개월간 CEO 면담 2회, 실무회의 78회, 이견조정위원회 11회를 거쳤지만 끝내 합의에 실패했죠.</p><p>핵심 쟁점은 공사비 산정 방식이에요. 한수원은 기본설계 단계에서 총액을 확정하는 방식을 요구했고, 컨소시엄은 상세설계 이후 공사 물량이 늘면 그만큼 정산해야 한다고 맞섰어요. 최종 협상에서 양측이 제시한 금액 차이가 1조원을 넘어서면서 결국 결렬됐어요.</p><p>한수원은 2027년 7월까지 공개경쟁입찰로 새 시공사를 선정할 계획이에요. 두산에너빌리티가 이미 체결한 주기기(원자로·증기발생기 등) 공급 계약은 그대로 유지돼요. 일정 차질 없이 2028년 1월 부지정지를 목표로 한다는 게 한수원 입장이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">원전 관련 주식(두산에너빌리티·대우건설 등)을 갖고 계신 분은 단기 변동성에 주의하세요. 두산에너빌리티는 주기기 계약이 유지되므로 타격이 제한적이지만, 대우건설은 시공 기회를 잃게 됐어요. 장기적으로는 한국 원전 수출 신뢰도에 영향을 줄 수 있어서, 두산에너빌리티 ETF(예: KODEX 원자력 ETF)를 담으신 분이라면 신규 시공사 선정 과정을 계속 모니터링할 필요가 있어요. 원전 사업 자체(체코와의 수주 계약)는 그대로이므로 너무 급하게 판단하기보다 내년 7월 시공사 확정까지 지켜보는 것도 방법이에요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">체코 두코바니 원전 총사업비</span>
+          <span class="data-value ">약 27조원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">협상 기간</span>
+          <span class="data-value ">15개월 (실무회의 78회)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">최종 공사비 이견</span>
+          <span class="data-value up">1조원 이상</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">신규 시공사 선정 목표</span>
+          <span class="data-value ">2027년 7월</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.segye.com/newsView/20261029517781" target="_blank">세계일보</a> · <a href="https://hankyung.com/article/2026102943891" target="_blank">한국경제</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">🏘️ 서울 5km 그린벨트 풀어 7.7만 가구 공급…2030 착공</h2>
+      <div class="news-body">
+<p>10/29 국토교통부가 김포·구리·하남·의정부·고양 등 수도권 6곳에 총 7만 6,700가구 규모의 신규 공공택지 후보지를 발표했어요. 서울 경계에서 약 5km 이내에 있는 개발제한구역(그린벨트)을 풀어 부지를 조성하는 방식이에요.</p><p>앞서 8/13 대책 때 발표한 2만 7,200가구(서울 강서·광주 역세권·남양주 도심)까지 합치면 8·13 대책에 따른 수도권 신규 택지는 총 10만 3,900가구가 돼요. 6개 지구 모두에 '최단기 착공 모델'을 적용해 인허가·보상·부지조성을 동시에 진행, 기존 68개월 걸리던 기간을 37개월로 줄이겠다는 계획이에요.</p><p>다만 전문가들은 입지가 좋아도 지하철 연장 등 교통망이 뒷받침돼야 실거주 수요가 붙는다고 지적해요. 택지 '발표'와 실제 '착공'까지는 여전히 시간이 걸리고, 효과가 체감되려면 2030년 이후를 봐야 해요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">서울·수도권 내 집 마련을 고민 중인 분, 특히 청년·신혼부부라면 주목할 뉴스예요. 이번 택지들은 공공분양(LH·SH 청약) 물량이 주를 이루고, 청년·신혼부부 특별공급 비중이 높게 배정될 가능성이 커요. 다만 당장 입주가 가능한 것은 아니에요. 빠르면 2030년 착공, 입주는 2033~2035년 이후로 봐야 해요. 그 사이에 청약통장을 꾸준히 유지하고 납입 횟수를 쌓아두는 게 중요해요. 후보지 6곳 중 내가 살고 싶은 지역이 있다면 LH청약센터(apply.lh.or.kr)에서 지구별 일정을 미리 체크해두세요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">이번 신규 택지 공급</span>
+          <span class="data-value up">7만 6,700가구 (6개 지구)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">8·13 대책 누계 공급량</span>
+          <span class="data-value up">총 10만 3,900가구</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">착공까지 기간 단축</span>
+          <span class="data-value down">68개월 → 37개월</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">착공 목표</span>
+          <span class="data-value ">2030년 이내</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.sisajournal.com/news/articleView.html?idxno=392130" target="_blank">시사저널</a> · <a href="https://www.segye.com/newsView/20261029506566" target="_blank">세계일보</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">😔 소득 계층 상향 이동 16.9%…역대 최저, 왜?</h2>
+      <div class="news-body">
+<p>10/29 국가데이터처가 발표한 '2024년 소득이동통계'에 따르면 1년 동안 소득이 올라 상위 소득 계층으로 이동한 비율이 16.9%로 집계됐어요. 2017년 통계 작성 이후 처음으로 17% 아래로 내려온 역대 최저예요.</p><p>특히 두드러지는 건 '양극단의 고착화'예요. 소득 최하위 20%(1분위) 중 이듬해 상위 계층으로 올라간 비율은 29.3%에 그쳐, 하위 계층 10명 중 7명은 이듬해에도 같은 구간에 머물렀어요. 반대로 소득 최상위 20%(5분위)의 86.5%는 자리를 유지했죠. 2017년 1분위였던 사람 중 24.9%는 2024년까지 8년째 1분위에 머물고 있어요.</p><p>청년층(15~39세)의 소득 상향 이동 비율도 22.4%로 전년 대비 0.6%p 낮아졌어요. 생성형 AI 확산으로 신규 채용이 줄고 좋은 일자리 문이 좁아진 영향이라는 분석이 나와요. 경제는 성장했지만 그 혜택이 가계 근로소득 증가로 충분히 이어지지 못한 거예요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">이 통계는 '나만 이렇게 힘든 게 아니구나'를 숫자로 보여주는 자료예요. 25~45세 직장인이라면 같은 회사, 비슷한 연봉 구간에서 빠져나오기가 갈수록 어려워지는 구조를 체감하고 있을 거예요. 근로소득만으로 계층을 높이기 어려운 시대일수록 투자·부업 소득을 병행하는 전략이 중요해져요. ISA(개인종합자산관리계좌)나 IRP(개인형 퇴직연금)처럼 세제 혜택을 주는 절세 계좌를 활용해 투자 소득을 늘리는 게 현실적인 출발점이에요. 당장 큰 금액이 아니어도, 매달 조금씩이라도 시작하는 게 격차를 좁히는 첫걸음이에요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">소득 상향 이동 비율</span>
+          <span class="data-value down">16.9% (역대 최저)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">최하위 1분위 계층 유지율</span>
+          <span class="data-value up">70.7%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">최상위 5분위 계층 유지율</span>
+          <span class="data-value up">86.5%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">청년층 상향 이동</span>
+          <span class="data-value down">22.4% (전년比 -0.6%p)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.kyeonggi.com/article/20261029580497" target="_blank">경기일보</a> · <a href="https://www.hankyung.com/article/2026102943881" target="_blank">한국경제</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">소득분위가 뭐예요? 1분위가 낮은 건가요, 높은 건가요?</h3>
+      <div class="explainer-body">오늘 계층 이동 뉴스에서 '소득 1분위·5분위'라는 표현이 자주 나왔어요. 소득분위(所得分位)는 전체 국민을 소득 순서대로 줄 세운 뒤, 같은 크기의 5개 구간으로 나눈 것이에요. 1분위는 소득이 가장 낮은 하위 20%, 5분위는 소득이 가장 높은 상위 20%예요. 헷갈리기 쉬운데, 숫자가 클수록 소득이 높다고 기억하면 돼요. 오늘 통계에서 '1분위 탈출률이 낮아졌다'는 건, 가장 적게 버는 20% 안에 있던 사람이 그보다 높은 구간으로 올라가기가 더 어려워졌다는 뜻이에요. 반대로 5분위 유지율 86.5%는, 최상위 20%에 들어간 사람의 86.5%가 이듬해에도 그 자리를 지킨다는 의미로, 상위권 진입 장벽이 그만큼 견고해졌다는 신호예요.<br><br><table border='1' style='border-collapse:collapse;width:100%;text-align:center;'><thead><tr><th>분위</th><th>소득 위치</th><th>2024년 계층 유지율</th><th>상향 이동률</th></tr></thead><tbody><tr><td>1분위</td><td>하위 20% (가장 낮음)</td><td>70.7%</td><td>29.3%</td></tr><tr><td>5분위</td><td>상위 20% (가장 높음)</td><td>86.5%</td><td>-</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+
+
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"107조 벌었는데 왜 주가가 빠졌냐고요?" 🎯 삼성전자 주주·국내 주식형 ETF 투자자 · 도입: 영업익 100조 돌파의 의미 · 전개 ①주주환원이란 뭔가(자사주 매입·소각·배당 차이) ②왜 시장이 실망했나(기대 대비 미흡한 구체성) ③코스피 4% 폭락으로 이어진 이유 · CTA: "연내 공시 예정인 세부 계획이 나오면 어떻게 판단할지" 행동 힌트로 마무리</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"계층 사다리가 끊겼다, 숫자로 보면 더 충격" 🎯 20~30대 취업준비·사회초년생 · 16.9% → 역대 최저 → 청년 22.4% → 하위 10명 중 7명 그대로 → 그래서 ISA·IRP 절세 투자가 현실적 대안 · 15초 충격 통계 → 20초 왜 이렇게 됐나 → 25초 내가 할 수 있는 것 → CTA 5초</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"그린벨트 풀어 10만 가구 공급한다는데, 내가 청약 넣을 수 있을까?" 🎯 수도권 청약 준비 중인 2030 직장인 · 8·13 대책 전체 흐름 정리 → 이번에 발표된 6개 지구 위치·특징 비교 → 최단기 착공 모델 37개월이 현실적인지 → 지금 당장 준비할 것(청약통장·납입 횟수·신혼부부 특공 조건)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-10-30 10:01 KST · Claude로 자동 생성됨<br>
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
+  </div>
+
+</div>
+
+</body>
+</html>
