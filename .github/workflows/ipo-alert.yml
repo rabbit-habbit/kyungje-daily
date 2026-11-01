@@ -1,0 +1,58 @@
+name: IPO Alert Post
+
+# 공모주 알림: 퍼블 「공모주 알림」 그룹방에 메시지를 올린다 → 퍼블이 방 참여자에게 앱 푸시.
+# 정시 실행은 공모주 달력 Worker(ipo.rabbit-habbit.workers.dev)의 Cloudflare 크론이 맡는다:
+#   평일 08:27 KST(상장일) · 10:57 KST(청약 1·2일차)에 오늘 대상 종목으로 문구를 만들어 이 워크플로를 깨운다.
+#   (GitHub cron은 지연이 커서 쓰지 않는다 — molit-daily weekly.yml과 같은 방식)
+# 수동 실행: Actions 탭 → Run workflow → message에 보낼 문구.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: '그룹방에 올릴 문구 (300자 이내)'
+        required: true
+        type: string
+      room_url:
+        description: '퍼블 콘솔 채팅방 URL (비우면 공모주 알림 방)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publ-ipo-alert
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TZ: Asia/Seoul
+      PUBL_EMAIL: ${{ secrets.PUBL_EMAIL }}
+      PUBL_PASSWORD: ${{ secrets.PUBL_PASSWORD }}
+      # 문구·주소는 셸에 직접 끼우지 않고 환경변수로 넘긴다(따옴표·특수문자 안전)
+      ALERT_MESSAGE: ${{ inputs.message }}
+      ALERT_ROOM_URL: ${{ inputs.room_url != '' && inputs.room_url || 'https://console.publ.biz/channels/L2NoYW5uZWxzLzIzMDY0/p-apps/D00003/chat/group/basic/rooms/0c3320f1-0f93-45c2-ad83-fd8ecaf1b327' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies (Playwright 포함)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Chromium (Playwright)
+        run: python -m playwright install --with-deps chromium
+
+      - name: Post IPO alert to publ group chat
+        run: python pipeline/notify_publ.py --message "$ALERT_MESSAGE" --room-url "$ALERT_ROOM_URL" --no-session
