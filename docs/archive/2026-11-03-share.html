@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 11월 3일 화요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 11월 3일 화요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,342.90</div>
+          <div class="pulse-change down">▼ 3.10 (-0.23%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value down">5,674.46</div>
+          <div class="pulse-change down">▼ 184.62 (-3.15%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">4.00%</div>
+          <div class="pulse-change down">▼ 0.020%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">7,541.40</div>
+          <div class="pulse-change down">▼ 38.67 (-0.51%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value up">51,983.98</div>
+          <div class="pulse-change up">▲ 213.67 (+0.41%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$96.43</div>
+          <div class="pulse-change down">▼ $7.69 (-7.39%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value up">171,142원</div>
+          <div class="pulse-change up">▲ 2,418원 (+1.43%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위 인상 유력, 시장 컨센서스 3.25% (최종금리 3.5% 경로)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/9 FOMC 인상 유력, 4.00→4.25% 전망 (CME 페드워치 78.4%)</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 주요 경제뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">💸 162조 미래기금, 2029년부터 재원 끊긴다는 경고</h2>
+      <div class="news-body">
+<p>정부가 반도체 호황 세수를 활용해 조성 중인 162조 원 규모의 미래대응기금에 빨간불이 켜졌어요. 국회예산정책처가 이 기금의 핵심 재원인 '추가세수'가 2028년까지만 걷히고, 2029년부터는 아예 발생하지 않을 것이라고 공식 진단했거든요.</p><p>문제는 기금 사업 구조예요. 전체 사업비의 46.7%인 약 21조 원이 매년 반복 지출해야 하는 성격이에요. 아동 기본수당이나 청년미래적금처럼, 한번 시작하면 중간에 끊기 어려운 사업들이거든요. 세수가 줄어든 뒤에도 지출은 계속될 수밖에 없는 구조라는 게 예정처의 우려예요.</p><p>예정처는 반도체 호황으로 일시적으로 늘어난 세수를 미래 투자에만 쏟는 것보다, 국가채무 상환과 재정 안정화에도 나눠 써야 한다고 제언했어요. 재정 경직성이 커지면 경기 침체 때 더 위험해질 수 있다는 이유에서예요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">청년미래적금·아동 기본수당 같은 기금 혜택을 받고 있거나, 받을 계획인 분이라면 알아둘 필요가 있어요. 재원이 끊기면 기존 수혜자도 영향받을 수 있거든요. 직접적인 영향이 없더라도, 국가 재정이 흔들리면 결국 세금 인상이나 복지 축소로 이어질 수 있어요. 지금 당장 무엇을 바꿔야 한다는 이야기는 아니고, 정부가 이 기금을 얼마나 알차게 쓰는지를 국회 심사 과정에서 지켜보는 게 중요한 시점이에요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">미래대응기금 규모</span>
+          <span class="data-value ">162조 3000억 원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">추가세수 발생 마지막 해 예상</span>
+          <span class="data-value ">2028년 (57조 3000억 원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">2029년 추가세수 전망</span>
+          <span class="data-value down">0원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">반복 지출 성격 사업비 비중</span>
+          <span class="data-value ">46.7% (약 21조 원)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/2026110185701" target="_blank">한국경제신문</a> · <a href="https://www.ajunews.com/view/20261102170510230" target="_blank">아주경제</a> · <a href="https://www.hankookilbo.com/news/article/A2026110115010005432" target="_blank">한국일보</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">📉 코스피 3% 급락…AI 반도체 쇼크 서울까지 덮쳤다</h2>
+      <div class="news-body">
+<p>11/3 오전 코스피가 전 거래일 대비 약 3% 넘게 떨어지며 5,650선 근처까지 밀렸어요(10:01 장중 기준). 삼성전자와 SK하이닉스가 나란히 4~5%대 하락하고, 반도체 장비주도 줄줄이 내렸어요. 외국인과 기관이 동반 순매도에 나선 반면 개인이 홀로 6,000억 원대 순매수에 나서는 모양새였어요.</p><p>직접적인 방아쇠는 간밤 미국 증시예요. 11/2(현지) 뉴욕증시에서 필라델피아 반도체지수가 3.37% 떨어졌어요. 오라클이 AI 인프라 확충을 위한 대규모 주식·채권 발행 계획을 발표한 뒤 급락했고, AMD(-7.52%), 인텔(-8.80%), 마이크론(-5.78%) 등도 일제히 크게 빠졌어요. AI에 막대한 돈을 쏟아붓는 속도에 비해 실제 수익이 나올지 불안한 분위기가 다시 커진 거예요.</p><p>미국 중간선거를 하루 앞두고 AI 규제 강화 가능성에 대한 불확실성도 투자심리를 짓눌렀어요. 시장에서는 반도체주 흐름과 외국인 수급 변화가 당분간 코스피 방향을 결정할 핵심 변수가 될 것으로 보고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">삼성전자·SK하이닉스 ETF나 반도체 관련 펀드를 보유하고 계신 분이라면 계좌가 꽤 출렁였을 거예요. 이런 날 가장 중요한 원칙은 '한 번에 몰빵 매수·매도보다 조금씩 나눠서 거래(=분할 매매)'예요. 오늘 흐름의 원인이 AI 수익성에 대한 의구심이라, 반도체 기업들의 3분기 실적과 AI 투자비 대비 매출 성과가 향후 방향을 가를 핵심이에요. 미국 중간선거 결과가 내일 나오는 만큼, 그 결과를 확인한 뒤 차분하게 접근하는 게 나아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">코스피 (11/3 오전 10:01 장중)</span>
+          <span class="data-value down">5,674.46p (-184.62, -3.15%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">필라델피아 반도체지수 (11/2 현지 마감)</span>
+          <span class="data-value down">-3.37%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">S&P 500 (11/2 현지 마감)</span>
+          <span class="data-value down">7,541.40p (-0.51%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">원/달러 환율 (11/3 오전 10:01 장중)</span>
+          <span class="data-value down">1,342.9원 (-3.1, -0.23%)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.seoul.co.kr/news/economy/securities/2026/11/03/20261103500030" target="_blank">서울신문</a> · <a href="https://news.mtn.co.kr/article/2026110309365730882" target="_blank">머니투데이방송</a> · <a href="https://www.newstomato.com/ReadNews.aspx?no=1319020" target="_blank">뉴스토마토</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🤖 AI가 광고를 죽인다…구글·아마존 수익모델 흔들</h2>
+      <div class="news-body">
+<p>AI가 빅테크의 가장 큰 돈줄인 광고 사업을 잠식하고 있어요. 구글은 AI 검색 기능('AI 모드')을 강화했지만, 이 기능이 인기를 끌수록 기존 검색 광고 클릭이 줄어드는 역설이 생겼어요. 실제로 구글의 3분기 검색광고 매출 증가율은 12%로, 1분기(19%)·2분기(17%)에서 계속 둔화했어요.</p><p>아마존은 다른 방향으로 위협받고 있어요. 메타의 AI 쇼핑 에이전트 '뮤즈'가 출시 6주 만에 북미에서 1,000만 명을 확보하며 빠르게 퍼지고 있거든요. 소비자가 광고를 보고 스스로 상품을 검색하는 대신, AI가 가격과 상품을 비교해 바로 구매까지 처리해버리면 아마존의 연간 약 700억 달러 광고 매출에 직격탄이 될 수 있어요. 아마존은 뮤즈 접근을 차단하고 자체 AI('알렉사 포 쇼핑')로 맞불을 놓은 상태예요.</p><p>빅테크들이 AI에 막대한 돈을 쏟아붓는 동안, 정작 그 AI가 기존 수익원을 갉아먹는 딜레마에 빠진 거예요. 알파벳·아마존·메타 모두 AI 자본 지출이 급증하며 잉여현금흐름이 악화됐는데, 광고 성장도 함께 꺾이면서 투자자들의 불안이 커지고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">미국 빅테크 ETF(예: TIGER 미국나스닥100, ACE 미국S&P500)를 보유하신 분이라면 이 흐름이 직접적인 수익률과 연결돼요. 빅테크 광고 수익 둔화는 주가에 이미 반영되기 시작했고, AI 투자비는 계속 늘고 있어 당분간 실적 압박이 이어질 수 있어요. 반면 AI 쇼핑 에이전트처럼 새로운 서비스가 빠르게 자리를 잡으면, 광고 대신 수수료·구독 중심으로 수익 구조가 바뀔 수도 있어요. 어떤 빅테크가 이 전환을 잘 해내는지가 향후 종목 선택의 핵심 포인트가 될 거예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">구글 3분기 검색광고 성장률</span>
+          <span class="data-value down">12% (1분기 19%→둔화)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">아마존 광고 연매출</span>
+          <span class="data-value ">약 700억 달러</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">메타 뮤즈 출시 6주 사용자</span>
+          <span class="data-value up">북미 1,000만 명</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">알파벳 3분기 자본지출</span>
+          <span class="data-value down">514억 달러 (잉여현금흐름 -91억 달러)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.g-enews.com/article/Global-Biz/2026/11/2026110121022699159a1f309431_1" target="_blank">글로벌이코노믹</a> · <a href="https://news.nate.com/view/20261102n34402" target="_blank">네이트뉴스(뉴스핌)</a> · <a href="https://www.newspim.com/news/view/20261030000733" target="_blank">뉴스핌</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">🛢️ 미·이란 협상 기대에 WTI 7% 급락…주유소 값은?</h2>
+      <div class="news-body">
+<p>11/2(현지) 국제유가가 하루 만에 7% 넘게 곤두박질쳤어요. 미국 서부텍사스산원유(WTI) 12월물은 7.36% 내린 배럴당 96.46달러, 브렌트유는 7.63% 내린 104.77달러에 마감했어요. 지난 10/30 브렌트유가 배럴당 117.64달러까지 치솟았던 것과 비교하면 불과 3일 만에 10달러 이상 빠진 셈이에요.</p><p>유가 급락의 방아쇠는 미국·이란 협상 기대예요. 이란 대통령이 최고지도자로부터 협상 권한을 부여받아 대화를 추진 중이라고 밝혔고, 이란은 '미국이 조건을 수용하면 48시간 안에 호르무즈 해협을 다시 열겠다'는 제안도 내놨어요. 트럼프 대통령도 이란이 합의를 원하고 있다고 언급하면서 시장이 빠르게 반응했어요.</p><p>다만 협상이 실제로 타결될지는 아직 불확실해요. 양측의 조건이 엇갈리고 군사적 긴장도 이어지고 있어서, 협상이 다시 틀어지면 유가가 반등할 수 있어요. 주유소 가격은 국제유가 하락이 2~3주 시차를 두고 반영되는 구조라, 체감 효과는 11월 중순 이후에 나타날 전망이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">유가가 내리면 가장 먼저 체감하는 건 주유비와 난방비예요. 만약 이번 협상이 실제로 진전된다면 11월 중순부터 주유소에서 체감할 수 있을 거예요. 반대로 협상이 결렬되면 유가가 다시 110달러 이상으로 치솟을 수 있으니, '호르무즈 해협 통항 재개 여부'를 지켜보는 게 포인트예요. 금은 지정학 불안이 클 때 오르는 경향이 있는데, 유가 급락과 함께 금도 소폭 올랐다면(+1.43%) 시장이 여전히 불확실성을 경계하고 있다는 신호예요. 금 ETF(예: ACE KRX금현물)에 소액으로 분산하는 것도 방법이에요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">WTI (11/2 현지 마감)</span>
+          <span class="data-value down">96.46달러/배럴 (-7.36%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">브렌트유 (11/2 현지 마감)</span>
+          <span class="data-value down">104.77달러/배럴 (-7.63%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">WTI 최고점 (10/30)</span>
+          <span class="data-value ">브렌트유 117.64달러 (6개월 최고)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">금 (1g 한화, 최근 기준)</span>
+          <span class="data-value up">171,142원 (+1.43%)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.ajunews.com/view/20261103061252774" target="_blank">아주경제</a> · <a href="http://www.joseilbo.com/news/htmls/2026/11/20261103578747.html" target="_blank">조세일보</a> · <a href="https://news.jkn.co.kr/post/1066647" target="_blank">재경일보</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">🧊 북극항로 이용 50% 급증…아직은 러·중 전용 통로</h2>
+      <div class="news-body">
+<p>올해 북극항로(북동항로)를 통한 선박 항해 횟수가 역대 최다를 기록할 전망이에요. 노르웨이 북극물류센터(CHNL)에 따르면 9월 말까지 이미 104척이 북극항로를 이용했는데, 이는 작년 연간 기록(103척)을 벌써 넘어선 거예요. 연말까지 150척에 달할 것으로 예상돼 지난해보다 약 46% 늘어나는 셈이에요.</p><p>북극항로는 러시아 북극해 연안을 따라 아시아와 유럽을 잇는 최단 해상 운송로예요. 편도 약 1만3,000km에 20일 안팎이 걸리는데, 수에즈 운하 경유 항로(2만1,000km)보다 거리는 35%, 기간은 약 10일 더 짧아요. 지구 온난화로 해빙 면적이 줄면서 항행 가능 기간도 길어졌고, 중동 사태로 홍해·수에즈 노선이 불안해지면서 대안으로 주목받고 있어요.</p><p>다만 지금은 사실상 러시아·중국 전용 항로예요. 이용 선박의 절반(52척)이 러중 간 원유·LNG 운반선이고, 러시아 국내 운항이 42척이었어요. 한국의 팬스타 아크로호가 시범운항 후 무사귀환했고, 일본도 내년 미라이2호 출발을 예고하는 등 한·일도 상업 운항에 도전하고 있어요. 서방 제재와 쇄빙선 인프라 부족이 아직 넘어야 할 벽이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">북극항로가 활성화되면 글로벌 물류비용이 내려가고, 중동 리스크에 덜 흔들리는 공급망이 만들어질 수 있어요. 국내 조선·해운 기업(현대중공업·HMM 등)이 쇄빙선이나 극지 운항 전문선 수주 기회를 노릴 수 있고, 관련 ETF나 종목에 관심 있는 분이라면 해당 기업들의 북극 항로 관련 수주 소식을 눈여겨볼 만해요. 다만 실제 상업 운항이 본격화되려면 서방 제재 완화·인프라 구축에 수년이 걸릴 수 있어서, 장기적인 관점에서 바라보는 테마예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">2026년 북극항로 이용 예상 선박</span>
+          <span class="data-value up">150척 (전년비 +46%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">9월 말 기준 이용 선박</span>
+          <span class="data-value up">104척 (전년 연간 103척 초과)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">수에즈 대비 거리·시간 단축</span>
+          <span class="data-value ">거리 35%·시간 열흘 단축</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">러·중 왕래 선박 비중</span>
+          <span class="data-value ">52척 (전체의 절반 이상)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.ajunews.com/view/20261102170510230" target="_blank">아주경제</a> · <a href="https://biz.sbs.co.kr/article/20000343620" target="_blank">SBS Biz</a> · <a href="https://www.obsnews.co.kr/news/articleView.html?idxno=1542469" target="_blank">OBS경인TV</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📚 경제 기초 다지기</div>
+    <div class="explainer">
+      <div class="explainer-badge">이번 편 개념 정리</div>
+      <h3 class="explainer-title">'잉여현금흐름(FCF) 적자'가 뭐예요? 매출이 늘었는데 왜 돈이 없다는 거예요?</h3>
+      <div class="explainer-body">오늘 빅테크 광고 위협 기사에서 '알파벳이 91억 달러 마이너스 잉여현금흐름(FCF)을 기록했다'는 표현이 나왔어요. 잉여현금흐름(FCF, Free Cash Flow)이란 회사가 영업으로 벌어들인 돈에서 설비투자(공장·데이터센터 건설 등)에 쓴 돈을 빼고 남는 '진짜 자유롭게 쓸 수 있는 현금'이에요. 이게 마이너스라는 건, 벌어들이는 것보다 더 많은 돈을 설비에 쏟아붓고 있다는 뜻이죠. 매출이 늘어도 AI 데이터센터 짓는 데 더 많이 쓰면 현금이 오히려 줄어드는 구조예요. 투자자들이 '매출 성장'보다 'FCF 흑자'에 민감하게 반응하는 이유는, FCF가 배당·자사주매입 여력을 결정하기 때문이에요. 오늘 뉴스처럼 빅테크 주가가 실적 발표 후 급락하는 것도 'FCF 적자 지속' 우려가 반영된 것으로 보시면 돼요.<br><br><table style='border-collapse:collapse;width:100%;font-size:0.9em'><thead><tr><th style='border:1px solid #ccc;padding:6px;background:#f5f5f5'>구분</th><th style='border:1px solid #ccc;padding:6px;background:#f5f5f5'>영업이익</th><th style='border:1px solid #ccc;padding:6px;background:#f5f5f5'>잉여현금흐름(FCF)</th></tr></thead><tbody><tr><td style='border:1px solid #ccc;padding:6px'>뜻</td><td style='border:1px solid #ccc;padding:6px'>매출 - 원가·판관비</td><td style='border:1px solid #ccc;padding:6px'>영업현금흐름 - 설비투자</td></tr><tr><td style='border:1px solid #ccc;padding:6px'>마이너스 의미</td><td style='border:1px solid #ccc;padding:6px'>영업 자체에서 손실</td><td style='border:1px solid #ccc;padding:6px'>투자 과다로 현금 부족</td></tr><tr><td style='border:1px solid #ccc;padding:6px'>주가 영향</td><td style='border:1px solid #ccc;padding:6px'>직접적 악재</td><td style='border:1px solid #ccc;padding:6px'>성장투자면 일부 허용, 지속되면 악재</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="ladder">
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=book&s=ladder&v=c5&a=role" target="_blank" rel="noopener">
+      <div class="ladder-thumb is-book"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/book.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">잘잘잘돈</div>
+        <div class="ladder-desc">재테크를 어디서부터 어떻게 시작할지 모르겠다면, 여기서부터 읽어보세요!</div>
+        <span class="ladder-cta">보러 가기 →</span>
+      </div>
+    </a>
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=taling&s=ladder&v=c8&a=role" target="_blank" rel="noopener">
+      <div class="ladder-thumb"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/taling.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">60일 월급테크 챌린지</div>
+        <div class="ladder-desc">하루 분량이 짧아서 출퇴근길에도 따라갈 수 있어요.</div>
+        <span class="ladder-cta">보러 가기 →</span>
+      </div>
+    </a>
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=mf_wait2&s=ladder&v=c7&a=ask" target="_blank" rel="noopener">
+      <div class="ladder-thumb"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/moneyfreelab-1.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">머니프리랩 4주 챌린지</div>
+        <div class="ladder-desc">시작은 했는데 흐지부지된다면, 다음 챌린지는 같이 가봐요!</div>
+        <span class="ladder-cta">2기 오픈 알림 받기 →</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 오늘의 한줄 인사이트</div>
+    <div class="insight-box">
+      <div class="insight-header">
+        <span class="insight-icon">🐰</span>
+        <span class="insight-title">래빗해빛이 보는 오늘의 핵심</span>
+      </div>
+      <div class="insight-body">오늘 뉴스들을 관통하는 흐름은 딱 하나예요. <strong>'AI가 만든 호황이 AI 스스로 균열을 내기 시작했다'</strong>는 것이에요. 빅테크 광고 수익을 AI가 잠식하고, AI 인프라 투자 부담이 반도체주 전체를 끌어내리고, 그 여파가 코스피 3% 급락으로 이어졌죠. 미·이란 협상 기대로 유가가 7% 떨어진 건 그나마 긍정적인 신호지만, <strong>협상 타결 전까지는 변동성이 크게 이어질 수 있어요.</strong> 당장 계좌를 들여다보기 무섭더라도, 지금은 개별 종목 승부보다 분산과 분할 원칙을 지키는 게 현명한 시점이에요.</div>
+    </div>
+  </div>
+
+
+  <footer>
+    <div class="logo-text">부자습관은 래빗해빛 🐰</div>
+    <p>햇님이들을 위한 오늘의 경제 한 입 🌞</p>
+    <p style="margin-top:8px;">
+      <a href="https://www.youtube.com/@rabbit._.habbit" target="_blank">유튜브</a> · 
+      <a href="https://www.instagram.com/rabbit._.habbit/" target="_blank">인스타그램</a>
+    </p>
+    <p style="margin-top:8px; opacity:0.5;">본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
