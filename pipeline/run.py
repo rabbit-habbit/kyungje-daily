@@ -202,6 +202,51 @@ def _adapt_base_rates(ind_data: dict, outlook: dict) -> dict:
 # ── git ─────────────────────────────────────────────────────────────
 
 
+# 권유 투를 거르는 데 쓰는 표현들. 프롬프트에도 같은 목록이 있지만, 생성은
+# 확률적이라 지시만으로는 새어나온다. 2026-11-06 5번(지분적립형 아파트)에서
+# "주목할 만한 제도예요"·"공고문을 꼭 확인해 보세요"가 그대로 발행됐고,
+# 사람 눈에 걸려서야 알았다.
+_PUSHY = [
+    "주목할 만", "노려볼 만", "눈여겨볼", "관심 가져볼", "특히 주목",
+    "꼭 확인해", "알아보세요", "신청해 보세요", "챙기세요",
+    "게 유리", "이 유리", "게 좋아요", "이 현명", "게 현명",
+    "이 기회", "놓치지 마", "서두르",
+]
+
+
+def _lint_pushy(report_data: dict) -> list[tuple[str, str]]:
+    """발행물 본문에서 권유 투를 찾아낸다.
+
+    막지는 않는다. 톤 판단에는 오탐이 있고, 오탐 하나로 발행을 멈추면
+    브리핑이 안 나가는 쪽이 더 큰 손해다. 대신 보이게 만든다.
+    상품 블록(ladder·trigger)은 대상이 아니다. 거기는 권유가 제 일이다.
+    """
+    hits = []
+
+    def scan(where: str, text) -> None:
+        if not text:
+            return
+        if isinstance(text, (list, tuple)):
+            for t in text:
+                scan(where, t)
+            return
+        if not isinstance(text, str):
+            return
+        for bad in _PUSHY:
+            if bad in text:
+                hits.append((where, bad))
+
+    for i, card in enumerate(report_data.get("news_cards") or [], 1):
+        scan(f"뉴스{i}.body", card.get("body"))
+        scan(f"뉴스{i}.why", card.get("why_for_workers"))
+    scan("insight", (report_data.get("insight") or {}).get("body")
+         if isinstance(report_data.get("insight"), dict) else report_data.get("insight"))
+    exp = report_data.get("explainer") or {}
+    scan("explainer", exp.get("body") if isinstance(exp, dict) else exp)
+    scan("group_note", report_data.get("group_note"))
+    return hits
+
+
 def _flag_kakao_failure(exc: Exception) -> None:
     """카톡 실패를 Actions 밖에서도 보이게 만든다.
 
@@ -347,6 +392,16 @@ def run(
     report_data["trigger"] = products.pick_trigger(
         report_data.get("news_cards") or [], date_str
     )
+
+    # 4-1) 권유 투 점검. 발행을 막지는 않고 드러내기만 한다.
+    pushy = _lint_pushy(report_data)
+    if pushy:
+        logger.warning("  ⚠️  권유 투로 읽힐 표현 %d건:", len(pushy))
+        for where, bad in pushy:
+            logger.warning("       %s - \"%s\"", where, bad)
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            detail = ", ".join(f"{w}:{b}" for w, b in pushy)
+            print(f"::warning title=권유 투 표현 {len(pushy)}건::{detail}", flush=True)
     if save_intermediate:
         (out_dir / "report_data.json").write_text(
             json.dumps(report_data, ensure_ascii=False, indent=2), encoding="utf-8"
