@@ -245,6 +245,17 @@ def _lint_group_note(note: str, recent: list[str]) -> list[str]:
     same = [r for r in recent[:5] if r.strip().split() and r.strip().split()[-1] == last]
     if last and same:
         out.append(f'최근 5편 중 {len(same)}편과 끝 어절이 같음 ("{last}")')
+    # 문장부호도 섞어야 한다. 57편 중 56편이 느낌표로 끝났다.
+    mark = note.strip()[-1]
+    if mark in "!.?":
+        streak = 0
+        for r in recent:
+            if r.strip() and r.strip()[-1] == mark:
+                streak += 1
+            else:
+                break
+        if streak >= 3:
+            out.append(f'최근 {streak}편이 연달아 "{mark}"로 끝났는데 오늘도 같음')
     return out
 
 
