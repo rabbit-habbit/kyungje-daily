@@ -244,20 +244,33 @@ _NOTE_BACKSTAGE = [
 ]
 
 
-def _has_feeling(note: str) -> bool:
-    """자모나 이모지로 감정이 표시됐는지 본다.
+def _feeling_marks(note: str) -> set[str]:
+    """자모·이모지로 감정이 표시됐는지, 어느 것으로 했는지 본다.
 
     문장으로 감정을 지어내는 것은 금지지만("저는 한참 들여다봤어요"), 자모
     한 개는 없던 일을 서술하지 않으면서 톤만 얹는다. 2026-11-06 수정본에서
     같은 "~보세요!"가 "ㅠ" 하나를 앞에 두느냐로 갈렸다. "낳았습니다ㅠ 꼭
     확인해보세요!"는 살고, "담았어요. 한번 읽어보세요!"는 지워졌다.
+
+    종류를 구분해서 돌려주는 이유: 빈도를 종류별로 봐야 한다. "ㅠ 남발하지
+    말라"는 지시를 받았고(2026-11-06), 느낌표 때와 같은 실패를 되풀이하지
+    않으려면 "자모를 썼는지"가 아니라 "같은 자모를 또 썼는지"를 세야 한다.
     """
-    if any(j in note for j in ("ㅠ", "ㅜ", "ㅎㅎ", "ㅋㅋ", "ㅎ!", "ㅠㅠ")):
-        return True
-    return any(
+    marks = set()
+    if "ㅠ" in note or "ㅜ" in note:
+        marks.add("ㅠ")
+    if "ㅎㅎ" in note or "ㅋㅋ" in note:
+        marks.add("ㅎㅎ")
+    if any(
         "\U0001F300" <= ch <= "\U0001FAFF" or "\u2600" <= ch <= "\u27BF"
         for ch in note
-    )
+    ):
+        marks.add("이모지")
+    return marks
+
+
+def _has_feeling(note: str) -> bool:
+    return bool(_feeling_marks(note))
 
 
 def _ends_with_guide(note: str) -> str:
@@ -313,13 +326,16 @@ def _lint_group_note(note: str, recent: list[str]) -> list[str]:
     # 하루였네요.")는 마침표로 끝나도 되므로 막지 않고 한 번 보게만 한다.
     if body.endswith(".") and not body.endswith("습니다."):
         out.append('마침표로 닫았다 - 짧은 한마디가 아니면 느낌표로 맺을 것')
-    # 자모도 매일 쓰면 그게 새 틱이 된다. 느낌표 때와 같은 실패다.
+    # 같은 자모를 또 쓰면 걸린다. 최근 3편 중 2편에 이미 있으면 상한이다.
+    # "ㅠ 매일 남발하지 말라"는 지시(2026-11-06). 처음엔 3편 전부일 때만
+    # 걸게 해뒀는데 그건 4편 연속을 허용하는 것이었다. 느낌표가 56/57편이 된
+    # 경로와 같다 - 상한이 느슨하면 거기까지 간다.
     # 종결부호 연속은 더 보지 않는다. 2026-11-06 수정본 4편이 모두 느낌표였고,
     # 섞는 자리는 종결부호가 아니라 자모라는 게 그때 정해졌다.
-    if _has_feeling(note):
-        same = [r for r in recent[:3] if _has_feeling(r)]
-        if len(same) >= 3:
-            out.append('최근 3편도 자모(ㅠ·ㅎㅎ)를 썼다 - 이것도 매일이면 틱이 된다')
+    for mark in sorted(_feeling_marks(note)):
+        same = [r for r in recent[:3] if mark in _feeling_marks(r)]
+        if len(same) >= 2:
+            out.append(f'"{mark}" - 최근 3편 중 {len(same)}편에 이미 썼다. 매일 붙으면 이것도 틱이 된다')
     return out
 
 

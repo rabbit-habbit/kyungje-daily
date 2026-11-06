@@ -176,11 +176,32 @@ def test_안내형이_연달아_나오면_걸린다():
         assert hits, f"린트가 못 잡는다: {note}"
 
 
-def test_자모도_매일_쓰면_걸린다():
-    """느낌표 때와 같은 실패다. 무엇이든 매일 쓰면 그게 틱이 된다."""
+def test_ㅠ를_최근_3편에_두_번_썼으면_걸린다():
+    """"ㅠ 매일 남발하지 말라"는 지시를 받았다 (2026-11-06).
+
+    처음엔 3편 전부일 때만 걸게 해뒀는데 그건 4편 연속을 허용하는 것이었다.
+    느낌표가 57편 중 56편이 된 경로와 같다 - 상한이 느슨하면 거기까지 간다.
+    """
+    two = ["담아봤습니다ㅠ", "흐름만 짚었어요!", "정리해봤습니다ㅠ"]
+    hits = run_mod._lint_group_note("오늘도 조용했어요ㅠ", two)
+    assert any("ㅠ" in h and "매일" in h for h in hits), hits
+    # 최근 3편에 한 번만 있으면 아직 상한이 아니다.
+    one = ["담아봤습니다ㅠ", "흐름만 짚었어요!", "같이 알아둡시다!"]
+    assert run_mod._lint_group_note("오늘도 조용했어요ㅠ", one) == []
+
+
+def test_자모_종류를_따로_센다():
+    """ㅠ가 막혔다고 ㅎㅎ까지 막히면 가라앉은 날과 평온한 날이 같아진다."""
     recent = ["담아봤습니다ㅠ", "짚어봤습니다ㅠ", "정리해봤습니다ㅠ"]
-    hits = run_mod._lint_group_note("오늘도 조용했어요ㅠ", recent)
-    assert any("자모" in h and "매일" in h for h in hits), hits
+    assert run_mod._lint_group_note("오늘은 좀 가벼웠어요ㅎㅎ", recent) == []
+
+
+def test_자모가_없는_날은_안내형을_빼라고_적혀있다():
+    """자모를 안내형 허가증으로 쓰려고 억지로 붙이면 그게 ㅠ 남발이 된다."""
+    src = (ROOT / "pipeline" / "summarize.py").read_text(encoding="utf-8")
+    assert '"ㅠ"를 매일 쓰지 않는다' in src
+    assert "안내형을 빼고" in src
+    assert "평온한 날에 \"ㅠ\"를 붙이는 것은" in src
 
 
 def test_종결부호가_연달아_같은_것은_더_보지_않는다():
