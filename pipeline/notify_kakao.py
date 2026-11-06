@@ -205,8 +205,8 @@ def refresh_access_token() -> dict:
                 print(
                     "::error title=카카오 refresh_token 교체됨::"
                     "SECRETS_PAT이 없어 Secret을 자동 갱신하지 못했습니다. "
-                    "notify_kakao.py authorize-url로 재발급해 "
-                    "KAKAO_REFRESH_TOKEN을 교체하세요.",
+                    "README의 '카톡 토큰 재발급' 절차대로 "
+                    "KAKAO_REFRESH_TOKEN을 교체하세요. 다음 실행부터 끊깁니다.",
                     flush=True,
                 )
         stored["refresh_token"] = rotated

@@ -99,6 +99,34 @@ python pipeline/summarize.py \
 - Settings → Pages에서 `Branch: main / Folder: /docs` 활성화
 - URL: https://rabbit-habbit.github.io/kyungje-daily/
 
+## 카톡 토큰 재발급 (약 2개월마다)
+
+카카오는 refresh_token 수명이 1개월 미만 남으면 갱신 응답에 새 토큰을 끼워주고
+**기존 토큰을 버린다.** Actions 컨테이너는 실행이 끝나면 사라지므로 새 토큰이
+`.kakao_tokens.json`에만 남고, GitHub Secret에는 이미 죽은 토큰이 남는다.
+그 다음 실행부터 `KOE322`가 난다 (2026-10-20 사고, 이틀 묵음).
+
+`SECRETS_PAT`을 등록하면 `_persist_refresh_token()`이 Secret을 자동으로
+덮어쓴다. 등록하지 않기로 했으므로(2026-11-06) 아래를 손으로 한다.
+교체되는 날 Actions가 job을 실패시켜 메일이 오니, 그때 하면 된다.
+
+```bash
+# 1. 동의 URL 출력 → 브라우저로 열고 로그인·동의
+.venv/bin/python pipeline/notify_kakao.py authorize-url
+
+# 2. 리다이렉트된 주소의 ?code= 값을 그대로 넘긴다
+.venv/bin/python pipeline/notify_kakao.py exchange-code <code>
+
+# 3. 발급된 refresh_token을 Secret에 심는다 (stdin으로. --body는 프로세스 인자에 남는다)
+python3 -c "import json;print(json.load(open('.kakao_tokens.json'))['refresh_token'],end='')" \
+  | gh secret set KAKAO_REFRESH_TOKEN --repo rabbit-habbit/kyungje-daily
+
+# 4. 확인
+.venv/bin/python pipeline/notify_kakao.py send
+```
+
+2번에서 `KOE320`이 나면 code를 이미 썼거나 만료된 것이다. 1번부터 다시 한다.
+
 ## 알려진 이슈
 
 - MBC 손경제 RSS는 가끔 description 텍스트가 중간에 잘려 반복됨. `pipeline/fetch_rss.py`의 `_dedup_description()`이 후처리.

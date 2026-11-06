@@ -133,6 +133,7 @@ jobs:
           echo "카카오톡 '나에게 보내기' 알림이 실패했습니다."
           echo "브리핑 생성·그룹톡·아티클은 정상 발송됐습니다. 위 annotation의 사유를 확인하세요."
           echo "KOE322(expired_or_invalid_refresh_token)이면 KAKAO_REFRESH_TOKEN 재발급이 필요합니다."
+          echo "절차는 README의 '카톡 토큰 재발급 (약 2개월마다)' 항목에 있습니다."
           exit 1
 
       - name: Upload intermediate JSONs as artifact (on failure)
