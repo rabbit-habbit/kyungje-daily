@@ -206,12 +206,22 @@ def _adapt_base_rates(ind_data: dict, outlook: dict) -> dict:
 # 확률적이라 지시만으로는 새어나온다. 2026-11-06 5번(지분적립형 아파트)에서
 # "주목할 만한 제도예요"·"공고문을 꼭 확인해 보세요"가 그대로 발행됐고,
 # 사람 눈에 걸려서야 알았다.
-_PUSHY = [
+#
+# 둘로 나눠 둔 이유: 본문과 그룹톡 멘트의 사정이 다르다. 본문에서 "꼭
+# 확인해"는 정책·상품을 권하는 말이라 걸러야 하지만, 그룹톡 멘트에서는
+# 대표님이 직접 쓰는 한마디다. 2026-11-06 수정본 "엇갈린 반응을
+# 낳았습니다ㅠ 꼭 확인해보세요!"는 대표님이 손으로 고쳐 넣은 문장이고,
+# 한 목록으로 묶어두면 그게 매일 경고로 뜬다. 멘트의 안내형 과용은
+# _lint_group_note가 빈도로 따로 본다.
+_PUSHY_INVEST = [
     "주목할 만", "노려볼 만", "눈여겨볼", "관심 가져볼", "특히 주목",
-    "꼭 확인해", "알아보세요", "신청해 보세요", "챙기세요",
     "게 유리", "이 유리", "게 좋아요", "이 현명", "게 현명",
     "이 기회", "놓치지 마", "서두르",
 ]
+_PUSHY_GUIDE = [
+    "꼭 확인해", "알아보세요", "신청해 보세요", "챙기세요",
+]
+_PUSHY = _PUSHY_INVEST + _PUSHY_GUIDE
 
 
 # 그룹톡 멘트의 마무리가 "~보세요!" 한 형태로 굳는 걸 잡는다. 프롬프트에서
@@ -221,8 +231,33 @@ _PUSHY = [
 _NOTE_CLOSERS = [
     "읽어보세요", "훑어보세요", "펼쳐보세요", "살펴보세요", "확인해보세요",
     "확인해두세요", "참고하세요", "챙기세요", "정리해보세요", "봐 주세요",
-    "보세요",
+    "잡아두세요", "읽어두세요", "점검해보세요", "봐주세요", "보세요",
 ]
+
+
+# "급한 것부터 앞에 뒀습니다" 류. 어느 뉴스를 앞에 놨는지는 독자 일이 아니다.
+# 2026-11-06에 대표님이 이 문장을 "왜 이런 일이 생기는지 같이 정리해봤습니다!"로
+# 바꿨다. 편집 사정을 설명하던 자리에 독자의 질문이 들어간 것이다.
+_NOTE_BACKSTAGE = [
+    "앞에 뒀", "앞에 놨", "맨 앞에", "뒤로 미뤘", "순서를 바꿔", "순서를 바꿨",
+    "먼저 담았", "먼저 뒀",
+]
+
+
+def _has_feeling(note: str) -> bool:
+    """자모나 이모지로 감정이 표시됐는지 본다.
+
+    문장으로 감정을 지어내는 것은 금지지만("저는 한참 들여다봤어요"), 자모
+    한 개는 없던 일을 서술하지 않으면서 톤만 얹는다. 2026-11-06 수정본에서
+    같은 "~보세요!"가 "ㅠ" 하나를 앞에 두느냐로 갈렸다. "낳았습니다ㅠ 꼭
+    확인해보세요!"는 살고, "담았어요. 한번 읽어보세요!"는 지워졌다.
+    """
+    if any(j in note for j in ("ㅠ", "ㅜ", "ㅎㅎ", "ㅋㅋ", "ㅎ!", "ㅠㅠ")):
+        return True
+    return any(
+        "\U0001F300" <= ch <= "\U0001FAFF" or "\u2600" <= ch <= "\u27BF"
+        for ch in note
+    )
 
 
 def _ends_with_guide(note: str) -> str:
@@ -247,12 +282,23 @@ def _lint_group_note(note: str, recent: list[str]) -> list[str]:
         used = [r for r in recent[:3] if _ends_with_guide(r)]
         if used:
             out.append(f'"{mine}" - 안내형 마무리가 최근 3편에 이미 {len(used)}번 나왔다')
+        # 맨손 안내형. 감정 신호 없이 사실 뒤에 붙으면 자동 발송 문구로 읽힌다.
+        if not _has_feeling(note):
+            out.append(f'"{mine}" - 자모(ㅠ·ㅎㅎ) 없이 붙은 안내형은 발송 안내문으로 읽힌다')
+    # 편집 사정 설명. 독자가 궁금한 것으로 바꿔야 한다.
+    for bad in _NOTE_BACKSTAGE:
+        if bad in note:
+            out.append(f'"{bad}" - 편집 사정 설명. 독자 질문("왜 이런 일이 생기는지")으로 바꿀 것')
+            break
     # 합니다체를 마침표로 닫으면 공문처럼 읽힌다.
     body = note.strip()
     if body.endswith("습니다.") or body.endswith("합니다."):
         out.append('합니다체를 마침표로 닫았다 - 느낌표로 맺거나 해요체로 바꿀 것')
     # 자료 소개 투. 링크가 이미 같이 나가므로 매일 쓸 말이 아니다.
-    for bad in ("정리해뒀", "담아뒀", "풀어뒀", "묶어뒀"):
+    # "뒀"만 보던 걸 "놨"까지 넓혔다. 2026-11-05 "차근차근 풀어놨어요!"가
+    # 같은 투인데 빠져나갔다.
+    for bad in ("정리해뒀", "담아뒀", "풀어뒀", "묶어뒀",
+                "정리해놨", "담아놨", "풀어놨", "묶어놨"):
         if bad in note:
             out.append(f'"{bad}" - 자료 소개 투')
             break
@@ -261,17 +307,19 @@ def _lint_group_note(note: str, recent: list[str]) -> list[str]:
     same = [r for r in recent[:5] if r.strip().split() and r.strip().split()[-1] == last]
     if last and same:
         out.append(f'최근 5편 중 {len(same)}편과 끝 어절이 같음 ("{last}")')
-    # 문장부호도 섞어야 한다. 57편 중 56편이 느낌표로 끝났다.
-    mark = note.strip()[-1]
-    if mark in "!.?":
-        streak = 0
-        for r in recent:
-            if r.strip() and r.strip()[-1] == mark:
-                streak += 1
-            else:
-                break
-        if streak >= 3:
-            out.append(f'최근 {streak}편이 연달아 "{mark}"로 끝났는데 오늘도 같음')
+    # 마침표로 닫은 경우. 2026-11-06에 "다음 금통위가 11/26이에요."가
+    # "11/26로 같이 알아둡시다!"로 고쳐졌다. 중립 사실을 마침표로 통보하면
+    # 사람이 쓴 한마디가 아니라 안내 문구가 된다. 짧은 한마디("오늘은 좀 긴
+    # 하루였네요.")는 마침표로 끝나도 되므로 막지 않고 한 번 보게만 한다.
+    if body.endswith(".") and not body.endswith("습니다."):
+        out.append('마침표로 닫았다 - 짧은 한마디가 아니면 느낌표로 맺을 것')
+    # 자모도 매일 쓰면 그게 새 틱이 된다. 느낌표 때와 같은 실패다.
+    # 종결부호 연속은 더 보지 않는다. 2026-11-06 수정본 4편이 모두 느낌표였고,
+    # 섞는 자리는 종결부호가 아니라 자모라는 게 그때 정해졌다.
+    if _has_feeling(note):
+        same = [r for r in recent[:3] if _has_feeling(r)]
+        if len(same) >= 3:
+            out.append('최근 3편도 자모(ㅠ·ㅎㅎ)를 썼다 - 이것도 매일이면 틱이 된다')
     return out
 
 
@@ -293,7 +341,8 @@ def _lint_pushy(report_data: dict) -> list[tuple[str, str]]:
             return
         if not isinstance(text, str):
             return
-        for bad in _PUSHY:
+        words = _PUSHY_INVEST if where == "group_note" else _PUSHY
+        for bad in words:
             if bad in text:
                 hits.append((where, bad))
 
