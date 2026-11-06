@@ -225,16 +225,32 @@ _NOTE_CLOSERS = [
 ]
 
 
+def _ends_with_guide(note: str) -> str:
+    """안내형 마무리로 끝나면 그 표현을 돌려준다."""
+    tail = note.strip()[-24:]
+    for bad in _NOTE_CLOSERS:
+        if tail.endswith(bad) or tail.endswith(bad + "!") or tail.endswith(bad + "."):
+            return bad
+    return ""
+
+
 def _lint_group_note(note: str, recent: list[str]) -> list[str]:
     """멘트의 마무리가 굳어가는지 본다. 막지는 않고 드러내기만 한다."""
     if not note:
         return []
     out = []
-    tail = note.strip()[-24:]
-    for bad in _NOTE_CLOSERS:
-        if tail.endswith(bad) or tail.endswith(bad + "!") or tail.endswith(bad + "."):
-            out.append(f'"{bad}"로 끝남 - 안내형 마무리는 금지')
-            break
+    # 안내형은 금지가 아니라 빈도 상한이다. 쓸 수는 있고 매일은 아니다.
+    # 읽어보세요·펼쳐보세요·훑어보세요·살펴보세요를 돌려쓰면 규칙은 지켜지면서
+    # 독자에게는 같은 문장이 된다. 최근 3편에 이미 있으면 걸린다.
+    mine = _ends_with_guide(note)
+    if mine:
+        used = [r for r in recent[:3] if _ends_with_guide(r)]
+        if used:
+            out.append(f'"{mine}" - 안내형 마무리가 최근 3편에 이미 {len(used)}번 나왔다')
+    # 합니다체를 마침표로 닫으면 공문처럼 읽힌다.
+    body = note.strip()
+    if body.endswith("습니다.") or body.endswith("합니다."):
+        out.append('합니다체를 마침표로 닫았다 - 느낌표로 맺거나 해요체로 바꿀 것')
     # 자료 소개 투. 링크가 이미 같이 나가므로 매일 쓸 말이 아니다.
     for bad in ("정리해뒀", "담아뒀", "풀어뒀", "묶어뒀"):
         if bad in note:

@@ -87,9 +87,22 @@ REAL_NOTES = [
 ]
 
 
-def test_실제로_나갔던_마무리가_전부_걸린다():
+def test_안내형이_연달아_나오면_걸린다():
+    """안내형은 금지가 아니라 빈도 상한이다. 쓸 수는 있고 매일은 아니다."""
+    # 최근에 안내형이 없으면 통과한다.
+    clean = ["다음 금통위가 11/26이에요.", "오늘은 좀 긴 하루였네요."]
+    assert run_mod._lint_group_note("오늘 굵직한 뉴스를 담았어요. 한번 읽어보세요!", clean) == []
+    # 최근 3편에 이미 있으면 걸린다. 표현을 바꿔도 같다.
     for note in REAL_NOTES:
-        assert run_mod._lint_group_note(note, []), f"린트가 못 잡는다: {note}"
+        hits = run_mod._lint_group_note(note, ["어제 것도 한번 훑어보세요!"])
+        assert hits, f"린트가 못 잡는다: {note}"
+
+
+def test_합니다체를_마침표로_닫으면_걸린다():
+    """공문처럼 딱딱해진다. 느낌표로 맺거나 해요체로 바꾼다."""
+    hits = run_mod._lint_group_note("숫자가 많아 급한 것부터 앞에 뒀습니다.", [])
+    assert any("합니다체" in h for h in hits), hits
+    assert run_mod._lint_group_note("숫자가 많아 급한 것부터 앞에 뒀습니다!", []) == []
 
 
 def test_담담하게_끝낸_마무리는_걸리지_않는다():
@@ -98,7 +111,7 @@ def test_담담하게_끝낸_마무리는_걸리지_않는다():
     만드는 셈이다. 쓰지 않기로 했다. 남는 건 사실·짧은 한마디·덧붙이는 말."""
     ok = [
         "근원물가가 2.8%로 꺾이지 않았어요. 다음 금통위가 11/26이에요.",
-        "숫자가 많은 날이라 급한 것부터 앞에 뒀습니다.",
+        "숫자가 많은 날이라 급한 것부터 앞에 뒀습니다!",
         "코스피가 개장 3분 만에 서킷브레이커를 맞았어요. 오늘은 좀 긴 하루였네요.",
         "삼성전자가 100조를 벌었는데 주가는 4% 빠졌어요.",
     ]
@@ -113,6 +126,13 @@ def test_같은_부호로_연달아_끝나면_걸린다():
     assert any("연달아" in h for h in hits), hits
     # 마침표로 바꾸면 걸리지 않는다.
     assert run_mod._lint_group_note("오늘은 조용한 하루였네요.", recent) == []
+
+
+def test_안내형을_아예_금지하지는_않는다():
+    """전부 빼지 말라는 지시를 받았다. 금지가 아니라 빈도 상한이다."""
+    src = (ROOT / "pipeline" / "summarize.py").read_text(encoding="utf-8")
+    assert '"~보세요" 계열로 끝내지 않는다' not in src
+    assert '"~보세요!"는 쓸 수 있다' in src
 
 
 def test_감정을_지어내지_않기로_한_것이_프롬프트에_있다():
@@ -139,4 +159,5 @@ def test_프롬프트에서_느낌표_강제를_뺐다():
     src = (ROOT / "pipeline" / "summarize.py").read_text(encoding="utf-8")
     assert "마지막 문장은 반드시 느낌표" not in src
     assert "느낌표로 종료" not in src
-    assert '"~보세요" 계열로 끝내지 않는다' in src
+    # 합니다체에는 느낌표를 붙인다. 부호를 섞는 것과 충돌하지 않는다.
+    assert "합니다체를\n  마침표로 닫으면 공문처럼 딱딱해진다" in src
