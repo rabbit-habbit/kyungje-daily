@@ -214,6 +214,40 @@ _PUSHY = [
 ]
 
 
+# 그룹톡 멘트의 마무리가 "~보세요!" 한 형태로 굳는 걸 잡는다. 프롬프트에서
+# 느낌표를 강제하고 마무리를 "안내형"으로 정의한 탓에, 발행 57편 중 43편이
+# 거기로 수렴했다. 금지 범위가 "최근 3~4편"이라 읽어보세요·펼쳐보세요·
+# 훑어보세요·살펴보세요를 돌려쓰면 규칙은 지켜지면서 독자에겐 같은 말이 됐다.
+_NOTE_CLOSERS = [
+    "읽어보세요", "훑어보세요", "펼쳐보세요", "살펴보세요", "확인해보세요",
+    "확인해두세요", "참고하세요", "챙기세요", "정리해보세요", "봐 주세요",
+    "보세요",
+]
+
+
+def _lint_group_note(note: str, recent: list[str]) -> list[str]:
+    """멘트의 마무리가 굳어가는지 본다. 막지는 않고 드러내기만 한다."""
+    if not note:
+        return []
+    out = []
+    tail = note.strip()[-24:]
+    for bad in _NOTE_CLOSERS:
+        if tail.endswith(bad) or tail.endswith(bad + "!") or tail.endswith(bad + "."):
+            out.append(f'"{bad}"로 끝남 - 안내형 마무리는 금지')
+            break
+    # 자료 소개 투. 링크가 이미 같이 나가므로 매일 쓸 말이 아니다.
+    for bad in ("정리해뒀", "담아뒀", "풀어뒀", "묶어뒀"):
+        if bad in note:
+            out.append(f'"{bad}" - 자료 소개 투')
+            break
+    # 최근 멘트와 끝 어절이 같으면 형태가 굳은 것으로 본다.
+    last = note.strip().split()[-1] if note.strip().split() else ""
+    same = [r for r in recent[:5] if r.strip().split() and r.strip().split()[-1] == last]
+    if last and same:
+        out.append(f'최근 5편 중 {len(same)}편과 끝 어절이 같음 ("{last}")')
+    return out
+
+
 def _lint_pushy(report_data: dict) -> list[tuple[str, str]]:
     """발행물 본문에서 권유 투를 찾아낸다.
 
@@ -394,6 +428,17 @@ def run(
     )
 
     # 4-1) 권유 투 점검. 발행을 막지는 않고 드러내기만 한다.
+    note_issues = _lint_group_note(
+        report_data.get("group_note") or "",
+        [n for _, n in sm.recent_group_notes(limit=5, exclude_date=date_str)],
+    )
+    if note_issues:
+        logger.warning("  ⚠️  그룹톡 멘트 마무리 점검:")
+        for msg in note_issues:
+            logger.warning("       %s", msg)
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            print(f"::warning title=그룹톡 멘트 마무리::{' / '.join(note_issues)}", flush=True)
+
     pushy = _lint_pushy(report_data)
     if pushy:
         logger.warning("  ⚠️  권유 투로 읽힐 표현 %d건:", len(pushy))
