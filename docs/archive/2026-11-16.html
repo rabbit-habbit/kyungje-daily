@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 11월 16일 월요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 11월 16일 월요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,333.80</div>
+          <div class="pulse-change down">▼ 4.20 (-0.31%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value down">5,278.46</div>
+          <div class="pulse-change down">▼ 12.07 (-0.23%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value flat">3.99%</div>
+          <div class="pulse-change flat">― 0.000%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">7,561.67</div>
+          <div class="pulse-change down">▼ 30.73 (-0.40%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value up">52,347.55</div>
+          <div class="pulse-change up">▲ 50.46 (+0.10%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$88.29</div>
+          <div class="pulse-change down">▼ $0.27 (-0.30%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value down">167,054원</div>
+          <div class="pulse-change down">▼ 126원 (-0.08%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위, 우리금융연구소 등 주요 증권사 3.25%로 25bp 인상 전망 (현재 3.00%)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/9 FOMC 25bp 인상, CME 페드워치 인상 확률 ~95% 반영 (현재 3.75~4.00%)</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">📊 미국 PPI 6.5%…4년 만에 가장 높은 도매물가, 한은도 긴장</h2>
+      <div class="news-body">
+<p>11/13(현지시간) 미국 노동부가 발표한 10월 생산자물가지수(PPI)가 전년 동월 대비 6.5% 올랐어요. 2022년 11월(7.4%) 이후 약 4년 만에 가장 높은 수준이에요. 전월(9월)의 6.3%보다도 높아졌고, 식품·에너지를 제외한 근원 PPI도 5.0% 올랐어요.</p><p>PPI는 '도매물가'예요. 공장·유통 단계에서 가격이 먼저 오르면 나중에 소비자가 사는 물건값(=CPI)에도 반영돼요. 중간 가공재 가격은 전년 대비 14.6% 올라 2022년 7월 이후 최대 상승폭을 기록했어요.</p><p>이에 따라 연준(Fed)이 12월에 금리를 한 번 더 올릴 것이라는 전망이 더 강해졌어요. 연준 이사 중 일부는 '0.5%포인트 빅스텝'까지 거론했고, CME 페드워치 기준 12월 25bp 인상 확률은 95%까지 반영된 상태예요. 한국은행도 이 흐름을 무시할 수 없어 11/26 금통위를 앞두고 고심이 깊어지고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">PPI는 '공장 출고 단계 물가'예요. 여기서 오른 비용은 시차를 두고 편의점 물가·외식비로 옮겨와요. 미국이 12월에 또 금리를 올리면, 한국도 한미 금리 차 때문에 추가 인상 압력을 받아요. 현재 변동형 주담대를 갖고 계신 분이라면, 11/26 금통위 결과가 내년 대출이자에 직접 닿는 신호가 될 수 있어요. 주담대 3억 기준으로 0.25%p가 더 오르면 연이자 약 75만원이 늘어요. 금리가 어디서 멈출지를 보려면 12월 FOMC(12/9) 결정과 한은 수정 경제전망을 같이 지켜보시면 돼요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">美 10월 PPI (전년비)</span>
+          <span class="data-value up">+6.5%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">근원 PPI (전년비)</span>
+          <span class="data-value up">+5.0%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">중간 가공재 가격 (전년비)</span>
+          <span class="data-value up">+14.6%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">12월 FOMC 25bp 인상 확률 (CME)</span>
+          <span class="data-value up">~95%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.news1.kr/world/international-economy/6353890" target="_blank">뉴스1</a> · <a href="https://m.news.nate.com/view/20261114n03200" target="_blank">네이트뉴스(이데일리)</a> · <a href="https://www.hankyung.com/article/2026111575201" target="_blank">한국경제</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">📈 미 국채 10년물 5.15%…채권시장 1년 반 만에 최대 충격</h2>
+      <div class="news-body">
+<p>11/13(현지시간) 미국 10년물 국채 금리가 연 5.147%까지 올라섰어요. 한 주 동안에만 0.28%포인트 상승했는데, 이는 1년 6개월 만에 가장 큰 주간 상승폭이에요. PPI에 이어 CPI까지 잇따라 예상을 웃돌자 채권 시장에 매도 물량이 쏟아진 거예요.</p><p>달러도 약 19개월 만의 최고 수준에 근접했어요. 미 국채 금리가 오르면 달러 강세 → 원화 약세로 이어지는 경향이 있고, 국내 채권 금리도 덩달아 상승 압력을 받아요. 11/16 기준 국고채 10년물은 3.99%로 4%선 코앞에 와 있어요.</p><p>반면 금값은 달러 강세에 눌려 주간 기준 약 4.5% 급락, 4개월 만에 최대 낙폭을 기록했어요. 고금리가 유지될수록 이자를 주지 않는 금 보유 비용이 상대적으로 커지기 때문이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">미 국채 10년물 금리는 '글로벌 자산 가격의 기준선'이에요. 이 금리가 오르면 주식·채권·부동산 등 거의 모든 자산 가격에 하락 압력이 생겨요. 국내에서 채권형 펀드나 채권 ETF(예: KODEX 국고채10년)를 갖고 계신 분이라면 금리 상승기에 평가액이 내려가는 구조임을 염두에 두세요. 금 ETF(예: ACE KRX금현물)를 담은 분도 단기적으로 달러 강세 국면에서는 금값이 눌릴 수 있어요. 이 흐름이 꺾이는 신호는 미국 물가 지표가 뚜렷이 꺾이는 시점이에요. 12월 9일 FOMC와 그 전에 나올 11월 CPI를 지켜보는 게 판단 재료가 될 거예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">美 10년물 국채 금리 (11/13)</span>
+          <span class="data-value up">5.147%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">주간 상승폭</span>
+          <span class="data-value up">+0.28%p</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국고채 10년물 (11/16)</span>
+          <span class="data-value ">3.99%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국제 금 가격 (주간)</span>
+          <span class="data-value down">-4.5%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.blockmedia.co.kr/archives/1165795" target="_blank">블록미디어</a> · <a href="https://www.news1.kr/world/international-economy/6349764" target="_blank">뉴스1</a> · <a href="https://m.news.nate.com/view/20261115n04639" target="_blank">네이트뉴스(이데일리)</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🏠 일본 임대보증업체 한국 진출…월세 보증금 6323만원 낮아지나</h2>
+      <div class="news-body">
+<p>일본 임대료 보증업체 제이리스(J-Lease)가 한국 시장 진출을 추진하고 있어요. 제이리스는 주거용·사업용 임대료 보증 양쪽에서 일본 최상위권에 속하는 회사로, 전국 44개 거점을 운영하고 있어요. 한국 월세 시장이 빠르게 커지면서 집주인의 '연체 불안'을 사업 기회로 본 거예요.</p><p>이 보증업체가 들어오면 어떻게 달라지냐고요? 세입자가 보증회사의 신용심사를 통과하면, 보증회사가 집주인에게 월세 납부를 보장해줘요. 그러면 집주인 입장에서는 보증금을 굳이 많이 받지 않아도 되는 여건이 생겨요. 현재 전국 평균 월세 보증금은 약 6,323만원인데, 이 목돈 부담이 줄어들 여지가 생기는 거예요.</p><p>다만 세입자는 보증회사의 신용심사를 받아야 하고, 보증료도 부담해야 해요. 일본에서는 초기 보증료로 월세의 50~100%를 내고, 매년 갱신료가 추가로 붙는 구조가 일반적이에요. 보증금 감소가 세입자 전체에게 혜택이 될지는 보증료 부담과 비교해봐야 해요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">현재 월세로 거주 중이거나, 조만간 월세 계약을 앞두신 분께 관련된 뉴스예요. 보증업체가 활성화되면 계약할 때 목돈 보증금 부담은 줄 수 있어요. 대신 매달 or 연 단위로 보증료가 추가 지출로 생겨요. 월세 70만원 기준으로 일본 사례를 단순 적용하면 초기 보증료만 35~70만원, 연 갱신료 7~14만원 수준이에요. 계약 조건은 업체마다 달라질 수 있어서, 실제 도입 후 보증료 수준을 확인해보는 게 필요해요. 집주인 입장에서도 연체 위험이 줄어드는 대신, 보증회사의 심사 기준이 임차인 선택에 개입하는 구조가 될 수 있어요. 한국 임대차 시장에 보증업체가 어떤 조건으로 정착하는지, 도입 후 보증료 수준을 지켜보는 게 판단 재료가 될 거예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">전국 평균 월세 보증금</span>
+          <span class="data-value ">6,323만원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">일본 초기 보증료 (월세 대비)</span>
+          <span class="data-value ">50~100%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">일본 연간 갱신료</span>
+          <span class="data-value ">월세의 10~20%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">제이리스 국내 거점 (일본)</span>
+          <span class="data-value ">44개</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://n.news.naver.com/article/009/0005763505?sid=101" target="_blank">매일경제(네이버)</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">🏦 금융당국, 10년 고정형 주담대 신설 압박…은행권 '난색'</h2>
+      <div class="news-body">
+<p>11/15 금융위원회가 주요 은행들을 소집해 '10년 이상 장기 고정형 주택담보대출 상품'을 개발하라고 압박하고 있어요. 금리 인상기에 차주의 이자 부담을 줄이고 안정적인 상환 환경을 만들겠다는 취지예요.</p><p>현재 신한은행 기준으로 10년 고정형 주담대 금리는 연 4.69~6.09%예요. 같은 날 기준 6개월 변동형(4.43~5.84%)이나 5년 고정형(4.42~5.83%)보다 높아요. 금리 고정 기간이 길수록 은행의 조달 위험이 커져 금리가 올라가는 구조거든요.</p><p>은행권은 불만이에요. 금리가 비싸면 소비자가 외면할 게 뻔하고, 비용 구조상 금리를 낮추기도 어렵다는 거예요. 현재 변동형 상품도 금리 상단이 고정형을 웃돌기 시작한 상황이라, 은행들은 제도 개선이 선행돼야 한다는 입장이에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">현재 변동형 주담대를 가지고 계신 분이라면, 금리가 더 오를 경우 이자 부담도 같이 올라가요. 10년 고정형 상품이 출시되면 한 번 금리를 확정하고 10년을 가져가는 선택지가 생기는 거예요. 단, 지금 시점엔 고정형 금리가 변동형보다 높아서, 금리가 더 오를지 아닐지를 본인이 판단해야 하는 문제예요. 대출 3억 기준으로 금리가 5.5% vs 4.5%라면 연이자 차이가 약 300만원이에요. 금융당국의 압박이 실제 상품 출시로 이어질지, 출시된다면 금리 수준이 얼마인지를 지켜보는 게 필요해요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">10년 고정형 주담대 금리 (신한, 11/15)</span>
+          <span class="data-value up">4.69~6.09%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">5년 고정형 주담대 금리 (신한)</span>
+          <span class="data-value ">4.42~5.83%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">9월 고정형 주담대 평균금리</span>
+          <span class="data-value up">5.11%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">주담대 고정금리 비중 (9월)</span>
+          <span class="data-value down">34.2%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.fnnews.com/news/202611150923063560" target="_blank">파이낸셜뉴스</a> · <a href="https://www.fnnews.com/news/202611151851208949" target="_blank">파이낸셜뉴스</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">🥇 금값 주간 4.5% 급락…달러·고금리 양날 압박</h2>
+      <div class="news-body">
+<p>11/13 기준 국제 금 가격(트레이딩뷰)은 온스당 3,875달러 수준으로, 한 주 동안 약 4.5% 급락했어요. 4개월 만에 가장 큰 주간 하락폭이에요. 11/16 기준 국내 금 1g 한화 가격은 167,054원으로 소폭 하락 중이에요.</p><p>원인은 두 가지예요. 첫째, 미 국채 금리가 5.15%까지 올라서예요. 금은 이자를 주지 않는 자산이라, 채권 금리가 오르면 금 보유 매력이 상대적으로 줄어요. 둘째, 달러가 19개월 만의 최강 수준에 가까워졌어요. 달러가 강하면 달러가 아닌 통화를 쓰는 투자자 입장에서 금을 사는 비용이 커져요.</p><p>다만 중동 긴장·중앙은행 금 매입 같은 중장기 수요 요인은 여전히 남아 있어요. 단기 금 가격 하락이 중장기 금 수요 구조를 바꾼 건 아니에요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">금 ETF(예: ACE KRX금현물, KODEX 골드선물(H))를 담고 계신 분이라면, 현재 고금리·달러 강세 국면에서 단기 평가 손실이 나타날 수 있어요. 금은 이자가 없어서 금리가 높은 시기에 상대적으로 불리한 자산이에요. 반면 금리 인상 사이클이 마무리되는 시점부터는 반등하는 경향이 있어요. 금을 중장기 분산 목적으로 보유하는 거라면, 단기 가격 등락보다 미국 금리 사이클이 어디서 꺾이는지를 지켜보는 게 더 중요한 판단 재료예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">국제 금 가격 주간 등락 (11/13)</span>
+          <span class="data-value down">-4.5%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국제 금 가격 (11/13)</span>
+          <span class="data-value down">$3,875/온스</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">국내 금 1g 가격 (11/16)</span>
+          <span class="data-value down">167,054원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">美 10년물 국채 금리 (11/13)</span>
+          <span class="data-value up">5.147%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.blockmedia.co.kr/archives/1165795" target="_blank">블록미디어</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">PPI가 뭐예요? CPI랑 어떻게 다르고, 왜 주담대 금리까지 흔드나요?</h3>
+      <div class="explainer-body">오늘 1번 뉴스카드에서 '생산자물가지수(PPI) 6.5%'가 핵심 소재로 나왔어요. PPI는 공장·도매 단계에서 형성되는 가격을 측정하는 지표예요. 쉽게 말해, 편의점이 과자를 팔기 전에 과자 공장이 편의점에 넘기는 가격이 얼마나 올랐냐를 보는 거예요. 반면 CPI(소비자물가지수)는 최종 소비자가 실제로 사는 단계의 가격이에요. PPI가 먼저 오르면 그 비용이 시차를 두고 CPI로 넘어오는 경향이 있어서, 연준은 PPI를 '선행 물가 지표'로 봐요. PPI가 높으면 연준이 금리를 더 올릴 가능성이 커지고 → 미 국채 금리 상승 → 한국 시장금리도 상승 압력 → 주담대 금리까지 오르는 연결 고리가 생겨요.<br><br><table><thead><tr><th>구분</th><th>PPI (생산자물가)</th><th>CPI (소비자물가)</th></tr></thead><tbody><tr><td>측정 단계</td><td>공장·도매 단계</td><td>최종 소비자 단계</td></tr><tr><td>누가 쓰나</td><td>연준·투자자 선행 지표</td><td>일반 물가 체감 지표</td></tr><tr><td>오늘 수치</td><td>전년비 +6.5% (4년 최고)</td><td>전년비 상승 중 (11/12 발표)</td></tr><tr><td>금리 영향</td><td>상승 시 금리 인상 압박</td><td>상승 시 금리 인상 압박</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+
+
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"내 주담대 이자가 왜 오르는지, 미국 공장 물가로 설명해드릴게요" 🎯 타깃: 변동금리 대출 보유 직장인, 재테크 입문자 · 도입: 미국 도매물가 6.5% 뉴스가 왜 내 대출이자와 연결되는지 질문으로 시작 · 전개: PPI→CPI→연준 금리→한국 기준금리→코픽스→주담대 금리의 5단계 연결 구조 시각화 · 핵심 비교: 변동형 vs 고정형 주담대, 지금 어느 쪽이 비싼지 실제 금리 비교표 · 마무리: 11/26 금통위·12/9 FOMC 체크포인트 정리</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"월세 보증금 6323만원, 일본처럼 없어질 수도 있대요" 🎯 타깃: 월세 세입자 25~35세 직장인 · 훅: '보증금 없이 월세만?' 텍스트로 시작 · 전개: 일본 임대보증 시스템 15초 초압축 설명 → 한국 도입 시 보증금↓ but 보증료 발생 구조 대비 · 마무리: '좋은 건지 따져봐야 해요' 판단 재료 제시로 끝내기</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"금리가 오르면 금값이 왜 떨어지나요? - 고금리 시대 금 투자 체크리스트" 🎯 타깃: 금 ETF 보유 or 금 투자 고민 중인 재테크 초보 · 흐름: 금이 이자 없는 자산인 이유 → 금리와 금값의 역방향 관계 설명 → 달러 강세가 더해질 때 이중 압박 구조 → 현재 국내 금 가격 현황 → 중장기 금 수요 요인(중앙은행 매입 등)과 단기 하락의 차이 정리</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-11-16 10:01 KST · Claude로 자동 생성됨<br>
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
+  </div>
+
+</div>
+
+</body>
+</html>
