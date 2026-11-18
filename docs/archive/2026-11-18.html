@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 11월 18일 수요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 11월 18일 수요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,331.20</div>
+          <div class="pulse-change down">▼ 4.30 (-0.32%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value up">5,115.40</div>
+          <div class="pulse-change up">▲ 146.92 (+2.96%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value flat">3.98%</div>
+          <div class="pulse-change flat">― 0.000%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">7,340.53</div>
+          <div class="pulse-change down">▼ 76.06 (-1.03%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value down">50,759.42</div>
+          <div class="pulse-change down">▼ 848.75 (-1.64%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$85.58</div>
+          <div class="pulse-change down">▼ $0.14 (-0.16%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value down">163,570원</div>
+          <div class="pulse-change down">▼ 1,868원 (-1.13%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위, 3.00→3.25% 인상 유력 (우리금융硏·IMF 금리 인상 권고 맞물림)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/8~9 FOMC 0.25%p 인상 확률 95% (CME 페드워치), 빅스텝 4~5%</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">🔒 미국, 중국 AI칩 '원격 우회로' 전면 봉쇄…5개국도 허가제</h2>
+      <div class="news-body">
+<p>미 상무부 산업안보국(BIS)이 11/16(현지시간) 새 수출통제 규정을 발표했어요. 핵심은 중국 기업들이 싱가포르나 말레이시아 같은 제3국 데이터센터에 접속해 엔비디아 AI칩을 원격으로 쓰는 걸 막는 거예요. 반도체 칩이 중국으로 직접 들어가지 않아도 '인터넷 접속'으로 연산 능력을 빌려 쓰는 허점을 차단한 거죠.</p><p>규제 대상 국가도 확대됐어요. 싱가포르·태국·말레이시아·인도네시아·브라질 5개국은 앞으로 미국 첨단 AI칩을 들여오기 전에 미국 정부 허가를 받아야 해요. 기존에 이 서비스를 제공하던 데이터센터엔 90일의 허가 신청 기한이 주어졌어요.</p><p>중국 상무부는 즉각 '강한 불만'을 표명하고 대응 조치를 경고했어요. 미중 정상이 선전 APEC에서 회담 예정인 시점에 나온 조치라, 기술 갈등의 불씨가 더 커질 수 있다는 관측이 나오고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">반도체 ETF나 엔비디아 관련 종목을 담고 계신 분이라면 이 규제가 왜 주가에 영향을 주는지 맥락이 중요해요. 중국 AI 기업들의 연산 자원 접근이 막히면 엔비디아의 잠재 수요가 줄어들고, 한국 반도체 기업들의 고객사에도 간접 영향이 생길 수 있어요. 실제로 11/17 규제 발표 직후 아시아 반도체주와 삼성전자가 동반 하락했고 11/17 코스피도 5000선 아래로 밀렸어요. 미중 기술 갈등은 단발성 이슈가 아니라 반도체 수출 방향 전체를 바꾸는 구조적 변화예요. 지금 당장은 불확실성이 크지만, APEC 미중 정상회담 결과가 단기 변수가 될 수 있어요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">규제 대상 추가 국가</span>
+          <span class="data-value up">5개국</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">기존 데이터센터 허가 신청 기한</span>
+          <span class="data-value ">90일</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">11/17 삼성전자·아시아 반도체주</span>
+          <span class="data-value down">일제히 하락</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">규제 주체</span>
+          <span class="data-value ">미 상무부 BIS</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://zdnet.co.kr/view/?no=20261117095135" target="_blank">ZDNet Korea</a> · <a href="https://news.mtn.co.kr/article/2026111706303561846" target="_blank">머니투데이방송</a> · <a href="https://m.news.nate.com/view/20261118n01479" target="_blank">네이트뉴스(뉴스1)</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">📈 엔비디아 실적 서프라이즈에 코스피 3% 반등…반도체 대형주 주도</h2>
+      <div class="news-body">
+<p>11/18 오전 코스피가 장 초반 3% 가까이 뛰며 하루 만에 5000선을 되찾았어요. 전날 미국 AI칩 규제 충격으로 9개월 만에 5000선 아래(4968p)로 밀렸다가 빠르게 반등한 거예요. 11/17 장 마감 후 발표된 엔비디아의 3분기 실적이 시장 예상을 뛰어넘으면서 AI 수요 둔화 우려를 잠재웠어요.</p><p>삼성전자와 SK하이닉스가 각각 3~4%, 5~6%대 급등하며 지수를 이끌었어요. 외국인도 4거래일 만에 순매수로 돌아서며 11/18 오전 기준 약 2500억원을 사들였어요. 반도체 장비주와 부품주로도 매수세가 번졌어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">코스피 반도체 ETF나 삼성전자·SK하이닉스 주식을 보유 중인 분들에게 오늘 반등은 반가운 소식이에요. 그런데 이 반등의 성격을 짚어볼 필요가 있어요. 엔비디아 실적 호조로 AI 투자 수요 자체는 살아 있음이 확인됐지만, 미중 반도체 규제는 여전히 진행 중인 변수예요. 오늘 같은 단기 반등을 추세 전환으로 볼지, 규제 불확실성 속 일시 반등으로 볼지는 전문가들도 견해가 엇갈려요. 반도체 ETF(예: KODEX 반도체)를 단번에 많이 담기보다 여러 번 나눠서 거래(=분할 매수·매도)하시는 게 변동성 관리에 유리할 수 있어요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">코스피 (11/18 오전 10:01 기준)</span>
+          <span class="data-value up">5115.4p (+2.96%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">SK하이닉스 (장 초반)</span>
+          <span class="data-value up">+5~6%대</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">삼성전자 (장 초반)</span>
+          <span class="data-value up">+3~4%대</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">외국인 순매수 (장 초반)</span>
+          <span class="data-value up">약 2500억원</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.joongangenews.com/news/articleView.html?idxno=564748" target="_blank">중앙이코노미뉴스</a> · <a href="https://supple.kr/news/cmwle9szm7s88jkun0enlsr9h" target="_blank">연합뉴스(서플)</a> · <a href="https://www.mediapen.com/news/view/1138214" target="_blank">미디어펜</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🤝 D램 공급난에 다급해진 애플, 삼성과 4~5년 장기계약 초읽기</h2>
+      <div class="news-body">
+<p>삼성전자와 애플이 D램 장기공급계약(LTA) 체결을 앞두고 막바지 협상 중이에요. 계약 기간은 4~5년이고 2027년 상반기부터 효력이 발생하는 방식으로 논의되고 있어요. 공급 물량의 하한선을 정하되 가격은 그때그때 시장 상황에 따라 최종 확정하는 구조예요.</p><p>애플은 대형 빅테크 중 삼성전자와 유일하게 D램 장기계약을 맺지 않았던 기업이에요. AI 데이터센터 확대로 모바일 D램 공급이 타이트해지자 단기 계약을 선호하던 애플도 결국 장기계약 카드를 꺼낸 거예요. 이미 SK하이닉스와도 별도 장기계약을 맺었고요.</p><p>계약이 체결되면 삼성전자는 주요 빅테크 고객 전부와 LTA를 갖추게 돼요. 업계에서는 "애플이 삼성과 LTA를 맺는 건 과거엔 보기 힘든 파격"이라는 평가가 나오고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">삼성전자 주식을 갖고 계신 분이라면 긍정적인 신호로 읽을 수 있어요. 세계 최대 스마트폰 고객이 4~5년간 안정적으로 D램을 사겠다고 나선 건 삼성 메모리 사업의 수주 안정성을 높이는 요소거든요. 반대로 이 계약이 의미하는 또 다른 사실은 D램 공급이 그만큼 빠듯하다는 것이에요. AI 서버·데이터센터 수요가 모바일용 메모리까지 조이고 있다는 뜻이기도 해요. D램 가격은 공급 여유가 생기면 다시 내릴 수도 있으니, 메모리 반도체 업황 흐름을 계속 지켜보는 게 좋아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">계약 기간</span>
+          <span class="data-value ">4~5년</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">효력 발생</span>
+          <span class="data-value ">2027년 상반기</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">계약 구조</span>
+          <span class="data-value ">물량 하한 고정 + 가격 변동</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">애플의 기존 삼성 LTA 여부</span>
+          <span class="data-value ">없었음 (유일)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.tokenpost.kr/news/tech/439683" target="_blank">토큰포스트(매일경제 인용)</a> · <a href="https://news.jkn.co.kr/post/1102553" target="_blank">재경일보</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">📉 미국 12월 FOMC 금리 인상 확률 95%…의사록도 오늘 공개</h2>
+      <div class="news-body">
+<p>CME 페드워치 기준으로 미국 연준이 12월 8~9일 FOMC에서 기준금리를 0.25%포인트 올릴 확률이 현재 약 95%에 달해요. 현행 미국 기준금리는 연 3.75~4.00%이에요. 10월 소비자물가가 시장 예상을 웃돈 데다 연준 인사들이 잇달아 인상 필요성을 강조하면서 12월 인상은 사실상 기정사실화된 분위기예요.</p><p>다만 한꺼번에 0.5%포인트 올리는 '빅스텝' 가능성을 두고는 연준 내부에서도 의견이 엇갈려요. 뉴욕 연은 총재는 "극적인 조치는 불필요하다"며 선을 그었고, CME 반영 확률도 빅스텝은 약 4~5%에 그쳐요. 11/18 오늘 10월 FOMC 의사록이 공개되는데, 위원들의 실제 견해 차이가 얼마나 컸는지 확인할 수 있어요.</p><p>미국 금리가 오르면 달러가 강해지면서 원화 가치가 내려가는 경향이 있어요. 다만 11/18 오전 원·달러 환율은 1331.2원으로 전날보다 오히려 4.3원 떨어진 상태예요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">미국이 금리를 올리면 한국에도 연쇄 영향이 생겨요. 한미 금리 차이가 벌어지면 한국은행도 금리를 더 올려야 한다는 압박을 받고, 이는 주담대·신용대출 금리로 이어질 수 있어요. 현재 한국 기준금리는 3.00%인데, 미국이 4.25%까지 올라가면 격차가 1.25%포인트가 돼요. 오늘 공개되는 10월 FOMC 의사록에서 위원들이 얼마나 강하게 추가 인상을 지지했는지 확인하면, 한국 금리 경로도 더 명확하게 가늠할 수 있어요. 대출이 있는 분이라면 11/26 한국 금통위와 함께 주목할 이정표예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">美 12월 FOMC 0.25%p 인상 확률 (CME)</span>
+          <span class="data-value up">약 95%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">현행 美 기준금리</span>
+          <span class="data-value ">연 3.75~4.00%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">원·달러 환율 (11/18 오전)</span>
+          <span class="data-value down">1331.2원 (-4.3원)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">빅스텝(0.5%p) 확률 (CME)</span>
+          <span class="data-value down">약 4~5%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.ajunews.com/view/20261118080934814" target="_blank">아주경제</a> · <a href="https://www.g-enews.com/article/Global-Biz/2026/11/2026111522131576539a1f309431_1" target="_blank">글로벌이코노믹</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">🌐 IMF, 한국 성장률 3.9% 최고치 전망…금리 인상 더 필요하다</h2>
+      <div class="news-body">
+<p>IMF가 11/17 발표한 '2026년 한국 연례협의 결과'에서 올해 한국 성장률을 3.9%로 제시했어요. 지난달 세계경제전망(3.3%)보다 0.6%포인트 올린 수치이고, 국내외 주요 기관 전망치 중 가장 높은 수준이에요. 전망대로라면 2021년(4.7%) 이후 5년 만에 가장 높은 성장률이에요.</p><p>성장의 주역은 AI 반도체 수출이에요. IMF는 글로벌 AI 투자 확대로 반도체 수출이 급증하고 투자와 소비도 회복세라고 평가했어요. 내년 성장률 전망치도 2.8%에서 3.3%로 올려 2년 연속 3%대 성장 가능성을 열어뒀어요.</p><p>다만 IMF는 '성장이 좋을수록 물가 압력도 커진다'며 추가 통화 긴축을 권고했어요. 올해 소비자물가 상승률 전망치를 2.7%로 제시했는데, 이는 한국은행 목표치 2%를 웃돌아요. IMF 협의단장은 한국은행의 올해 두 차례 금리 인상을 "적절한 조치"라고 평가하면서도 더 필요하다는 입장을 밝혔어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">성장률이 좋다는 소식은 반갑지만, IMF가 함께 꺼낸 '추가 금리 인상 권고'가 직장인 지갑에 더 직접적인 이야기예요. 한국은행이 11/26 금통위에서 금리를 3.00%→3.25%로 올릴 가능성이 높게 점쳐지는 상황인데, IMF 권고가 그 명분을 강화했어요. 주담대 3억원 기준으로 금리가 0.25%포인트 오르면 연 이자 부담이 약 75만원 늘어요. 변동금리 대출이 있는 분이라면 11/26 금통위 결정이 본인 금리에 반영되는 시점(보통 1~3개월 후)을 미리 확인해두는 게 좋아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">올해 성장률 전망 (IMF)</span>
+          <span class="data-value up">3.9%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">지난달 대비 상향 폭</span>
+          <span class="data-value up">+0.6%p</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">올해 소비자물가 전망 (IMF)</span>
+          <span class="data-value up">2.7%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">내년 성장률 전망 (IMF)</span>
+          <span class="data-value up">3.3%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.huffingtonpost.kr/article/262142" target="_blank">허프포스트코리아</a> · <a href="http://www.srtimes.kr/news/articleView.html?idxno=217833" target="_blank">SR타임스</a> · <a href="https://www.seoul.co.kr/news/economy/2026/11/18/20261118031002" target="_blank">서울신문</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">LTA(장기공급계약)가 뭐예요? 왜 체결하면 주가에 호재인가요?</h3>
+      <div class="explainer-body">오늘 삼성전자·애플 뉴스에서 'LTA(Long-Term Agreement, 장기공급계약)'라는 말이 나왔어요. LTA는 공급사와 고객사가 수년 단위로 공급 물량과 기본 조건을 미리 약속해두는 계약이에요. 반도체처럼 수요가 갑자기 치솟거나 쪼그라드는 산업에서 양쪽 모두 불확실성을 줄이기 위해 맺어요. 공급사(삼성전자) 입장에서는 '몇 년 치 주문'이 미리 보장되니 공장 가동률과 매출 예측이 쉬워지고, 고객사(애플) 입장에서는 공급난 때 경쟁사보다 먼저 물량을 확보할 수 있어요. 주가에 호재로 작용하는 이유도 여기 있어요 - 미래 매출 가시성이 높아지기 때문이에요. 단, 가격은 계약 시점에 고정되지 않고 시장 상황에 따라 나중에 정해지는 경우가 많아서, 메모리 가격이 급락하면 LTA가 있어도 수익성이 나빠질 수 있다는 점도 같이 알아두세요.<br><br><table><tr><th>구분</th><th>LTA(장기공급계약)</th><th>단기·현물 거래</th></tr><tr><td>계약 기간</td><td>수 년 (보통 3~5년)</td><td>분기·수시</td></tr><tr><td>공급사 장점</td><td>물량 안정, 매출 예측 가능</td><td>가격 상승 시 더 비싸게 팔 수 있음</td></tr><tr><td>고객사 장점</td><td>공급난 때 물량 확보</td><td>공급 과잉 시 더 싸게 살 수 있음</td></tr><tr><td>단점</td><td>시황 급변 시 양측 모두 손해 가능</td><td>공급난 시 물량 확보 어려움</td></tr></table></div>
+    </div>
+  </div>
+
+
+
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"AI 호황인데 왜 금리까지 오르나요?" - 성장과 긴축이 동시에 오는 이유 🎯 25~40대 직장인, 대출·투자 모두 걸린 분 · 도입: 성장률 3.9%인데 왜 금리 인상 권고가 나오는지 의문 던지기 · 전개1: AI→반도체 수출 호황→물가 압력→금리 인상 연결고리 도식화 · 전개2: 미국 12월 FOMC 인상 95%·한국 11/26 금통위 연결 · 전개3: 대출 3억원 기준 이자 변화 계산 · 마무리: 성장 국면에서 대출·투자 비중 조절의 의미</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"애플이 삼성한테 4년치 D램을 예약한 이유" 🎯 20~35세 스마트폰 사용자·주식 입문자 · 훅: 아이폰 D램이 부족하다고? · 흐름: 메모리 공급난 현황 15초 → 애플·삼성 LTA 조건 15초 → 반도체 주가 의미 15초 → 'AI가 모바일까지 조인다' 한 줄 정리 15초</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"미국이 중국 AI칩 사용을 막으면 한국 반도체는 어떻게 되나요?" 🎯 반도체 ETF 보유자·뉴스 맥락이 궁금한 직장인 · 미국 수출통제 규제 변천사 흐름 → 이번 '원격 접속 차단' 의미 → 한국 기업(삼성·SK하이닉스)에 미치는 경로 → 엔비디아 실적 호조와 규제 강화의 모순적 공존 설명</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-11-18 10:01 KST · Claude로 자동 생성됨<br>
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
+  </div>
+
+</div>
+
+</body>
+</html>
