@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 11월 23일 월요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 11월 23일 월요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,342.60</div>
+          <div class="pulse-change down">▼ 2.40 (-0.18%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value down">4,706.22</div>
+          <div class="pulse-change down">▼ 163.74 (-3.36%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">3.82%</div>
+          <div class="pulse-change down">▼ 0.050%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">6,910.39</div>
+          <div class="pulse-change down">▼ 265.44 (-3.70%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value down">48,147.33</div>
+          <div class="pulse-change down">▼ 949.73 (-1.93%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value down">$82.86</div>
+          <div class="pulse-change down">▼ $1.12 (-1.33%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value up">154,226원</div>
+          <div class="pulse-change up">▲ 2,211원 (+1.45%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위, 3.00%→3.25% 인상 전망 우세 (전문가 6명 전원·신한·하나증권)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/8~9 FOMC 0.25%p 인상 전망, CME 페드워치 93.2% (현재 3.75~4.00%)</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 경제 뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">📉 정부, 10조 증안펀드 18년 만에 가동 준비 착수</h2>
+      <div class="news-body">
+<p>11/22 밤, 경제부총리·한국은행 총재·금융위원장·금융감독원장이 긴급 시장상황점검회의를 열었어요. 11/20(현지시간) 미국 증시가 급락한 데 이어 11/23 국내 증시에도 '검은 월요일'이 올 수 있다는 우려가 커지자, 정부가 2008년 글로벌 금융위기 이후 18년 만에 처음으로 증권시장안정펀드(증안펀드) 가동 준비에 나선 거예요.</p><p>증안펀드는 증시가 급락할 때 금융회사·한국거래소 등이 공동 출자한 자금으로 주식을 사들이는 펀드예요. 약정 규모는 10조 7,600억 원이고, 실제로 출자금을 요청해 돈을 모아 쓰는 '캐피털콜' 방식으로 운영돼요. 이번 발표는 사전 준비 단계로, 자금 투입 시점과 규모는 아직 정해지지 않았어요.</p><p>함께 발표된 추가 조치들도 있어요. 11/24부터 3개월간 상장사의 하루 자사주 매수 주문 한도가 완화되고, 불법 공매도도 집중 감시 기간에 들어가요. 다만 개인 투자자 사이에서 요구가 높았던 공매도 전면 제한은 이번 대책에서 빠졌어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">증안펀드 가동 준비 발표는 '정부가 추가 하락을 용납하지 않겠다'는 신호예요. 실제 돈이 투입되지 않더라도 투자 심리를 안정시키는 게 목적이에요. 국내 주식을 갖고 계신 분이라면 단기 급락 때 패닉 매도가 더 큰 손실로 이어질 수 있다는 점을 같이 보시면 좋아요. 단, 2008년 당시 가동 후 코스피가 1년에 42% 오른 통계가 있는 반면, 증안펀드 10조 원이 코스피 전체 시가총액에서 차지하는 비중은 현재 약 0.24%에 불과해 효과가 제한적일 수 있다는 지적도 있어요. 지켜볼 포인트는 외국인 매도세가 진정되는지와, 증안펀드가 실제 투입 단계로 가는지 여부예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">증안펀드 약정 규모</span>
+          <span class="data-value ">10조 7,600억 원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">증안펀드 마지막 투입 시점</span>
+          <span class="data-value ">2008년 (18년 전)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">자사주 매수 한도 완화 기간</span>
+          <span class="data-value ">11/24~3개월</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">코스피 (11/23 장중 기준)</span>
+          <span class="data-value down">4,706p (-3.36%)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/2026112226011" target="_blank">한국경제신문</a> · <a href="https://www.fnnews.com/news/202611211105346704" target="_blank">파이낸셜뉴스</a> · <a href="https://www.econovill.com/news/articleView.html?idxno=758089" target="_blank">이코노믹리뷰</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">🤖 나스닥 5.3% 폭락, AI 거품 공포에 뉴욕증시 일제히 급락</h2>
+      <div class="news-body">
+<p>11/20(현지시간) 미국 뉴욕증시가 대규모 AI·반도체주 투매로 일제히 급락했어요. 나스닥은 5.28%, S&P500은 3.70%, 다우존스는 1.93% 떨어졌고, S&P500은 7거래일 연속 하락이라는 2020년 2월 코로나19 초기 이후 최장 연속 하락을 기록했어요. 나스닥은 연초부터 쌓아온 올해 상승분을 모두 반납했어요.</p><p>하락의 중심은 엔비디아였어요. 젠슨 황 전 CEO가 11/12에 사임한 여파가 가시지 않은 상태에서, 미국 증권거래위원회(SEC)가 엔비디아의 회계 처리를 조사하고 있다는 보도가 나오면서 주가가 14% 급락했어요. 필라델피아 반도체지수는 10.73% 폭락했고, AMD(-13.25%)·브로드컴(-12.19%)·마이크론(-13.89%)도 두 자릿수 하락했어요.</p><p>시장에서는 'AI 과잉 투자 논란'이 이번 하락의 근본 원인이라는 분석이 나와요. 빚을 내 데이터센터를 짓는 AI 투자 방식의 수익성에 의구심이 쌓인 상황에서, 엔비디아 악재가 도화선이 됐다는 거예요. 다우와 S&P500은 고점 대비 10% 이상 하락해 조정 국면에 진입했어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">미국 반도체·AI주 급락은 국내 주식에도 직접 충격을 줘요. 삼성전자·SK하이닉스 같은 반도체 대형주 비중이 코스피에서 크기 때문이에요. 미국 나스닥 ETF(예: TIGER 미국나스닥100)를 갖고 계신 분은 11/20 하락이 이미 평가 손실로 반영됐어요. 반도체 ETF(예: KODEX 반도체)를 담고 계신 분이라면, 이번 하락이 단순 조정인지 AI 투자 사이클 자체가 꺾이는 것인지를 가르는 분기점이 될 수 있어서 미국 빅테크의 추가 실적 발표 흐름을 같이 보시는 게 도움이 돼요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">나스닥 (11/20 현지 마감)</span>
+          <span class="data-value down">-5.28%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">S&P500 (11/20 현지 마감)</span>
+          <span class="data-value down">6,910p (-3.70%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">필라델피아 반도체지수 (11/20)</span>
+          <span class="data-value down">-10.73%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">엔비디아 (11/20 현지 마감)</span>
+          <span class="data-value down">-14.01%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.segye.com/newsView/20261121504595" target="_blank">세계일보</a> · <a href="https://www.ebn.co.kr/news/articleView.html?idxno=1732544" target="_blank">EBN뉴스</a> · <a href="https://seoul.co.kr/news/economy/securities/2026/11/23/20261123029004" target="_blank">서울신문</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🚗 국산 전기차에 대당 250만 원 세액공제 추진…11/30 결론</h2>
+      <div class="news-body">
+<p>정부가 국내에서 생산·판매한 전기차에 대당 약 250만 원의 법인세 세액공제를 주는 방안을 이달 말 발표할 전기차 산업 경쟁력 강화방안에 담기로 가닥을 잡았어요. 올해 8월 세제개편안에서 태양광·반도체·이차전지 등 6개 분야에만 국내생산세액공제를 주기로 했는데, 여기서 전기차 완성차는 빠져 있었어요.</p><p>중국산 전기차 공세가 거세지면서 여야 의원 19명이 전기차를 세액공제 대상에 추가하는 법안을 공동 발의했고, 정부도 전향적으로 검토하겠다고 입장을 바꿨어요. 국내 생산 전기차의 첫 번째 마지노선은 11/30이에요.</p><p>다만 쟁점이 남아 있어요. 업계는 대당 400만 원을 요구하는데 정부 추진안은 250만 원으로 150만 원 적어요. 국내 부품 사용 비율을 조건으로 걸면 WTO 보조금 협정 위반이 될 수 있고, 수출 차량을 포함하면 재정 부담도 크게 늘어요. 중국산 전기차 생산비가 한국보다 약 30% 낮다는 점에서 250만 원 공제로 가격 경쟁력을 얼마나 회복할 수 있는지도 의문으로 남아요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">세액공제는 전기차를 만드는 회사에 주는 세금 혜택이에요. 소비자에게 직접 오는 혜택은 아니지만, 제조사 원가가 낮아지면 이론적으로 판매가에도 반영될 수 있어요. 현대차·기아 등 완성차 주식을 갖고 계신 분이라면 11/30 국회 조세소위 결론이 중요한 변수예요. 세액공제가 확정되면 국내 생산 비중이 높은 차종일수록 수혜가 커질 수 있어요. 반면 도입이 미뤄지면 중국산 저가 전기차의 국내 시장 침투가 계속될 가능성도 같이 봐야 해요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">정부 추진 공제액 (대당)</span>
+          <span class="data-value up">약 250만 원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">업계 요구 공제액 (대당)</span>
+          <span class="data-value ">400만 원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">입법 1차 마지노선</span>
+          <span class="data-value ">11/30</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">중국 대비 국내 생산비 차이</span>
+          <span class="data-value down">약 30% 높음</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/2026112225071" target="_blank">한국경제신문</a> · <a href="https://www.fnnews.com/news/202611230701245834" target="_blank">파이낸셜뉴스</a> · <a href="https://www.etoday.co.kr/news/view/2647835" target="_blank">이투데이</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">📊 코스피 오전 장중 3~4% 급락…반도체·대형주 일제히 약세</h2>
+      <div class="news-body">
+<p>11/23 국내 증시가 장 초반부터 큰 폭으로 밀렸어요. 미국 11/20 반도체주 폭락 여파로 삼성전자·SK하이닉스가 프리마켓에서 5~6%대 급락한 뒤 개장했고, 코스피는 한때 4,600선까지 내려앉기도 했어요. 11/23 10:01 KST 기준 코스피는 4,706p로 전 거래일 대비 3.36% 하락한 상태예요.</p><p>삼성전자는 장 중 최대 5%대, SK하이닉스는 3~4%대 하락했고, 두 종목에만 5,500억 원 이상의 거래대금이 몰렸어요. KB금융·삼성SDI 등 시가총액 상위 종목도 대부분 약세를 보였어요. 코스닥도 2% 넘게 빠지며 동반 하락 중이에요.</p><p>지난주 한 주만 해도 외국인이 코스피에서 4조 5,159억 원을 순매도했어요. 이달 들어 코스피 누적 하락률이 15%에 달하는 상황이에요. 11/23 오전에는 기관이 홀로 약 2,030억 원을 순매수했지만 대형 반도체주 낙폭을 메우기엔 역부족이었어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">반도체 비중이 높은 코스피 특성상, 미국 AI·반도체주가 흔들리면 국내 증시가 더 크게 출렁여요. 국내 주식형 펀드나 ETF를 연금·IRP 계좌에 담고 계신 분이라면 단기 평가 손실이 커 보일 수 있어요. 그런데 이런 급락장에서는 증안펀드 가동 준비처럼 정부 개입 신호가 나오는 시점이 과거에 단기 반등 타이밍이 되기도 했어요. 다만 AI 투자 사이클에 대한 근본적인 의구심이 풀리지 않으면 반등도 제한될 수 있어요. 지켜볼 포인트는 11/26 한국은행 금통위 결정과 미국 추가 기술주 실적 발표예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">코스피 (11/23 오전 10:01 기준)</span>
+          <span class="data-value down">4,706p (-3.36%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">삼성전자 (11/23 장중)</span>
+          <span class="data-value down">최대 -5%대</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">SK하이닉스 (11/23 장중)</span>
+          <span class="data-value down">최대 -4%대</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">외국인 주간 순매도 (지난주)</span>
+          <span class="data-value down">4조 5,159억 원</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/202611233228i" target="_blank">한국경제신문</a> · <a href="http://www.opinionnews.co.kr/news/articleView.html?idxno=147357" target="_blank">오피니언뉴스</a> · <a href="https://m.news.nate.com/view/20261123n01122" target="_blank">네이트뉴스</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">🏢 트럼프 "해외 데이터센터 짓는 미국 기업엔 세금 폭탄"</h2>
+      <div class="news-body">
+<p>11/20(현지시간) 트럼프 미국 대통령이 아시아 순방을 마친 뒤 백악관 기자회견에서 "미국 기업들이 해외에 데이터센터를 짓도록 허용하지 않을 것"이라며, 이를 어기면 막대한 세금을 부과하겠다고 경고했어요. 구글이 핀란드에 데이터센터를 건설하려는 계획을 직접 언급하기도 했어요.</p><p>다만 아직 확정된 정책은 아니에요. 구체적인 세율·적용 대상·시행 시점이 공개되지 않았고, 트럼프 대통령 본인도 "참모들에게 아직 말하지 않은 얘기"라고 했어요. 과세 권한의 법적 근거도 불분명한 상태예요. 현재는 발언 경고 단계이며, 실제 입법이나 행정 조치로 이어질지는 추가 논의가 필요해요.</p><p>이번 경고의 배경은 중국과의 AI 경쟁이에요. 미 상무부는 이미 해외 데이터센터를 통해 미국산 첨단 AI 반도체가 중국 기업에 흘러들어 가는 경로를 차단하는 수출통제 조치를 발표했어요. 한국에서도 AWS·구글 등 미국 빅테크의 데이터센터 건설 계획이 추진 중인 만큼, 이 경고가 현실화할 경우 국내 IT 인프라 투자에도 영향이 생길 수 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">당장 체감하기 어려운 뉴스지만, 직장인 투자 관점에서 두 가지를 볼 수 있어요. 첫째, 국내 클라우드·데이터센터 관련 주식(예: KT클라우드, NHN클라우드 계열)은 미국 빅테크 투자가 위축되면 국내 사업자에게 반사이익이 올 수 있다는 시각도 있어요. 둘째, 삼성전자·SK하이닉스 같은 AI 반도체 공급업체 입장에서는 미국 빅테크의 해외 데이터센터 투자가 줄면 HBM·서버 메모리 수요에 영향을 줄 수 있어요. 발언이 실제 정책으로 구체화되는지 여부가 핵심이고, 단계적으로 나올 미국 행정부 입장을 같이 지켜보시면 돼요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">트럼프 발언 일자</span>
+          <span class="data-value ">11/20(현지시간)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">과세 세율</span>
+          <span class="data-value ">미공개 ("막대한" 경고)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">정책 확정 여부</span>
+          <span class="data-value ">미확정 (발언 단계)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">관련 수출통제 조치</span>
+          <span class="data-value ">美 상무부 별도 시행</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://zdnet.co.kr/view/?no=20261121085127" target="_blank">ZDNet Korea</a> · <a href="https://www.fnnews.com/news/202611210309557646" target="_blank">파이낸셜뉴스</a> · <a href="https://www.g-enews.com/article/Global-Biz/2026/11/202611210954597556fda4f5ab74_1" target="_blank">글로벌이코노믹</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 친절한 경제</div>
+    <div class="explainer">
+      <div class="explainer-badge">오늘의 경제상식</div>
+      <h3 class="explainer-title">증안펀드가 가동되면 내 주식에 실제로 어떤 영향이 있나요?</h3>
+      <div class="explainer-body">오늘 뉴스 1번에서 정부가 증권시장안정펀드(증안펀드) 가동 준비에 들어갔다는 소식이 나왔어요. 증안펀드는 증시가 급락할 때 금융회사·한국거래소 등이 공동 출자해 코스피200 같은 지수 상품을 직접 사들이는 펀드예요. 쉽게 말하면 '정부가 대신 주식을 사줘서 가격 하락 속도를 늦추는 완충 장치'예요. 실제 투입이 발표되면 투자 심리가 안정되면서 단기 반등 계기가 되기도 해요. 2008년 가동 이후 1년간 코스피가 42% 오른 선례가 있지만, 현재 증안펀드 10조 원이 코스피 전체 시가총액의 약 0.24%에 불과해 효과가 제한적일 수 있다는 지적도 있어요. 중요한 차이는 이번 발표가 아직 '준비 단계'라는 점이에요. 실제 자금 투입이 결정되면 그때 시장에 더 직접적인 영향이 생겨요.<br><br><table style="border-collapse:collapse;width:100%;font-size:0.95em"><thead><tr style="background:#f4f4f4"><th style="border:1px solid #ddd;padding:6px">구분</th><th style="border:1px solid #ddd;padding:6px">준비 단계 (지금)</th><th style="border:1px solid #ddd;padding:6px">실제 투입 단계</th></tr></thead><tbody><tr><td style="border:1px solid #ddd;padding:6px">시장 효과</td><td style="border:1px solid #ddd;padding:6px">심리 안정 신호</td><td style="border:1px solid #ddd;padding:6px">직접 매수 압력</td></tr><tr><td style="border:1px solid #ddd;padding:6px">내 주식 영향</td><td style="border:1px solid #ddd;padding:6px">추가 투매 억제 기대</td><td style="border:1px solid #ddd;padding:6px">지수 반등 가능성↑</td></tr><tr><td style="border:1px solid #ddd;padding:6px">주의점</td><td style="border:1px solid #ddd;padding:6px">규모 한계 존재</td><td style="border:1px solid #ddd;padding:6px">근본 원인 해소 아님</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+
+
+  <div class="section">
+    <div class="section-label">🐰 래빗해빛 콘텐츠 소재</div>
+    <div class="rabbit-card">
+      <div class="rabbit-header">
+        <span class="rabbit-icon">🐰</span>
+        <span class="rabbit-title">오늘의 뉴스에서 뽑은 콘텐츠 소재</span>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">유튜브 본편 10분</div>
+        <div class="rabbit-idea-text">"정부가 18년 만에 꺼낸 10조 카드, 내 주식 살려줄까?" 🎯 국내 주식 투자 경험 1~3년 직장인 · 도입: 검은 월요일 공포란 무엇인지, 11/23 개장 전날 밤 무슨 일이 있었는지 · 전개: 증안펀드 구조 쉽게 설명(캐피털콜 방식, 10조 규모의 실제 위력) → 과거 2008년 가동 사례 · 중반: 코스피 15% 하락 속 반도체주가 왜 더 많이 빠지는지(AI 투자 사이클 연결) · 마무리: 증안펀드만으로 증시가 돌아서지 않는 이유, 11/26 금통위·미국 실적 발표가 진짜 변수</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">인스타 릴스 60초</div>
+        <div class="rabbit-idea-text">"증안펀드가 뭐예요? 15초 안에 설명해드려요" 🎯 주식 초보 20~30대 · 도입(5초): 오늘 코스피가 3%대 급락한 이유 한 줄 · 본문(30초): 증안펀드 = 국가가 주식 사주는 비상금 / 10조 규모 / 2008년 이후 처음 준비 · 마무리(25초): 아직 실제 투입은 아님 / 가동 신호가 나면 뭘 봐야 하는지 1가지</div>
+      </div>
+      <div class="rabbit-idea">
+        <div class="rabbit-idea-label">블로그 글</div>
+        <div class="rabbit-idea-text">"전기차 대당 250만 원 세액공제, 현대차·기아 주가에 어떤 영향?" 🎯 자동차주·ETF 보유 직장인 · 국내생산세액공제 제도 개념 정리 → 전기차가 왜 처음에 빠졌는지 → 여야 공동발의·정부 입장 변화 경과 · 쟁점 3가지(공제액·수출차 포함 여부·WTO 위반 가능성) 표로 정리 · 11/30 마지노선까지 뭘 보면 되는지 체크리스트</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    생성 시각: 2026-11-23 10:00 KST · Claude로 자동 생성됨<br>
+    본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.
+  </div>
+
+</div>
+
+</body>
+</html>
