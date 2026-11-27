@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 경제 뉴스 — 2026년 11월 27일 금요일</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFDF5;
+    --text: #2D2A26;
+    --text-sub: #6B6560;
+    --accent: #E8820C;
+    --accent-light: #FFF4E6;
+    --blue: #3B82F6;
+    --blue-light: #EFF6FF;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --border: #F0E8D8;
+    --card: #FFFFFF;
+    --tag-bg: #FFF8ED;
+    --rabbit-orange: #FF6B35;
+    --rabbit-bg: #FFF8F5;
+    --yellow-warm: #FFC107;
+    --header-text: #2D2A26;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 좁은 화면에서 본문 폭을 확보하려고 좌우 여백을 20px -> 14px로 줄였다
+     (2026-09-21 구독자 건의: 여백 줄이고 폭 넓히기). 데스크톱은 max-width가
+     잡고 있어 체감 차이가 거의 없다. */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #FFF3D0 0%, #FFE8A3 50%, #FFD97A 100%);
+    color: var(--header-text);
+    padding: 40px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '🐰';
+    position: absolute;
+    bottom: 32px;
+    right: 60px;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--yellow-warm), var(--rabbit-orange), var(--accent));
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(60,45,15,0.7);
+    font-weight: 600;
+  }
+
+  .date-badge {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(60,45,15,0.15);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(60,45,15,0.8);
+    font-weight: 500;
+  }
+
+  .header__title, .header-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+    color: var(--header-text);
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(60,45,15,0.65);
+    font-weight: 400;
+  }
+
+  /* Market Pulse */
+  .market-pulse {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: -20px 20px 24px;
+    position: relative;
+    z-index: 2;
+    padding: 20px 20px 16px;
+  }
+
+  .pulse-section { margin-bottom: 14px; }
+  .pulse-section:last-child { margin-bottom: 0; }
+
+  .pulse-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-sub);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* 퍼블 아티클은 에디터가 <head>의 <style>을 버려서 @media가 적용되지 않는다.
+     따라서 모바일 대응을 미디어 쿼리에 의존하지 말고 기본값이 좁은 폭에서도
+     깨지지 않도록 한다. auto-fit은 컨테이너 폭에 따라 열 수가 자동으로 줄어든다
+     (360px에서 2열, 데스크톱에서 4열). 2026-09-21 구독자 제보로 수정. */
+  .pulse-row { display: grid; gap: 8px; }
+  .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .pulse-row-global { grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); }
+
+  .pulse-item { text-align: center; }
+
+  .pulse-label {
+    font-size: 11px;
+    color: var(--text-sub);
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .pulse-value {
+    font-family: 'DM Sans', 'Pretendard Variable', sans-serif;
+    font-size: 15px;
+    white-space: nowrap;   /* 숫자가 "1,382.5 / 8" 처럼 중간에서 끊기지 않게 */
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .pulse-change {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .up { color: #E55C20; }
+  .down { color: #3B82F6; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+
+  /* News Card */
+  .news-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+  }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .news-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .news-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+
+  .news-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .news-body p { margin-bottom: 10px; }
+
+  .data-box {
+    background: var(--tag-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .data-box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label { color: var(--text-sub); }
+  .data-value { font-weight: 700; }
+
+  /* Tags (full 모드만 사용) */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-red { background: var(--accent-light); color: var(--accent); }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+
+  /* Why Box (share 모드 - 직장인이 알아야 하는 이유) */
+  .why-box {
+    background: #FFF9E6;
+    border-left: 3px solid #FFD43B;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0 12px;
+  }
+  .why-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #D4940C;
+    margin-bottom: 6px;
+  }
+  .why-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* Source Link */
+  .source-link {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 8px;
+  }
+  .source-link a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .source-link a:hover { text-decoration: underline; }
+
+
+  /* 상품 블록 - 사다리 (share 모드, 기초 다지기 뒤) */
+  .ladder {
+    border-top: 1px solid #E5DECF;
+    border-bottom: 1px solid #E5DECF;
+    padding: 6px 0;
+    margin: 18px 0;
+  }
+  .ladder-row {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 13px 2px;
+    border-bottom: 1px dashed #EAE2D2;
+  }
+  .ladder-row:last-child { border-bottom: 0; }
+  .ladder-thumb {
+    width: 92px; height: 92px; flex: 0 0 92px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .ladder-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 책 표지는 세로로 길다. 정사각 칸에 넣으면 위아래가 잘려
+     베스트셀러 딱지까지 날아간다. 표지 비율대로 칸을 준다. */
+  .ladder-thumb.is-book { width: 70px; flex: 0 0 70px; height: 94px; }
+  .ladder-text { min-width: 0; }
+  .ladder-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .ladder-desc { font-size: 12.5px; color: var(--text-sub); line-height: 1.65; }
+  .ladder-cta { font-size: 12.5px; color: var(--blue); font-weight: 600; margin-top: 5px; display: inline-block; }
+  .coupon-line {
+    display: inline-block; margin-top: 6px; padding: 3px 9px;
+    background: #FFF1B8; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; color: #7A5E00;
+  }
+  .coupon-box {
+    margin-top: 10px; padding: 10px 12px;
+    background: #FFF9E0; border: 1px dashed #E8C84A; border-radius: 9px;
+  }
+  .coupon-head { font-size: 12px; font-weight: 700; color: #7A5E00; }
+  .coupon-code {
+    display: inline-block; margin-left: 6px; padding: 2px 9px;
+    background: #fff; border: 1px solid #E8C84A; border-radius: 5px;
+    font-size: 12.5px; font-weight: 700; color: #2D2A26;
+  }
+  .coupon-note { font-size: 11px; color: #8A7A4A; margin-top: 5px; }
+
+  /* 상품 블록 - 기사에 이어 붙는 트리거 */
+  .trigbox {
+    margin: -12px 0 12px;
+    padding: 14px 16px;
+    background: #FBF7EE;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+  }
+  .trigbox-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 11px; }
+  .trigbox-thumb {
+    width: 60px; height: 60px; flex: 0 0 60px;
+    border-radius: 8px; overflow: hidden; background: #EFE9DC;
+  }
+  .trigbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .trigbox-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .trigbox-intro { font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+  .trigbox-text { font-size: 12.5px; line-height: 1.75; white-space: pre-line; }
+  .trigbox-facts {
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed #E5DCC8;
+    font-size: 11.5px; color: var(--text-sub); line-height: 1.7;
+  }
+  .trigbox-cta {
+    display: inline-block; margin-top: 11px;
+    font-size: 12.5px; font-weight: 700; color: var(--blue); text-decoration: none;
+  }
+  .news-card.trigjoin {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Insight Box (share 모드 - 오늘의 한줄 인사이트) */
+  .insight-box {
+    background: linear-gradient(135deg, #FFF8ED 0%, #FFF3D8 100%);
+    border: 1px solid #F0E0C0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .insight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .insight-icon { font-size: 20px; }
+  .insight-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .insight-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Explainer Box (전 모드 - 경제 기초 다지기 / 친절한 경제) */
+  .explainer {
+    background: var(--blue-light);
+    border: 1px solid rgba(37,99,235,0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .explainer-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .explainer-title {
+    font-family: 'Pretendard Variable', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .explainer-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* Rabbit Card (full 모드 전용) */
+  .rabbit-card {
+    background: var(--rabbit-bg);
+    border: 2px solid var(--rabbit-orange);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .rabbit-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rabbit-icon { font-size: 24px; }
+  .rabbit-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+  }
+  .rabbit-idea {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    border-left: 3px solid var(--rabbit-orange);
+  }
+  .rabbit-idea-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--rabbit-orange);
+    margin-bottom: 4px;
+  }
+  .rabbit-idea-text {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer .logo-text {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-note {
+    text-align: center;
+    padding: 32px 0 48px;
+    color: var(--text-sub);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer-note.share .share-brand {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .header__title, .header-title { font-size: 21px; }
+    .pulse-row-domestic { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pulse-row-global { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pulse-value { font-size: 14px; }
+    .pulse-label { font-size: 10px; }
+    .news-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-top">
+      <div class="brand">래빗해빛 경제 브리핑</div>
+      <div class="date-badge">2026년 11월 27일 금요일</div>
+    </div>
+    <h1 class="header__title">오늘의 경제 뉴스</h1>
+    <div class="header-subtitle">햇님이들을 위한 오늘의 경제 한 입 🌞</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="market-pulse">
+    <div style="text-align:center; margin-bottom:14px;">
+      <span style="display:inline-block; background:linear-gradient(135deg, var(--yellow-warm), var(--rabbit-orange)); color:white; font-size:13px; font-weight:700; padding:6px 18px; border-radius:20px; letter-spacing:0.5px;">📊 오늘의 경제지표 한눈에 보기!</span>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🇰🇷 국내</div>
+      <div class="pulse-row pulse-row-domestic">
+        <div class="pulse-item">
+          <div class="pulse-label">환율 (KRW/USD)</div>
+          <div class="pulse-value down">1,343.60</div>
+          <div class="pulse-change down">▼ 0.40 (-0.03%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">코스피</div>
+          <div class="pulse-value up">4,738.08</div>
+          <div class="pulse-change up">▲ 26.87 (+0.57%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">국고채 10년</div>
+          <div class="pulse-value down">3.77%</div>
+          <div class="pulse-change down">▼ 0.030%p</div>
+        </div>
+      </div>
+    </div>
+    <div class="pulse-section">
+      <div class="pulse-section-label">🌍 글로벌</div>
+      <div class="pulse-row pulse-row-global">
+        <div class="pulse-item">
+          <div class="pulse-label">S&P 500</div>
+          <div class="pulse-value down">7,182.78</div>
+          <div class="pulse-change down">▼ 18.31 (-0.25%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">다우</div>
+          <div class="pulse-value up">50,182.95</div>
+          <div class="pulse-change up">▲ 164.25 (+0.33%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">WTI</div>
+          <div class="pulse-value up">$85.21</div>
+          <div class="pulse-change up">▲ $1.53 (+1.83%)</div>
+        </div>
+        <div class="pulse-item">
+          <div class="pulse-label">금/g</div>
+          <div class="pulse-value up">154,929원</div>
+          <div class="pulse-change up">▲ 2,145원 (+1.40%)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); text-align:center; font-size:12px; color:var(--text-sub); line-height:1.8;">
+      <div>📌 기준금리 — 🇰🇷 한국 <strong style="color:var(--text); font-size:13px;">3.00%</strong> | 🇺🇸 미국 <strong style="color:var(--text); font-size:13px;">3.75%</strong> <span style="opacity:0.5;">(한미 금리차 -0.75%p)</span></div>
+      <div style="margin-top:8px; font-size:11px;">
+        <div>🔮 전망 — 🇰🇷 <span style="color:#E55C20; font-weight:600;">11/26 금통위 3.25%로 인상 완료. 2027년 상반기 3.50% 추가 인상 전망 (시장 컨센서스)</span></div>
+        <div style="margin-top:4px;">🇺🇸 <span style="color:#3B82F6; font-weight:600;">12/10 FOMC 0.25%p 인상 전망 우세 (CME 페드워치 98.1%), 목표 4.00~4.25%</span></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="section-label">📰 오늘의 주요 경제뉴스</div>
+    <div class="news-card">
+      <div class="news-num">1</div>
+      <h2 class="news-title">📈 10조 증안펀드 증액 논의…11/29 투자위·11/30 긴급 점검 예정</h2>
+      <div class="news-body">
+<p>금융당국이 현재 10조 7600억원 규모인 증권시장안정펀드(증안펀드)를 더 늘리기로 하고, 은행·증권사 등 25개 금융사를 상대로 추가 출자 여력을 파악하고 있어요. 증안펀드는 주가 급락 시 금융사들이 모은 자금을 주식시장에 투입해 하락을 막는 장치예요. 11/29 투자관리위를 긴급 소집하고 11/30에는 5대 금융지주 회장이 참석하는 시장안정 긴급 점검회의도 예정돼 있어요.</p><p>증권가에서는 현재 규모만으로는 역부족이라는 의견이 강해요. 11월 한 달간 외국인 순매도 규모만 17조 5000억원에 달해 현재 펀드 규모의 약 1.6배에 이르거든요. 기존 펀드 규모(10조 7600억원)는 코스피 시가총액(약 3847조원)의 0.28%에 불과하다는 지적도 나와요. 즉시 투입보다는 규모 확대와 투입 시점을 조율하는 단계예요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">증안펀드 가동·증액은 증시 하락세를 막으려는 정부의 '직접 개입' 신호예요. 국내 주식·ETF에 투자하고 있는 분이라면, 펀드 투입 발표가 단기 반등 계기가 될 수 있어요. 다만 2020년 코로나 때도 가동 직후 V자 반등이 아니라 수개월의 등락이 이어졌다는 점은 같이 알아두면 좋아요. 11/29 투자위·11/30 긴급 점검회의 결과가 증액 규모와 투입 시점의 첫 가늠자가 될 거예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">현 증안펀드 규모</span>
+          <span class="data-value ">10조 7600억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">11월 외국인 순매도</span>
+          <span class="data-value down">17조 5735억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">코스피 (11/27 오전)</span>
+          <span class="data-value up">4738.08p (+0.57%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">시총 대비 펀드 비율</span>
+          <span class="data-value ">0.28%</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.etoday.co.kr/news/view/2653521" target="_blank">이투데이</a> · <a href="https://news1.kr/finance/general-finance/6367490" target="_blank">뉴스1</a> · <a href="https://www.dt.co.kr/article/12097541" target="_blank">디지털타임스</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">2</div>
+      <h2 class="news-title">🛢️ WTI 유가 11/26 85달러대 반등…OPEC+ 11/29 회의 주목</h2>
+      <div class="news-body">
+<p>11/26(현지시각) 국제유가가 중동 지역 공급 차질 우려로 반등했어요. WTI는 한국시간 기준 11/27 오전 3시 21분 기준 배럴당 84.84달러로 1.39% 올랐고, 오늘 경제지표 기준일(11/26) WTI는 85.21달러까지 올라왔어요. 호르무즈 해협 일대 선박 피격과 사우디 에너지 인프라 공격 소식이 공급 불안을 키운 것으로 분석돼요.</p><p>다만 미국 원유 재고가 3주 연속 증가하고 글로벌 공급 과잉 우려도 함께 있어 상승폭을 제한하고 있어요. 11/29 OPEC+ 장관급 회의에서 2027년 산유 정책이 논의될 예정이라, 그 결과가 유가 방향을 다시 결정짓는 분수령이 될 수 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">유가가 오르면 국내 휘발유·경유 가격과 가스·전기 요금에 2~3개월 시차를 두고 반영돼요. 지금 주유소 가격이 높다면 중동 긴장이 한몫하고 있는 거예요. 에너지 관련 ETF(예: KODEX WTI원유선물)나 정유주에 투자한 분이라면 11/29 OPEC+ 결과가 단기 가격 변수로 작용할 수 있어요. 중동 긴장이 완화되거나 재고 증가가 지속되면 유가 상승폭이 제한될 수 있다는 점도 같이 보면 돼요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">WTI (기준일 11/26)</span>
+          <span class="data-value up">85.21$/배럴 (+1.83%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">브렌트유 (11/26 현지)</span>
+          <span class="data-value up">96.57$/배럴 (+1.2%)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">호르무즈 통과율</span>
+          <span class="data-value down">49% (정상 대비)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">美 원유 재고 변화</span>
+          <span class="data-value up">+110만 배럴 (3주 연속↑)</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://m.news.nate.com/view/20261127n02015" target="_blank">뉴스핌</a> · <a href="https://kr.investing.com/news/commodities-news/article-2184677" target="_blank">인베스팅닷컴</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">3</div>
+      <h2 class="news-title">🏥 실손보험료 3000억 과다 징수 논란…12월 금융위 결정 주목</h2>
+      <div class="news-body">
+<p>메리츠화재·현대해상·DB손보 3개 보험사가 1·2세대 실손보험 가입자 약 100만 명에게서 3000억원에 달하는 보험료를 더 받았다는 의혹이 제기됐어요. 2011년 이후 갱신 때마다 약관에 명시되지 않은 사업비를 추가로 청구한 게 문제예요. 금감원은 약관 위반으로 보고 전액 환급 방침이지만, 해당 보험사들은 잘못이 없다고 맞서고 있어요.</p><p>금융위원회는 이달 내 법령해석심의위원회(법해심)를 열어 최종 판단을 내릴 예정이에요. 약관 위반으로 결론이 나면 수천억원대 보험료를 환급하는 첫 사례가 될 전망이에요. 보험사 입장에선 최대 6500억원의 손실이 예상돼 각사 주가에도 영향을 줄 수 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">2011년 이후 1·2세대 실손보험을 갱신해 온 분이라면 대상일 수 있어요. 현재 금융위 판단이 아직 나오지 않은 상태라 환급이 확정된 건 아니에요. 12월 법해심 결과가 나와야 환급 대상·금액·시기 등 구체적인 절차가 정해질 수 있어요. 메리츠화재·현대해상·DB손보 주주라면 최대 6500억원 규모 손실 가능성이 주가 변수로 작용할 수 있다는 점, 같이 알아두면 좋아요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">과다 징수 추정액</span>
+          <span class="data-value ">3000억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">대상 가입자</span>
+          <span class="data-value ">약 100만명</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">보험사 최대 손실 예상</span>
+          <span class="data-value down">6500억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">법해심 결론 예정</span>
+          <span class="data-value ">2026년 12월</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/2026112632391" target="_blank">한국경제</a> · <a href="https://supple.kr/news/cmwhfqmvfc03mal9p2718mhze" target="_blank">머니투데이(서플)</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">4</div>
+      <h2 class="news-title">🚌 굴릴수록 적자…경기도 버스 준공영제의 구조적 한계</h2>
+      <div class="news-body">
+<p>경기도 시내버스 업체들이 누적 적자를 버티지 못해 노선 운행을 잇달아 중단하고 있어요. 경기도가 2024년부터 도입한 '공공관리제(경기도형 준공영제)'는 민간 업체가 버스를 운행하고 지자체가 표준 운송원가와 운송수입의 차액을 세금으로 메워주는 구조예요. 2025년 상반기 기준 도내 버스 운송수지율은 53.2%로, 비용 3139억원 중 수입은 1668억원뿐이라 적자가 1470억원에 달했어요.</p><p>문제는 재정 지원 예산까지 삭감됐다는 점이에요. 사업비의 70%를 부담하는 기초지자체는 경기도에 더 지원해달라 요청하지만 경기도도 재정난을 호소하고 있어요. 전문가들은 단순 보조금 확대만으로는 한계가 있다며, DRT(수요응답형 교통)나 차량 소형화 같은 운영비 절감 방향이 현실적이라고 지적해요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">경기도에 사는 분이라면 이미 체감하고 있을 거예요. 버스 노선이 없어지거나 배차 간격이 늘어나는 형태로 직접 불편이 오거든요. 준공영제는 '적자 노선도 세금으로 메워 유지한다'는 제도인데, 그 세금 부담이 한계에 다다른 상황이에요. 경기도·기초지자체 재정 논의와 내년 예산안 심의가 이 문제의 단기 해결 가능성을 좌우할 거예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">2025년 상반기 운송수지율</span>
+          <span class="data-value down">53.2%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">상반기 운송 적자</span>
+          <span class="data-value down">1470억원</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">시·군 평균 적자 비율</span>
+          <span class="data-value ">약 50%</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">부천시 민영제 적자 보전</span>
+          <span class="data-value ">연간 30억원 이상</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.hankyung.com/article/2026112631161" target="_blank">한국경제</a> · <a href="https://www.kyeonggi.com/article/20260115580487" target="_blank">경기일보</a>      </div>
+    </div>
+    <div class="news-card">
+      <div class="news-num">5</div>
+      <h2 class="news-title">💶 디지털 유로, 2026년 말 법안 채택 땐 2029년 첫 발행 가능</h2>
+      <div class="news-body">
+<p>유럽중앙은행(ECB)이 디지털 유로 추진에 속도를 내고 있어요. ECB 라가르드 총재는 유로존 카드 결제의 60% 이상이 비자·마스터카드 같은 국제 결제망을 거친다는 점을 지적하며, 유럽 자체 디지털 결제 인프라 구축의 필요성을 강조했어요. EU 의회와 이사회가 2026년 말까지 법안을 채택하면 2027년 하반기부터 12개월간 시범 운영 후 2029년 첫 발행을 목표로 해요.</p><p>디지털 유로는 블록체인 기반이 아닌 중앙화 플랫폼에서 운영되는 중앙은행 디지털화폐(CBDC)예요. 현금을 대체하는 게 아니라 보완하는 방식으로 설계돼 있어요. 현재 36개 결제서비스 사업자와 함께 오프라인·온라인·개인 간 결제를 테스트할 준비를 하고 있어요.</p>      </div>
+
+      <div class="why-box">
+        <div class="why-label">🔍 직장인이 알아야 하는 이유</div>
+        <div class="why-text">당장 내 지갑에 디지털 유로가 들어오는 건 아니에요. 하지만 한국도 한국은행 CBDC(디지털 원화) 파일럿을 진행 중이라, 유럽의 사례가 국내 디지털 결제 정책에도 참고 기준이 돼요. 핀테크·간편결제·카드사 관련 주식에 투자한 분이라면, 중앙은행 디지털화폐가 비자·마스터 같은 민간 카드 결제망의 점유율에 장기적으로 어떤 영향을 줄지 큰 흐름으로 지켜볼 만한 주제예요.</div>
+      </div>
+
+      <div class="data-box">
+        <div class="data-box-title">📊 Key Numbers</div>
+        <div class="data-row">
+          <span class="data-label">유로존 국제 결제망 의존 비율</span>
+          <span class="data-value ">60% 이상</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">시범 운영 목표 시점</span>
+          <span class="data-value ">2027년 하반기(12개월)</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">첫 발행 목표 연도</span>
+          <span class="data-value ">2029년</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">파일럿 참여 PSP</span>
+          <span class="data-value ">36곳</span>
+        </div>
+      </div>
+
+      <div class="source-link">출처:
+<a href="https://www.tokenpost.kr/news/policy/436162" target="_blank">토큰포스트</a> · <a href="https://www.tokenpost.kr/news/policy/433944" target="_blank">토큰포스트</a>      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📚 경제 기초 다지기</div>
+    <div class="explainer">
+      <div class="explainer-badge">이번 편 개념 정리</div>
+      <h3 class="explainer-title">CBDC(중앙은행 디지털화폐)가 뭐예요? 디지털 유로랑 코인은 어떻게 달라요?</h3>
+      <div class="explainer-body">오늘 디지털 유로 뉴스에서 'CBDC'라는 단어가 나왔는데, 처음 보면 헷갈릴 수 있어요. CBDC(Central Bank Digital Currency)는 중앙은행이 직접 발행하는 디지털 화폐예요. 비트코인·이더리움처럼 민간이 만든 게 아니라, 한국은행이나 ECB(유럽중앙은행)가 뒷받침하는 '국가 보증 디지털 돈'이에요. 디지털 유로도 ECB가 발행하고 중앙화 플랫폼에서 운영되기 때문에 블록체인 기반 코인과는 구조 자체가 달라요. 아래 표로 비교해보면 더 쉬워요.<br><br><table style="border-collapse:collapse;width:100%;font-size:0.95em"><thead><tr style="background:#f4f4f4"><th style="border:1px solid #ccc;padding:6px 10px">구분</th><th style="border:1px solid #ccc;padding:6px 10px">CBDC(디지털 유로·디지털 원화)</th><th style="border:1px solid #ccc;padding:6px 10px">비트코인·스테이블코인</th></tr></thead><tbody><tr><td style="border:1px solid #ccc;padding:6px 10px">발행 주체</td><td style="border:1px solid #ccc;padding:6px 10px">중앙은행 (국가)</td><td style="border:1px solid #ccc;padding:6px 10px">민간 개인·기업</td></tr><tr><td style="border:1px solid #ccc;padding:6px 10px">가치 보장</td><td style="border:1px solid #ccc;padding:6px 10px">국가 신용 뒷받침</td><td style="border:1px solid #ccc;padding:6px 10px">시장·알고리즘 의존</td></tr><tr><td style="border:1px solid #ccc;padding:6px 10px">기반 기술</td><td style="border:1px solid #ccc;padding:6px 10px">중앙화 플랫폼 (블록체인 아님)</td><td style="border:1px solid #ccc;padding:6px 10px">블록체인 (탈중앙화)</td></tr><tr><td style="border:1px solid #ccc;padding:6px 10px">목적</td><td style="border:1px solid #ccc;padding:6px 10px">결제 인프라 자립·금융 포용</td><td style="border:1px solid #ccc;padding:6px 10px">투자·거래 수단</td></tr></tbody></table><br>쉽게 말하면, CBDC는 "지폐의 디지털 버전"이고 코인은 "민간이 만든 새로운 자산"이에요. 디지털 유로가 도입되면 현금처럼 쓸 수 있지만, 코인처럼 가격이 출렁이지는 않아요.</div>
+    </div>
+  </div>
+
+  <div class="ladder">
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=book&s=ladder&v=c1&a=role" target="_blank" rel="noopener">
+      <div class="ladder-thumb is-book"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/book.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">잘잘잘돈</div>
+        <div class="ladder-desc">0원에서 시작해 20대에 20억을 만든 과정, 순서대로 다 적어뒀어요!</div>
+        <span class="ladder-cta">보러 가기 →</span>
+      </div>
+    </a>
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=taling&s=ladder&v=c2&a=role" target="_blank" rel="noopener">
+      <div class="ladder-thumb"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/taling.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">60일 월급테크 챌린지</div>
+        <div class="ladder-desc">예적금, ISA, ETF, 채권, 공모주. 이름만 알던 것들을 하나씩 정리해드려요!</div>
+        <span class="ladder-cta">보러 가기 →</span>
+      </div>
+    </a>
+    <a class="ladder-row" href="https://economy-proxy.rabbit-habbit.workers.dev/r?p=mf_wait2&s=ladder&v=c5&a=ask" target="_blank" rel="noopener">
+      <div class="ladder-thumb"><img src="https://economy-proxy.rabbit-habbit.workers.dev/img/moneyfreelab-1.jpg" alt=""></div>
+      <div class="ladder-text">
+        <div class="ladder-title">머니프리랩 4주 챌린지</div>
+        <div class="ladder-desc">경제 기사는 읽는데 내 돈이랑 연결이 안 된다면, 머니프리랩에서 같이 해봐요!</div>
+        <span class="ladder-cta">2기 오픈 알림 받기 →</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-label">💡 오늘의 한줄 인사이트</div>
+    <div class="insight-box">
+      <div class="insight-header">
+        <span class="insight-icon">🐰</span>
+        <span class="insight-title">래빗해빛이 보는 오늘의 핵심</span>
+      </div>
+      <div class="insight-body">오늘 뉴스들을 관통하는 흐름은 하나예요. <strong>공공 재정의 한계와 역할 재정의</strong>예요. 10조 증안펀드 증액, 경기도 버스 준공영제 적자, 실손보험료 환급 논란까지 - 세 뉴스 모두 "누가 얼마나 돈을 대느냐"를 두고 정부·기업·개인 사이에서 줄다리기가 벌어지는 모습이에요. 디지털 유로도 결국 국가가 결제 인프라 주권을 되찾으려는 시도죠. <strong>12월 금융위 법해심 결과, 11/29 OPEC+ 회의, 11/30 증안펀드 점검회의</strong> - 다음 주가 올해 마지막 굵직한 변수들이 모이는 시간이에요.</div>
+    </div>
+  </div>
+
+
+  <footer>
+    <div class="logo-text">부자습관은 래빗해빛 🐰</div>
+    <p>햇님이들을 위한 오늘의 경제 한 입 🌞</p>
+    <p style="margin-top:8px;">
+      <a href="https://www.youtube.com/@rabbit._.habbit" target="_blank">유튜브</a> · 
+      <a href="https://www.instagram.com/rabbit._.habbit/" target="_blank">인스타그램</a>
+    </p>
+    <p style="margin-top:8px; opacity:0.5;">본 보고서는 경제 뉴스의 요약본이며, 투자 판단의 근거가 될 수 없습니다.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
